@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="createPostTable" author="Sergei Ragaev">
+        <createTable tableName="posts">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="author_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_blocked" type="BOOLEAN"/>
+            <column name="is_delete" type="BOOLEAN"/>
+            <column name="publish_date" type="TIMESTAMP (6) "/>
+            <column name="time" type="TIMESTAMP (6) "/>
+            <column name="time_changed" type="TIMESTAMP (6) "/>
+            <column name="image_path" type="VARCHAR(255)"/>
+            <column name="post_text" type="TEXT"/>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createPost2TagTable" author="Sergei Ragaev">
+        <createTable tableName="post2tag">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="post_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tag_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="createTagTable" author="Sergei Ragaev">
+        <createTable tableName="tags">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="createKeyForPost2TagTable" author="Sergei Ragaev">
+        <addForeignKeyConstraint baseColumnNames="post_id" baseTableName="post2tag" constraintName="fk_post_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="posts" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="tag_id" baseTableName="post2tag" constraintName="fk_tag_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tags" validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>

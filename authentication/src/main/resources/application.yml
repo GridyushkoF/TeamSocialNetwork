@@ -1,0 +1,23 @@
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  liquibase:
+    enabled: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/security_jwt
+    username: postgres
+    password:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create
+
+
+app:
+  jwt:
+    secret: "SomeKey"
+    tokenExpiration: 3m
+    refreshToken: 30m
