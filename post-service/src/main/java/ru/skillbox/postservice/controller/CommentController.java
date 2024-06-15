@@ -1,6 +1,7 @@
 package ru.skillbox.postservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.postservice.dto.CommentDto;
@@ -18,7 +19,7 @@ public class CommentController {
             @RequestBody CommentDto commentDto
     ) {
         //CommentsService.updateComment(postId,commentId,commentDto)
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @DeleteMapping("/{id}/comment/{commentId}")
@@ -40,7 +41,7 @@ public class CommentController {
     @PostMapping("/{id}/comment")
     public ResponseEntity<Object> createComment(@PathVariable("id") Long postId) {
         //CommentsService.createComment(postId)
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
     @GetMapping("/{id}/comment/{commentId}/subcomment")
     public ResponseEntity<PageCommentDto> getSubComment(

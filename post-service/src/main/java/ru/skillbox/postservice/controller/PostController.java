@@ -1,6 +1,7 @@
 package ru.skillbox.postservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.postservice.dto.PhotoDto;
@@ -25,7 +26,7 @@ public class PostController {
             @PathVariable("id") Long postId,
             @RequestBody PostDto postDto) {
         //PostService.updatePostById(postId)
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @DeleteMapping("/{id}")
@@ -49,7 +50,7 @@ public class PostController {
             @RequestBody PostDto postDto
     ) {
         //PostService.createNewPost(publishDateEpochMillis,postDto)
-        return ResponseEntity.status(201).body(new PostDto());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new PostDto());
     }
 
     @PostMapping("/storagePostPhoto")
@@ -57,7 +58,7 @@ public class PostController {
             @RequestParam(value = "file") String binaryFile
     ) {
         //PostService.uploadPhoto(fileBinary)
-        return ResponseEntity.status(201).body(new PhotoDto());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new PhotoDto());
     }
 }
 

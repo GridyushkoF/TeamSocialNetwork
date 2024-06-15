@@ -1,6 +1,7 @@
 package ru.skillbox.postservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,7 @@ public class LikeController {
             @PathVariable("id") Long postId
     ) {
         //LikeService.likePost(postId)
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
     @DeleteMapping("/{id}/like")
     public ResponseEntity<Object> unLikePost(
@@ -28,7 +29,7 @@ public class LikeController {
             @PathVariable("commentId") Long commentId
     ) {
         //LikeService.likeComment(postId,commentId)
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
     @DeleteMapping("/{id}/comment/{commentId}/like")
     public ResponseEntity<Object> unLikeComment(
