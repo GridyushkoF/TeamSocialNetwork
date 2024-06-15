@@ -17,7 +17,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     private String email;
 
@@ -81,5 +81,4 @@ public class User {
     private LocalDateTime updatedOn;
 
     private String password;
-
 }

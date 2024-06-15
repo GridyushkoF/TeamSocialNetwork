@@ -7,7 +7,7 @@
 
     <changeSet id="createUserTable" author="Sergei Ragaev">
         <createTable tableName="users">
-            <column name="id" type="serial">
+            <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true"/>
             </column>
             <column name="email" type="varchar (255)"/>
@@ -36,10 +36,10 @@
 
     <changeSet id="createUserRoleTable" author="Sergei Ragaev">
         <createTable tableName="roles">
-            <column name="id" type="serial">
+            <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="user_id" type="integer">
+            <column name="user_id" type="BIGINT">
                 <constraints nullable="false" />
             </column>
             <column name="role" type="varchar (255)">
