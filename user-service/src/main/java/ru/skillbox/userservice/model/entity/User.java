@@ -5,7 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,16 +39,16 @@ public class User {
 
     @CreationTimestamp
     @Column(name = "reg_date")
-    private Instant regDate;
+    private LocalDateTime regDate;
 
     @Column(name = "birth_date")
-    private Instant birthDate;
+    private LocalDateTime birthDate;
 
     @Column(name = "message_permission")
     private String messagePermission;
 
     @Column(name = "last_online_time")
-    private Instant lastOnlineTime;
+    private LocalDateTime lastOnlineTime;
 
     @Column(name = "is_online")
     private boolean isOnline;
@@ -74,11 +74,11 @@ public class User {
 
     @CreationTimestamp
     @Column(name = "created_on")
-    private Instant createdOn;
+    private LocalDateTime createdOn;
 
     @UpdateTimestamp
     @Column(name = "updated_on")
-    private Instant updatedOn;
+    private LocalDateTime updatedOn;
 
     private String password;
 

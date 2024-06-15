@@ -6,7 +6,7 @@ services:
       - "5432:5432"
     restart: always
     environment:
-      - POSTGRES_MULTIPLE_DATABASES="user_db"
+      - POSTGRES_MULTIPLE_DATABASES="user_db","post_db"
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
