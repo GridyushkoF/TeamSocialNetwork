@@ -11,16 +11,21 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.skillbox.authentication.Entity.Users;
 import ru.skillbox.authentication.Repository.UserRepository;
+import ru.skillbox.authentication.service.UserService;
 
 import java.io.IOException;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    UserRepository userRepository;
+    public JwtAuthenticationFilter(JwtService jwtService, UserRepository userRepository){
+        this.jwtService = jwtService;
+        this.userRepository = userRepository;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

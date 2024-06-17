@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: mypass
+  jpa:
+    hibernate:
+      ddl-auto: update
+  mail:
+    host: smtp.mail.ru
+    port: 587
+    username: testMail@mail.ru
+    password: passApplication
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+server:
+  port: 4455
+
+security:
+  jwt:
+    expiration-minutes: 30
+    secret-key: bXkgc2VjcmV0IGtleSBhbmQgdSBhcmUgbm9vYiBoYWNrZXI=

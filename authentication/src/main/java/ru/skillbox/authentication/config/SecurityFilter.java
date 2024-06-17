@@ -14,9 +14,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityFilter {
+    private final AuthenticationProvider authenticationProvider;
 
     @Autowired
-    private AuthenticationProvider authenticationProvider;
+    public SecurityFilter(AuthenticationProvider authenticationProvider){
+        this.authenticationProvider = authenticationProvider;
+    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 

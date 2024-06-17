@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.skillbox.authentication.Entity.Users;
 
+import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
 import java.util.Map;
@@ -30,16 +31,17 @@ public class JwtService {
 
 
         return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(users.getFirstName())
-                .setIssuedAt(issuedAt)
-                .setExpiration(expiration)
+                .claims(extraClaims)
+                .subject(users.getFirstName())
+                .issuedAt(issuedAt)
+                .expiration(expiration)
                 .signWith(generateKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
 
     private Key generateKey(){
+
         byte[] secreateAsBytes = Decoders.BASE64.decode(SECRET_KEY);
 
         return Keys.hmacShaKeyFor(secreateAsBytes);
@@ -53,7 +55,7 @@ public class JwtService {
     }
 
     public Claims extractAllClaims(String jwt){
-        return Jwts.parser().setSigningKey(generateKey()).build()
-                .parseClaimsJws(jwt).getBody();
+        return Jwts.parser().verifyWith((SecretKey) generateKey()).build()
+                .parseSignedClaims(jwt).getPayload();
     }
 }

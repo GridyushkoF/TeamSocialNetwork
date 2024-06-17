@@ -16,14 +16,18 @@ import java.util.Map;
 @Service
 public class AuthenticationService  {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+
+    private final  UserRepository userRepository;
+
+    private final JwtService jwtService;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private JwtService jwtService;
+    public AuthenticationService(AuthenticationManager authenticationManager , UserRepository userRepository , JwtService jwtService) {
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.jwtService = jwtService;
+    }
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest){
 
@@ -47,6 +51,7 @@ public class AuthenticationService  {
 
         Map<String, Object> extraClaims = new HashMap<>();
 
+        extraClaims.put("id" , users.getId());
         extraClaims.put("name" , users.getSecondName());
         extraClaims.put("role" , users.getRole().name());
 

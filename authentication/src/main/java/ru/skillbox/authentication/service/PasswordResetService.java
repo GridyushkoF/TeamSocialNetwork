@@ -14,14 +14,24 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class PasswordResetService {
-    @Autowired
+
     private PasswordResetTokenRepository passwordResetTokenRepository;
-    @Autowired
+
     private UserRepository userRepository;
-    @Autowired
+
     private JavaMailSender mailSender;
-    @Autowired
+
     private PasswordEncoder passwordEncode;
+
+    @Autowired
+    public PasswordResetService(PasswordResetTokenRepository passwordResetTokenRepository,
+                                UserRepository userRepository, JavaMailSender mailSender,
+                                PasswordEncoder passwordEncode){
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.userRepository = userRepository;
+        this.mailSender = mailSender;
+        this.passwordEncode = passwordEncode;
+    }
 
     public void createResetToken(Users user, String token){
         PasswordResetToken userToken = new PasswordResetToken();

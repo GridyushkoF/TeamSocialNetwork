@@ -12,14 +12,17 @@ import ru.skillbox.authentication.service.UserService;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class UserController {
-    @Autowired
+
     private UserService userService;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
+    private AuthenticationService authenticationService;
 
     @Autowired
-    private AuthenticationService authenticationService;
+    public UserController(UserService userService,PasswordEncoder passwordEncoder, AuthenticationService authenticationService ){
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationService = authenticationService;
+    }
 
     @PostMapping("/register")
     public void createUser(@RequestBody UserDTO user) {

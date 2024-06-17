@@ -11,10 +11,16 @@ import ru.skillbox.authentication.service.PasswordResetService;
 @RestController
 @RequestMapping("/api/v1/auth/password")
 public class PasswordResetController {
+
+    private final PasswordResetService passwordResetService;
+
+    private final  PasswordResetTokenRepository passwordResetTokenRepository;
+
     @Autowired
-    private PasswordResetService passwordResetService;
-    @Autowired
-    private PasswordResetTokenRepository passwordResetTokenRepository;
+    public PasswordResetController(PasswordResetService passwordResetService, PasswordResetTokenRepository passwordResetTokenRepository){
+        this.passwordResetService = passwordResetService;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
+    }
 
     /*@PostMapping("/recovery")
     public void resetPassword(@RequestParam("email") String email){

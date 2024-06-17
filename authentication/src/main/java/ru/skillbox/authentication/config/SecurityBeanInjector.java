@@ -12,12 +12,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.skillbox.authentication.Repository.UserRepository;
+import ru.skillbox.authentication.service.UserService;
 
 @Component
 public class SecurityBeanInjector {
 
+    private final UserRepository userRepository;
+    private final UserService userService;
+
     @Autowired
-    private UserRepository userRepository;
+    public SecurityBeanInjector(UserRepository userRepository , UserService userService){
+        this.userRepository = userRepository;
+        this.userService = userService;
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -28,7 +35,7 @@ public class SecurityBeanInjector {
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(detailsService());
+        provider.setUserDetailsService(userService);
         provider.setPasswordEncoder(passwordEncoder());
 
         return provider;
@@ -39,11 +46,13 @@ public class SecurityBeanInjector {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public UserDetailsService detailsService(){
-        return email -> {
-            return userRepository.findByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("User is not found"));
-        };
-    }
+        /*@Bean
+        public UserDetailsService detailsService(){
+            return email -> {
+                    userRepository.findByEmail(email)
+                        .orElseThrow(() -> new RuntimeException("User is not found"));
+            };
+        }
+         */
+
 }
