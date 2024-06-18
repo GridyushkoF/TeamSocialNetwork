@@ -25,6 +25,7 @@ public class User {
 
     private String photo;
 
+    @Column(name = "about", columnDefinition = "TEXT")
     private String about;
 
     private String city;

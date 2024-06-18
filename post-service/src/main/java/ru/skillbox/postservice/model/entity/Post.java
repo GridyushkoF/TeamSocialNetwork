@@ -2,8 +2,7 @@ package ru.skillbox.postservice.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,9 +10,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
 @Table(name = "posts")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Data
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +37,7 @@ public class Post {
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    @Column(name = "post_text")
+    @Column(name = "post_text", columnDefinition = "TEXT")
     private String postText;
 
     @Column(name = "is_blocked")
