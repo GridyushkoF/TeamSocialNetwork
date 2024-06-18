@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="createUserTable" author="Sergei Ragaev">
+        <createTable tableName="users">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="email" type="varchar (255)"/>
+            <column name="phone" type="varchar (255)"/>
+            <column name="photo" type="varchar (255)"/>
+            <column name="about" type="varchar (255)"/>
+            <column name="city" type="varchar (255)"/>
+            <column name="country" type="varchar (255)"/>
+            <column name="first_name" type="varchar (255)"/>
+            <column name="last_name" type="varchar (255)"/>
+            <column name="reg_date" type="TIMESTAMP  WITHOUT TIME ZONE"/>
+            <column name="birth_date" type="TIMESTAMP  WITHOUT TIME ZONE"/>
+            <column name="message_permission" type="varchar (255)"/>
+            <column name="last_online_time" type="TIMESTAMP  WITHOUT TIME ZONE"/>
+            <column name="is_online" type="boolean"/>
+            <column name="is_blocked" type="boolean"/>
+            <column name="is_deleted" type="boolean"/>
+            <column name="photo_id" type="varchar (255)"/>
+            <column name="photo_name" type="varchar (255)"/>
+            <column name="role" type="varchar (255)"/>
+            <column name="created_on" type="TIMESTAMP  WITHOUT TIME ZONE"/>
+            <column name="updated_on" type="TIMESTAMP  WITHOUT TIME ZONE"/>
+            <column name="password" type="varchar (255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createUserRoleTable" author="Sergei Ragaev">
+        <createTable tableName="roles">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+            <column name="role" type="varchar (255)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
