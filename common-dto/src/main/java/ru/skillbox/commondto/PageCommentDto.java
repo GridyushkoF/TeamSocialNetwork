@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.skillbox.postservice.dto.pages.PageableObject;
+import ru.skillbox.postservice.dto.pages.Sort;
 
 import java.util.List;
 
