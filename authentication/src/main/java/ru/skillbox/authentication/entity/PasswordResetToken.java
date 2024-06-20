@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.Entity;
+package ru.skillbox.authentication.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class PasswordResetToken {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Users user;
+    private User user;
     private LocalDateTime expiryDate;
 
 }

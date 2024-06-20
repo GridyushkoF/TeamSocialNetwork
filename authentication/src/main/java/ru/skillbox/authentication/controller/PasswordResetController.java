@@ -1,26 +1,21 @@
-package ru.skillbox.authentication.Controller;
+package ru.skillbox.authentication.controller;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.authentication.Entity.Users;
-import ru.skillbox.authentication.Repository.PasswordResetTokenRepository;
+import ru.skillbox.authentication.entity.User;
+import ru.skillbox.authentication.repository.PasswordResetTokenRepository;
 import ru.skillbox.authentication.authentication.AuthenticationRequest;
 import ru.skillbox.authentication.service.PasswordResetService;
 
 @RestController
 @RequestMapping("/api/v1/auth/password")
+@RequiredArgsConstructor
 public class PasswordResetController {
 
     private final PasswordResetService passwordResetService;
-
     private final  PasswordResetTokenRepository passwordResetTokenRepository;
 
-    @Autowired
-    public PasswordResetController(PasswordResetService passwordResetService, PasswordResetTokenRepository passwordResetTokenRepository){
-        this.passwordResetService = passwordResetService;
-        this.passwordResetTokenRepository = passwordResetTokenRepository;
-    }
 
     /*@PostMapping("/recovery")
     public void resetPassword(@RequestParam("email") String email){
@@ -45,7 +40,7 @@ public class PasswordResetController {
         if (!passwordResetService.isValidPasswordResetToken(token)){
             return "Invalid or expired token";
         }
-        Users user = passwordResetTokenRepository.findByToken(token).get().getUser();
+        User user = passwordResetTokenRepository.findByToken(token).get().getUser();
         passwordResetService.changePassword(user, newPassword);
         return "Password successfully reset";
     }

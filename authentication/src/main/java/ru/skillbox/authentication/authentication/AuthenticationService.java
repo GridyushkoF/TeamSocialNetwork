@@ -2,59 +2,122 @@ package ru.skillbox.authentication.authentication;
 
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.stereotype.Service;
-import ru.skillbox.authentication.Entity.Users;
-import ru.skillbox.authentication.Repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import ru.skillbox.authentication.dto.UserDto;
+import ru.skillbox.authentication.entity.RoleType;
+import ru.skillbox.authentication.entity.User;
+import ru.skillbox.authentication.repository.UserRepository;
 import ru.skillbox.authentication.config.Jwt.JwtService;
+import ru.skillbox.authentication.model.AppUserDetails;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Set;
 
-@Service
+@Component
+@RequiredArgsConstructor
 public class AuthenticationService  {
 
     private final AuthenticationManager authenticationManager;
-
     private final  UserRepository userRepository;
-
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public AuthenticationService(AuthenticationManager authenticationManager , UserRepository userRepository , JwtService jwtService) {
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.jwtService = jwtService;
-    }
+//    @Autowired
+//    public AuthenticationService(AuthenticationManager authenticationManager , UserRepository userRepository , JwtService jwtService) {
+//        this.authenticationManager = authenticationManager;
+//        this.userRepository = userRepository;
+//        this.jwtService = jwtService;
+//    }
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest){
 
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                authenticationRequest.getEmail(), authenticationRequest.getPassword()
-        );
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(
+                        authenticationRequest.getEmail(),
+                        authenticationRequest.getPassword()));
 
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        authenticationManager.authenticate(authToken);
+        AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
 
+        List<String> roles = userDetails.getAuthorities()
+                .stream().map(GrantedAuthority::getAuthority).toList();
 
-        Users users = userRepository.findByEmail(authenticationRequest.getEmail()).get();
+//        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-        String jwt = jwtService.generateToken(users, generateExtrsClaims(users));
+        String jwt = jwtService.generateJwtToken(userDetails);
 
         return new AuthenticationResponse(jwt);
 
+//
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
+//
+//        List<String> roles = userDetails.getAuthorities()
+//                .stream().map(GrantedAuthority::getAuthority).toList();
+//
+//        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+//
+//        return AuthResponse.builder()
+//                .id(userDetails.getId())
+//                .username(userDetails.getUsername())
+//                .refreshToken(refreshToken.getToken())
+//                .roles(roles)
+//                .token(jwtUtils.generateJwtToken(userDetails))
+//                .email(userDetails.getEmail())
+//                .build();
+
     }
 
-    private Map<String, Object> generateExtrsClaims(Users users) {
+//    private Map<String, Object> generateExtrsClaims(User users) {
+//
+//        Map<String, Object> extraClaims = new HashMap<>();
+//
+//        extraClaims.put("id" , users.getId());
+//        extraClaims.put("name" , users.getSecondName());
+//        extraClaims.put("role" , users.getRole().name());
+//
+//        return extraClaims;
+//    }
 
-        Map<String, Object> extraClaims = new HashMap<>();
+    public void register(UserDto userDto) {
+        User user = User.builder()
+                .username(userDto.getFirstName())
+                .email(userDto.getEmail())
+                .roles(Set.of(RoleType.USER))
+                .password(passwordEncoder.encode(userDto.getPassword1()))
+                .build();
 
-        extraClaims.put("id" , users.getId());
-        extraClaims.put("name" , users.getSecondName());
-        extraClaims.put("role" , users.getRole().name());
+        userRepository.save(user);
+    }
 
-        return extraClaims;
+//    public RefreshTokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+//        String requestRefreshToken = refreshTokenRequest.getRefreshToken();
+//
+//        return refreshTokenService.findByRefreshToken(requestRefreshToken)
+//                .map(refreshTokenService::checkRefreshToken)
+//                .map(RefreshToken::getUserId)
+//                .map(userId -> {
+//                    User tokenOwner = userRepository.findById(userId)
+//                            .orElseThrow(() -> new RefreshTokenException("Ошибка при получении токена по user id"));
+//                    String token = jwtUtils.generateJwtTokenFromUsername(tokenOwner.getUsername());
+//                    return new RefreshTokenResponse(token, refreshTokenService.createRefreshToken(userId).getToken());
+//                }).orElseThrow(() -> new RefreshTokenException(requestRefreshToken, "Токен не найден"));
+//    }
+
+    public void logout() {
+        var currentPrincipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (currentPrincipal instanceof AppUserDetails userDetails) {
+            Long userId = userDetails.getId();
+//            refreshTokenService.deleteByUserId(userId);
+        }
     }
 }

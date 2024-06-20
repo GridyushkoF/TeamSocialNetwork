@@ -1,27 +1,34 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
-    driver-class-name: org.postgresql.Driver
     username: postgres
-    password: mypass
+    password: postgres
   jpa:
+    show-sql: true
+    generate-ddl: true
     hibernate:
       ddl-auto: update
-  mail:
-    host: smtp.mail.ru
-    port: 587
-    username: testMail@mail.ru
-    password: passApplication
+    database: postgresql
     properties:
-      mail:
-        transport:
-          protocol: smtp
-        smtp:
-          auth: true
-server:
-  port: 4455
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+#  mail:
+#    host: smtp.mail.ru
+#    port: 587
+#    username: testMail@mail.ru
+#    password: passApplication
+#    properties:
+#      mail:
+#        transport:
+#          protocol: smtp
+#        smtp:
+#          auth: true
+#server:
+#  port: 4455
 
 security:
   jwt:
+    secret: "SomeKey"
+    tokenExpiration: 3m
     expiration-minutes: 30
     secret-key: bXkgc2VjcmV0IGtleSBhbmQgdSBhcmUgbm9vYiBoYWNrZXI=

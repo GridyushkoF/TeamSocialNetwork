@@ -5,55 +5,56 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.skillbox.authentication.Entity.Users;
-import ru.skillbox.authentication.Repository.UserRepository;
-import ru.skillbox.authentication.service.UserService;
+import ru.skillbox.authentication.service.UserDetailsServiceImpl;
 
 import java.io.IOException;
-
+@Component
+@Slf4j
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-
-    private final UserRepository userRepository;
-
-    @Autowired
-    public JwtAuthenticationFilter(JwtService jwtService, UserRepository userRepository){
-        this.jwtService = jwtService;
-        this.userRepository = userRepository;
-    }
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        try {
+            String jwtToken = getToken(request);
+            if (jwtToken != null && jwtService.validate(jwtToken)) {
+                String username = jwtService.getUserName(jwtToken);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 
-        String authHeader = request.getHeader("Authorization");
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-        if(authHeader == null || !authHeader.startsWith("Bearer")){
-
-            filterChain.doFilter(request, response);
-            return;
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception e) {
+            log.error("Не удалось аутентифицировать пользователя");
         }
-
-
-        String jwt = authHeader.split(" ")[1];
-
-        String email = jwtService.extractEmail(jwt);
-
-        Users users = userRepository.findByEmail(email).get();
-
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, null, users.getAuthorities()
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-
-
         filterChain.doFilter(request, response);
 
-
-
     }
+
+    public String getToken(HttpServletRequest request) {
+        String headerAuth = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7);
+        }
+        return null;
+    }
+
 }

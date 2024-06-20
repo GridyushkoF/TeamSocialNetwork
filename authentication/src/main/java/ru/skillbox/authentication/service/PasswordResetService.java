@@ -1,39 +1,31 @@
 package ru.skillbox.authentication.service;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.skillbox.authentication.Entity.PasswordResetToken;
-import ru.skillbox.authentication.Entity.Users;
-import ru.skillbox.authentication.Repository.PasswordResetTokenRepository;
-import ru.skillbox.authentication.Repository.UserRepository;
+import org.springframework.stereotype.Service;
+import ru.skillbox.authentication.entity.PasswordResetToken;
+import ru.skillbox.authentication.entity.User;
+import ru.skillbox.authentication.repository.PasswordResetTokenRepository;
+import ru.skillbox.authentication.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
+@Service
+@RequiredArgsConstructor
 public class PasswordResetService {
 
-    private PasswordResetTokenRepository passwordResetTokenRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private JavaMailSender mailSender;
+//    private final JavaMailSender mailSender;
 
-    private PasswordEncoder passwordEncode;
+    private final PasswordEncoder passwordEncode;
 
-    @Autowired
-    public PasswordResetService(PasswordResetTokenRepository passwordResetTokenRepository,
-                                UserRepository userRepository, JavaMailSender mailSender,
-                                PasswordEncoder passwordEncode){
-        this.passwordResetTokenRepository = passwordResetTokenRepository;
-        this.userRepository = userRepository;
-        this.mailSender = mailSender;
-        this.passwordEncode = passwordEncode;
-    }
 
-    public void createResetToken(Users user, String token){
+    public void createResetToken(User user, String token){
         PasswordResetToken userToken = new PasswordResetToken();
         userToken.setToken(token);
         userToken.setUser(user);
@@ -41,7 +33,7 @@ public class PasswordResetService {
         passwordResetTokenRepository.save(userToken);
     }
     public void sendPasswordResetToken(String email){
-        Users user = userRepository.findByEmail(email).get();
+        User user = userRepository.findByEmail(email).get();
         if (user == null)
             throw new IllegalArgumentException("No user with email " + email);
         String token = UUID.randomUUID().toString();
@@ -52,7 +44,7 @@ public class PasswordResetService {
         message.setSubject("Password Reset Request");
         message.setText("http://localhost:4455/resetPassword?token="+ token);
         message.setFrom("testMail@mail.ru");
-        mailSender.send(message);
+//        mailSender.send(message);
 
     }
     public boolean isValidPasswordResetToken(String token){
@@ -62,7 +54,7 @@ public class PasswordResetService {
         return true;
     }
 
-    public void changePassword(Users user, String newPassword){
+    public void changePassword(User user, String newPassword){
         user.setPassword(passwordEncode.encode(newPassword));
         userRepository.save(user);
     }

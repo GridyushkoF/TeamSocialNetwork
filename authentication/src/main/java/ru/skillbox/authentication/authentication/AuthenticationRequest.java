@@ -1,15 +1,12 @@
 package ru.skillbox.authentication.authentication;
 
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
 public class AuthenticationRequest {
-
     private String email;
-
     private String password;
-
 }
