@@ -2,11 +2,11 @@ package ru.skillbox.authentication.authentication;
 
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-import ru.skillbox.authentication.Entity.Users;
+import ru.skillbox.authentication.Entity.User;
 import ru.skillbox.authentication.Repository.UserRepository;
 import ru.skillbox.authentication.config.Jwt.JwtService;
 
@@ -14,16 +14,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class AuthenticationService  {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest){
 
@@ -35,20 +33,20 @@ public class AuthenticationService  {
         authenticationManager.authenticate(authToken);
 
 
-        Users users = userRepository.findByEmail(authenticationRequest.getEmail()).get();
+        User user = userRepository.findByEmail(authenticationRequest.getEmail()).get();
 
-        String jwt = jwtService.generateToken(users, generateExtrsClaims(users));
+        String jwt = jwtService.generateToken(user, generateExtraClaims(user));
 
         return new AuthenticationResponse(jwt);
 
     }
 
-    private Map<String, Object> generateExtrsClaims(Users users) {
+    private Map<String, Object> generateExtraClaims(User user) {
 
         Map<String, Object> extraClaims = new HashMap<>();
 
-        extraClaims.put("name" , users.getSecondName());
-        extraClaims.put("role" , users.getRole().name());
+        extraClaims.put("name" , user.getLastName());
+        extraClaims.put("role" , user.getRole().name());
 
         return extraClaims;
     }

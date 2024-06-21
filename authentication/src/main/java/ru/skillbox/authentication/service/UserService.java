@@ -1,7 +1,7 @@
 package ru.skillbox.authentication.service;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,22 +9,25 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.skillbox.authentication.DTO.UserDTO;
-import ru.skillbox.authentication.Entity.Users;
+import ru.skillbox.authentication.Entity.Role;
+import ru.skillbox.authentication.Entity.User;
 import ru.skillbox.authentication.Repository.UserRepository;
+import ru.skillbox.authentication.config.Jwt.JwtService;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Users user = userRepository.findByEmail(email).get();
+        User user = userRepository.findByEmail(email).get();
         if (user == null)
             throw new UsernameNotFoundException("user not found");
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
@@ -33,12 +36,16 @@ public class UserService implements UserDetailsService {
     }
 
     public void createUser(UserDTO user){
-        Users user2 = new Users();
+        User user2 = new User();
         user2.setPassword(user.getPassword1());
         user2.setEmail(user.getEmail());
         user2.setFirstName(user.getFirstName());
-        user2.setSecondName(user.getLastName());
+        user2.setLastName(user.getLastName());
         user2.setPassword(passwordEncoder.encode(user.getPassword1()));
+
+        Role role = Role.valueOf(jwtService.extractAllClaims(user.getToken()).get("role").toString());
+
+        user2.setRole(role);
 
         userRepository.save(user2);
     }

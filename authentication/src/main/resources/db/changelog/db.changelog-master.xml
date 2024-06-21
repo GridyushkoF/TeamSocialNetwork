@@ -11,41 +11,27 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="email" type="varchar (255)"/>
-            <column name="phone" type="varchar (255)"/>
-            <column name="photo" type="varchar (255)"/>
-            <column name="about" type="TEXT"/>
-            <column name="city" type="varchar (255)"/>
-            <column name="country" type="varchar (255)"/>
             <column name="first_name" type="varchar (255)"/>
             <column name="last_name" type="varchar (255)"/>
-            <column name="reg_date" type="TIMESTAMP  WITHOUT TIME ZONE"/>
-            <column name="birth_date" type="TIMESTAMP  WITHOUT TIME ZONE"/>
-            <column name="message_permission" type="varchar (255)"/>
-            <column name="last_online_time" type="TIMESTAMP  WITHOUT TIME ZONE"/>
-            <column name="is_online" type="boolean"/>
-            <column name="is_blocked" type="boolean"/>
-            <column name="is_deleted" type="boolean"/>
-            <column name="photo_id" type="varchar (255)"/>
-            <column name="photo_name" type="varchar (255)"/>
             <column name="role" type="varchar (255)"/>
-            <column name="created_on" type="TIMESTAMP  WITHOUT TIME ZONE"/>
-            <column name="updated_on" type="TIMESTAMP  WITHOUT TIME ZONE"/>
             <column name="password" type="varchar (255)"/>
         </createTable>
     </changeSet>
 
-    <changeSet id="createUserRoleTable" author="Sergei Ragaev">
-        <createTable tableName="roles">
+    <changeSet id="createPasswordResetTokensTable" author="Sergei Ragaev">
+        <createTable tableName="password_reset_tokens">
             <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="user_id" type="BIGINT">
-                <constraints nullable="false" />
-            </column>
-            <column name="role" type="varchar (255)">
-                <constraints nullable="false" />
-            </column>
+            <column name="expiry_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="user_id" type="BIGINT"/>
+            <column name="token" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
+
+    <changeSet id="createFKForPasswordResetTokensTable" author="Sergei Ragaev">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="password_reset_tokens" constraintName="fk_user_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+
 
 </databaseChangeLog>

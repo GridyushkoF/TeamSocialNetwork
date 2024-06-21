@@ -2,7 +2,7 @@ spring:
   application:
     name: authentication
   datasource:
-    url: jdbc:postgresql://localhost:5432/user_db
+    url: jdbc:postgresql://localhost:5432/auth_user_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -20,3 +20,8 @@ spring:
 
 server:
   port: 8081
+
+security:
+  jwt:
+    expiration-minutes: 30
+    secret-key: bXkgc2VjcmV0IGtleSBhbmQgdSBhcmUgbm9vYiBoYWNrZXI=

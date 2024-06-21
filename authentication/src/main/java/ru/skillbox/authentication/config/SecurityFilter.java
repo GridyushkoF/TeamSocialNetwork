@@ -25,7 +25,7 @@ public class SecurityFilter {
                 .sessionManagement(sessionMangConfig -> sessionMangConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .authorizeHttpRequests( authConfig -> {
-                    authConfig.requestMatchers(HttpMethod.POST, "/auth/authenticate").permitAll();
+                    authConfig.requestMatchers(HttpMethod.POST, "api/v1/auth/*").permitAll();
               //      authConfig.requestMatchers(HttpMethod.POST, "/auth/register").permitAll();
                     authConfig.requestMatchers("/error").permitAll();
 

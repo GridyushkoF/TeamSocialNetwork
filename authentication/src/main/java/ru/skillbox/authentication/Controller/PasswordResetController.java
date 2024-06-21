@@ -3,7 +3,7 @@ package ru.skillbox.authentication.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.authentication.Entity.Users;
+import ru.skillbox.authentication.Entity.User;
 import ru.skillbox.authentication.Repository.PasswordResetTokenRepository;
 import ru.skillbox.authentication.authentication.AuthenticationRequest;
 import ru.skillbox.authentication.service.PasswordResetService;
@@ -39,7 +39,7 @@ public class PasswordResetController {
         if (!passwordResetService.isValidPasswordResetToken(token)){
             return "Invalid or expired token";
         }
-        Users user = passwordResetTokenRepository.findByToken(token).get().getUser();
+        User user = passwordResetTokenRepository.findByToken(token).get().getUser();
         passwordResetService.changePassword(user, newPassword);
         return "Password successfully reset";
     }
