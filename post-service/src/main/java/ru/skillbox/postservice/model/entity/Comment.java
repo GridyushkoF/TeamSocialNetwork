@@ -39,7 +39,7 @@ public class Comment {
     @Column(name = "comment_text", columnDefinition = "TEXT")
     private String commentText;
 
-    @Column(name = "post_id")
+    @Column (name = "post_id")
     private Long postId;
 
     @Column(name = "is_blocked")
@@ -48,12 +48,11 @@ public class Comment {
     @Column(name = "is_delete")
     private boolean isDelete;
 
-    @OneToMany(mappedBy="comment")
-    private Set<Like> likes;
-
-    @Column(name = "my_like")
-    private boolean myLike;
-
     @Column(name = "image_path")
     private String imagePath;
+
+    @OneToMany
+    private Set<Like> likes;
+    @Column(name = "likes_amount")
+    private Long likeAmount;
 }

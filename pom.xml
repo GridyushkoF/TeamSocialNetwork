@@ -25,7 +25,6 @@
     </dependencyManagement>
 
     <modules>
-        <module>common-lib</module>
         <module>authentication</module>
         <module>user-service</module>
         <module>dialog-service</module>

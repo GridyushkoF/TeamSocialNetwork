@@ -1,6 +1,5 @@
 package ru.skillbox.postservice.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -47,23 +46,23 @@ public class Post {
     @Column(name = "is_delete")
     private boolean isDelete;
 
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "post2tag",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private List<Tag> tags;
-
-    @OneToMany(mappedBy="post")
-    private Set<Like> likes;
-
-    @Column(name = "my_like")
-    private boolean myLike;
+    @ElementCollection
+    @CollectionTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"))
+    @Column(name = "tag")
+    private List<String> tags;
 
     @Column(name = "image_path")
     private String imagePath;
 
     @Column(name = "publish_date")
     private LocalDateTime publishDate;
+
+    @Column(name = "comments_count")
+    private Long commentsCount;
+
+    @Column(name = "like_amount")
+    private Long likeAmount;
+    @OneToMany
+    private Set<Like> likes;
+    private boolean myLike;
 }
