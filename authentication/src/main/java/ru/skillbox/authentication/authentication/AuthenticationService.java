@@ -5,49 +5,71 @@ package ru.skillbox.authentication.authentication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.stereotype.Service;
-import ru.skillbox.authentication.Entity.User;
-import ru.skillbox.authentication.Repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import ru.skillbox.authentication.dto.UserDto;
+import ru.skillbox.authentication.entity.RoleType;
+import ru.skillbox.authentication.entity.User;
+import ru.skillbox.authentication.repository.UserRepository;
 import ru.skillbox.authentication.config.Jwt.JwtService;
+import ru.skillbox.authentication.model.AppUserDetails;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Set;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class AuthenticationService  {
 
     private final AuthenticationManager authenticationManager;
-
-    private final UserRepository userRepository;
-
+    private final  UserRepository userRepository;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
+
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest){
 
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                authenticationRequest.getEmail(), authenticationRequest.getPassword()
-        );
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(
+                        authenticationRequest.getEmail(),
+                        authenticationRequest.getPassword()));
 
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        authenticationManager.authenticate(authToken);
+        AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
 
+        List<String> roles = userDetails.getAuthorities()
+                .stream().map(GrantedAuthority::getAuthority).toList();
 
-        User user = userRepository.findByEmail(authenticationRequest.getEmail()).get();
+//        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-        String jwt = jwtService.generateToken(user, generateExtraClaims(user));
+        String jwt = jwtService.generateJwtToken(userDetails);
 
         return new AuthenticationResponse(jwt);
 
+
     }
 
-    private Map<String, Object> generateExtraClaims(User user) {
+    public void register(UserDto userDto) {
+        User user = User.builder()
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
+                .email(userDto.getEmail())
+                .roles(Set.of(RoleType.USER))
+                .password(passwordEncoder.encode(userDto.getPassword1()))
+                .build();
 
-        Map<String, Object> extraClaims = new HashMap<>();
+        userRepository.save(user);
+    }
 
-        extraClaims.put("name" , user.getLastName());
-        extraClaims.put("role" , user.getRole().name());
-
-        return extraClaims;
+    public void logout() {
+        var currentPrincipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (currentPrincipal instanceof AppUserDetails userDetails) {
+            Long userId = userDetails.getId();
+//            refreshTokenService.deleteByUserId(userId);
+        }
     }
 }
