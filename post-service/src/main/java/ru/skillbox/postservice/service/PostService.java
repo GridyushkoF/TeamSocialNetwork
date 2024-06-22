@@ -35,19 +35,20 @@ public class PostService {
     private final PostValidatorUtil postValidator;
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
+    private final PostMapper postMapper;
 
     @Transactional
     public PostDto getPostById(Long postId) {
         postValidator.throwExceptionIfPostNotValid(postId);
         Post post = postRepository.getPostByIdOrThrowException(postId);
-        return PostMapper.INSTANCE.postToPostDto(post);
+        return postMapper.postToPostDto(post);
     }
 
     @Transactional
     public void updatePost(PostDto postToUpdate, Long postId, Long authUserId) {
         postValidator.throwAccessExceptionIfUserNotAuthor(postToUpdate, authUserId);
         postValidator.throwExceptionIfPostNotValid(postId);
-        postRepository.save(PostMapper.INSTANCE.postDtoToPost(postToUpdate));
+        postRepository.save(postMapper.postDtoToPost(postToUpdate));
         log.info("post with id " + postId + " was updated by postDto: " + postToUpdate);
     }
 
@@ -55,7 +56,7 @@ public class PostService {
     @Transactional
     public void deletePostById(Long postId, Long authUserId) {
         Post post = postRepository.getPostByIdOrThrowException(postId);
-        postValidator.throwAccessExceptionIfUserNotAuthor(PostMapper.INSTANCE.postToPostDto(post), authUserId);
+        postValidator.throwAccessExceptionIfUserNotAuthor(postMapper.postToPostDto(post), authUserId);
         post.setDelete(true);
         likeRepository.deleteAll(likeRepository.findAllByEntityTypeAndEntityId(LikeEntityType.POST,postId));
         commentRepository.findAllByPostId(postId).forEach(comment -> {
@@ -70,7 +71,7 @@ public class PostService {
     public PagePostDto searchPosts(PostSearchDto postSearchDto, Pageable pageable) {
         //Without specification api, pageable only
         Page<Post> postsPage = postRepository.findAll(pageable);
-        List<PostDto> content = postsPage.get().map(PostMapper.INSTANCE::postToPostDto).toList();
+        List<PostDto> content = postsPage.get().map(postMapper::postToPostDto).toList();
         return PagePostDto.builder()
                 .totalElements(postsPage.getTotalElements())
                 .totalPages(postsPage.getTotalPages())
@@ -88,14 +89,14 @@ public class PostService {
 
     @Transactional
     public PostDto createNewPost(PostDto postDto, Long publishDateMillis, Long authUserId) {
-        Post post = PostMapper.INSTANCE.postDtoToPost(postDto);
+        Post post = postMapper.postDtoToPost(postDto);
         if(!authUserId.equals(post.getAuthorId())) {
             throw new PostAccessException(post.getId());
         }
         post.setPublishDate(LocalDateTime.ofInstant(Instant.ofEpochMilli(publishDateMillis), ZoneId.systemDefault()));
         postRepository.save(post);
         log.info("post created by dto " + postDto);
-        return PostMapper.INSTANCE.postToPostDto(post);
+        return postMapper.postToPostDto(post);
     }
 
     public PhotoDto uploadImage(MultipartFile multipartFile) {

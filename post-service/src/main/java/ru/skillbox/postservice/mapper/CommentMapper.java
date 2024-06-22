@@ -1,13 +1,11 @@
 package ru.skillbox.postservice.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 import ru.skillbox.postservice.model.dto.CommentDto;
 import ru.skillbox.postservice.model.entity.Comment;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CommentMapper {
-    CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
     CommentDto commentToCommentDto(Comment comment);
 

@@ -1,14 +1,16 @@
 package ru.skillbox.postservice.mapper;
 
+import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Mapping;
 import ru.skillbox.postservice.model.dto.PostDto;
 import ru.skillbox.postservice.model.entity.Post;
 
-@Mapper
+@Mapper(componentModel = "spring")
+@DecoratedWith(PostMapperDecorator.class)
 public interface PostMapper {
-    PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);
-
+    @Mapping(target = "tags", ignore = true)
     PostDto postToPostDto(Post post);
+    @Mapping(target = "tags", ignore = true)
     Post postDtoToPost(PostDto postDto);
 }

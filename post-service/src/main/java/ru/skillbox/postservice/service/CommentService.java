@@ -30,10 +30,11 @@ public class CommentService {
     private final PostValidatorUtil postValidator;
     private final CommentValidatorUtil commentValidator;
     private final LikeRepository likeRepository;
+    private final CommentMapper commentMapper;
 
-    private static PageCommentDto buildPageCommentDto(Page<Comment> pageOfComments) {
+    private PageCommentDto buildPageCommentDto(Page<Comment> pageOfComments) {
         List<CommentDto> commentDtoList = pageOfComments.getContent().stream()
-                .map(CommentMapper.INSTANCE::commentToCommentDto).toList();
+                .map(commentMapper::commentToCommentDto).toList();
         return PageCommentDto.builder()
                 .totalElements(pageOfComments.getTotalElements())
                 .totalPages(pageOfComments.getTotalPages())
@@ -55,7 +56,7 @@ public class CommentService {
         commentValidator.throwExceptionIfCommentNotValidWithAuthor(commentId,authUserId);
         Comment comment = commentRepository.getByIdOrThrowException(commentId);
         if (comment.getPostId().equals(postId) && resultCommentDto.getId().equals(commentId)) {
-            commentRepository.save(CommentMapper.INSTANCE.commentDtoToComment(resultCommentDto));
+            commentRepository.save(commentMapper.commentDtoToComment(resultCommentDto));
         }
         log.info("Comment with id " + commentId + " updated by commentDto: " + resultCommentDto);
     }
@@ -84,7 +85,7 @@ public class CommentService {
         if (!commentDto.getAuthorId().equals(authUserId)) {
             throw new CommentAccessException(commentDto.getId());
         }
-        Comment comment = CommentMapper.INSTANCE.commentDtoToComment(commentDto);
+        Comment comment = commentMapper.commentDtoToComment(commentDto);
         if (comment.getLikes() == null) {
             comment.setLikes(Set.of());
         }

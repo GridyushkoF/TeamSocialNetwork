@@ -52,7 +52,10 @@ public class Comment {
     private String imagePath;
 
     @OneToMany
+    @JoinTable(
+            name = "comments_likes",
+            joinColumns = @JoinColumn(name = "comment_id"),
+            inverseJoinColumns = @JoinColumn(name = "like_id")
+    )
     private Set<Like> likes;
-    @Column(name = "likes_amount")
-    private Long likeAmount;
 }

@@ -41,9 +41,10 @@ public class LikeService {
         Optional<Like> likeOptional = getLikeIfPostValid(postId, userId);
         if (likeOptional.isEmpty()) {
             Post post = postRepository.getPostByIdOrThrowException(postId);
-            post.setLikeAmount(post.getLikeAmount() + 1);
+            Like like = new Like(null, userId, LikeEntityType.POST, postId);
+            likeRepository.save(like);
+            post.getLikes().add(like);
             postRepository.save(post);
-            likeRepository.save(new Like(null, userId, LikeEntityType.POST,postId));
             log.info("Post with id " + postId + " was liked by user with id " + userId);
             return;
         }
@@ -54,7 +55,7 @@ public class LikeService {
         Optional<Like> likeOptional = getLikeIfPostValid(postId, userId);
         if (likeOptional.isPresent()) {
             Post post = postRepository.getPostByIdOrThrowException(postId);
-            post.setLikeAmount(post.getLikeAmount() - 1);
+            post.getLikes().remove(likeOptional.get());
             postRepository.save(post);
             likeRepository.delete(likeOptional.get());
             log.info("Post with id " + postId + " was unliked by user with id " + userId);
@@ -67,13 +68,11 @@ public class LikeService {
         Optional<Like> likeOptional = getLikeOnCommentIfValid(postId,commentId, userId);
         if(likeOptional.isEmpty()) {
             Comment comment = commentRepository.getByIdOrThrowException(commentId);
-            if (comment.getLikeAmount() == null) {
-                comment.setLikeAmount(1L);
-            }
-            comment.setLikeAmount(comment.getLikeAmount() + 1);
-            commentRepository.save(comment);
             Like like = new Like(null,userId,LikeEntityType.COMMENT,commentId);
             likeRepository.save(like);
+            comment.getLikes().add(like);
+            commentRepository.save(comment);
+
             log.info("Comment with id " + commentId + " was liked by user with id " + userId);
             return;
         }
@@ -84,7 +83,7 @@ public class LikeService {
         Optional<Like> likeOptional = getLikeOnCommentIfValid(postId,commentId, userId);
         if(likeOptional.isPresent()) {
             Comment comment = commentRepository.getByIdOrThrowException(commentId);
-            comment.setLikeAmount(comment.getLikeAmount() - 1);
+            comment.getLikes().remove(likeOptional.get());
             commentRepository.save(comment);
             likeRepository.delete(likeOptional.get());
             log.info("Comment with id " + commentId + " was unliked by user with id " + userId);
