@@ -43,7 +43,7 @@ public class PostController {
         postService.deletePostById(postId,currentAuthUserId);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<PagePostDto> searchPosts(
             @ModelAttribute PostSearchDto searchDto,
             @RequestParam("page") int page,
@@ -53,7 +53,7 @@ public class PostController {
         return ResponseEntity.ok(postService.searchPosts(searchDto, PageRequest.of(page,size,Sort.by(sort))));
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<PostDto> createPost(
             @RequestParam(value = "publishDate", required = false) Long publishDateEpochMillis,
             @RequestBody PostDto postDto,
