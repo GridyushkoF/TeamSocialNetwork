@@ -1,6 +1,7 @@
 package ru.skillbox.authentication.Entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,61 +11,27 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Table
-public class Users implements UserDetails {
+@Table(name = "users")
+@Data
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "first_name")
     private String firstName;
 
     private String email;
 
-    private String secondName;
+    @Column(name = "last_name")
+    private String lastName;
 
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getSecondName() {
-        return secondName;
-    }
-
-    public void setSecondName(String secondName) {
-        this.secondName = secondName;
-    }
-
-    public void setPassword(String password1) {
-        this.password = password1;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public void setEmail(String email){this.email = email;}
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = role.getPermissions().stream().map(
@@ -75,11 +42,6 @@ public class Users implements UserDetails {
 
         return authorities;
 
-    }
-
-    @Override
-    public String getPassword() {
-        return getPassword();
     }
 
     @Override

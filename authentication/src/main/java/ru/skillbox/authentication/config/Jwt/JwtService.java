@@ -7,7 +7,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.skillbox.authentication.Entity.Users;
+import ru.skillbox.authentication.Entity.User;
 
 import java.security.Key;
 import java.util.Date;
@@ -23,7 +23,7 @@ public class JwtService {
     private String SECRET_KEY;
 
 
-    public String generateToken(Users users, Map<String, Object> extraClaims){
+    public String generateToken(User user, Map<String, Object> extraClaims){
 
         Date issuedAt = new Date(System.currentTimeMillis());
         Date expiration = new Date(issuedAt.getTime() + (30 * 60 * 1000));
@@ -31,7 +31,7 @@ public class JwtService {
 
         return Jwts.builder()
                 .setClaims(extraClaims)
-                .setSubject(users.getFirstName())
+                .setSubject(user.getFirstName())
                 .setIssuedAt(issuedAt)
                 .setExpiration(expiration)
                 .signWith(generateKey(), SignatureAlgorithm.HS256)
@@ -40,15 +40,14 @@ public class JwtService {
 
 
     private Key generateKey(){
-        byte[] secreateAsBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] secretAsBytes = Decoders.BASE64.decode(SECRET_KEY);
 
-        return Keys.hmacShaKeyFor(secreateAsBytes);
+        return Keys.hmacShaKeyFor(secretAsBytes);
     }
 
     public String extractEmail(String jwt) {
 
        return extractAllClaims(jwt).getSubject();
-
 
     }
 

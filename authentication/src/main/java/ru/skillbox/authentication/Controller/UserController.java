@@ -1,7 +1,7 @@
 package ru.skillbox.authentication.Controller;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.authentication.DTO.UserDTO;
@@ -11,22 +11,19 @@ import ru.skillbox.authentication.service.UserService;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
     public void createUser(@RequestBody UserDTO user) {
         if (user.getPassword1().equals(user.getPassword2())){
             userService.createUser(user);
         }
-
     }
 
     @PostMapping("/login")
