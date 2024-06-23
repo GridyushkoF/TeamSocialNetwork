@@ -1,10 +1,9 @@
-package ru.skillbox.commondto;
+package ru.skillbox.postservice.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.skillbox.postservice.model.dto.CommentType;
 
 import java.time.LocalDateTime;
 

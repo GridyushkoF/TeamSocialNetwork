@@ -17,6 +17,7 @@ spring:
     change-log: classpath://db/changelog/db.changelog-master.xml
     enabled: true
     drop-first: false
+
 server:
   port: 8082
 app:

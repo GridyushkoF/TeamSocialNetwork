@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
-
+    <!--    BASE_STRUCTURE-->
     <changeSet id="createPostTable" author="Sergei Ragaev">
         <createTable tableName="posts">
             <column name="id" type="BIGSERIAL">
@@ -90,6 +90,32 @@
     <changeSet id="createForeignKeysForLikeTable" author="Sergei Ragaev">
         <addForeignKeyConstraint baseColumnNames="comment_id" baseTableName="likes" constraintName="fk_comment_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="comments" validate="true"/>
         <addForeignKeyConstraint baseColumnNames="post_id" baseTableName="likes" constraintName="fk_post_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="posts" validate="true"/>
+    </changeSet>
+    <changeSet id="likesStructureUpdate" author="Gridyushko Fedor">
+        <dropColumn tableName="likes" columnName="comment_id"/>
+        <dropColumn tableName="likes" columnName="post_id"/>
+        <addColumn tableName="likes">
+            <column name="entity_type" type="VARCHAR(255)"/>
+            <column name="entity_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="createPostsLikesTable" author="Gridyushko Fedor">
+        <createTable tableName="posts_likes">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>>
+            </column>
+            <column name="post_id" type="BIGINT"/>
+            <column name="like_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="createCommentsLikesTable" author="Gridyushko Fedor">
+        <createTable tableName="comments_likes">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>>
+            </column>
+            <column name="comment_id" type="BIGINT"/>
+            <column name="like_id" type="BIGINT"/>
+        </createTable>
     </changeSet>
 
 </databaseChangeLog>
