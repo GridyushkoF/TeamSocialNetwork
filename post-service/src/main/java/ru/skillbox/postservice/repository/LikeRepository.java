@@ -8,6 +8,8 @@ import ru.skillbox.postservice.model.entity.LikeEntityType;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.List;
+
 @Repository
 public interface LikeRepository extends JpaRepository<Like, Long> {
     Optional<Like> findByEntityTypeAndEntityIdAndUserId(LikeEntityType likeEntityType, Long entityId, Long userId);

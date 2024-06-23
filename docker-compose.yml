@@ -1,6 +1,6 @@
 version: '3'
 services:
-  psql:
+  postgres:
     image: postgres:latest
     ports:
       - "5432:5432"
@@ -13,5 +13,29 @@ services:
       - ./pg-init-scripts:/docker-entrypoint-initdb.d
       - database-data:/var/lib/postgresql/data/
 
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    restart: on-failure
+
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+      - "9094:9094"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://localhost:9094
+      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+    volumes:
+      - kafka:/data
+    restart: on-failure
+
 volumes:
   database-data:
+  kafka:
