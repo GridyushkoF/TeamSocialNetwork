@@ -1,5 +1,7 @@
 package ru.skillbox.authentication.config.Jwt;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,12 +15,17 @@ import java.util.Date;
 @Slf4j
 public class JwtService {
 
-    @Value("${security.jwt.secret-key}")
-    private String SECRET_KEY;
+    @Value("${security.jwt.secret}")
+    private String secretKey;
 
     @Value("${security.jwt.tokenExpiration}")
     private Duration tokenExpiration;
 
+    private final Algorithm algorithm;
+
+    public JwtService(Algorithm algorithm) {
+        this.algorithm = algorithm;
+    }
 
 
     public String generateJwtToken(AppUserDetails userDetails) {
@@ -26,20 +33,19 @@ public class JwtService {
     }
 
     public String generateJwtTokenFromUsernameAndId(String username, long id) {
-        return Jwts.builder()
-                .setSubject(username)
-                .claim("id", id)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + tokenExpiration.toMillis()))
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-                .compact();
+        return JWT.create()
+                .withSubject(username)
+                .withClaim("id", id)
+                .withIssuedAt(new Date())
+                .withExpiresAt(new Date(new Date().getTime() + tokenExpiration.toMillis()))
+                .sign(algorithm);
     }
 
 
 
     public String getUserName(String token) {
         return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(secretKey.getBytes())
                 .parseClaimsJwt(token)
                 .getBody().getSubject();
     }
@@ -47,7 +53,7 @@ public class JwtService {
     public boolean validate(String authToken) {
         try {
             Jwts.parser()
-                    .setSigningKey(SECRET_KEY)
+                    .setSigningKey(secretKey)
                     .parseClaimsJwt(authToken);
             return true;
         } catch (SignatureException e) {
@@ -63,4 +69,5 @@ public class JwtService {
         }
         return false;
     }
+
 }

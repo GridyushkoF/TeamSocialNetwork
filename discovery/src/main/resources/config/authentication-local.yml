@@ -23,8 +23,8 @@ server:
 
 security:
   jwt:
-    tokenExpiration: 86400000
-    secret-key: B9vPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY
+    tokenExpiration: 30m
+    secret: B9vPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY
 
 eureka:
   client:

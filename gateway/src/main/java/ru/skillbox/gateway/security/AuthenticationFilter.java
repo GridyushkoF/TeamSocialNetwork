@@ -1,6 +1,5 @@
 package ru.skillbox.gateway.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -15,11 +14,10 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthenticationFilter implements GatewayFilter {
 
-    private final JwtService jwtService;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    public AuthenticationFilter(JwtService jwtService) {
-        this.jwtService = jwtService;
+    public AuthenticationFilter(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
     }
 
 
@@ -34,7 +32,7 @@ public class AuthenticationFilter implements GatewayFilter {
 
             final String token = this.getAuthHeader(request);
 
-            if (!jwtService.validate(token)) {
+            if (jwtUtil.isInvalid(token)) {
                 return this.onError(exchange, "Authorization header is invalid", HttpStatus.UNAUTHORIZED);
             }
 
@@ -59,7 +57,7 @@ public class AuthenticationFilter implements GatewayFilter {
 
     private void populateRequestWithHeaders(ServerWebExchange exchange, String tokenString) {
         String jwtToken = tokenString.substring(7);
-        String userId = jwtService.getUserId(jwtToken);
+        String userId = jwtUtil.getAllClaimsFromToken(jwtToken).get("id").toString();
         exchange.getRequest().mutate()
                 .header("id", userId)
                 .build();
