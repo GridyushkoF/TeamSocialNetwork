@@ -44,7 +44,7 @@ public class PostController {
         return ResponseEntity.ok(new PagePostDto());
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<PostDto> createPost(
             @RequestParam(value = "publishDate", required = false) Long publishDateEpochMillis,
             @RequestBody PostDto postDto

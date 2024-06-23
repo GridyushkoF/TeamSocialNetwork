@@ -3,25 +3,27 @@ package ru.skillbox.authentication.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.skillbox.authentication.Entity.PasswordResetToken;
-import ru.skillbox.authentication.Entity.User;
-import ru.skillbox.authentication.Repository.PasswordResetTokenRepository;
-import ru.skillbox.authentication.Repository.UserRepository;
+import ru.skillbox.authentication.entity.PasswordResetToken;
+import ru.skillbox.authentication.entity.User;
+import ru.skillbox.authentication.repository.PasswordResetTokenRepository;
+import ru.skillbox.authentication.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class PasswordResetService {
 
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+
     private final UserRepository userRepository;
-    private final JavaMailSender mailSender;
+
+//    private final JavaMailSender mailSender;
+
     private final PasswordEncoder passwordEncode;
+
 
     public void createResetToken(User user, String token){
         PasswordResetToken userToken = new PasswordResetToken();
@@ -42,7 +44,7 @@ public class PasswordResetService {
         message.setSubject("Password Reset Request");
         message.setText("http://localhost:4455/resetPassword?token="+ token);
         message.setFrom("testMail@mail.ru");
-        mailSender.send(message);
+//        mailSender.send(message);
 
     }
     public boolean isValidPasswordResetToken(String token){
