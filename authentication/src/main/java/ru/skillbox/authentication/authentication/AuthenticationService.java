@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import ru.skillbox.authentication.dto.UserDto;
+import ru.skillbox.authentication.dto.RegUserDto;
 import ru.skillbox.authentication.entity.RoleType;
 import ru.skillbox.authentication.entity.User;
 import ru.skillbox.authentication.repository.UserRepository;
@@ -25,16 +25,10 @@ import java.util.Set;
 public class AuthenticationService  {
 
     private final AuthenticationManager authenticationManager;
-    private final  UserRepository userRepository;
+    private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
-//    @Autowired
-//    public AuthenticationService(AuthenticationManager authenticationManager , UserRepository userRepository , JwtService jwtService) {
-//        this.authenticationManager = authenticationManager;
-//        this.userRepository = userRepository;
-//        this.jwtService = jwtService;
-//    }
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest){
 
@@ -49,6 +43,7 @@ public class AuthenticationService  {
 
         List<String> roles = userDetails.getAuthorities()
                 .stream().map(GrantedAuthority::getAuthority).toList();
+//        TODO Добавить реализацию рефреш токена. Данный метод должен возвращать два токена
 
 //        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
@@ -88,7 +83,7 @@ public class AuthenticationService  {
 //        return extraClaims;
 //    }
 
-    public void register(UserDto userDto) {
+    public void register(RegUserDto userDto) {
         User user = User.builder()
                 .username(userDto.getFirstName())
                 .email(userDto.getEmail())

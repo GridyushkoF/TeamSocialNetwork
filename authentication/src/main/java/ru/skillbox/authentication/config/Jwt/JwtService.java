@@ -59,7 +59,7 @@ public class JwtService {
 //        return Jwts.parser().verifyWith((SecretKey) generateKey()).build()
 //                .parseSignedClaims(jwt).getPayload();
 //    }
-
+//
     public String generateJwtToken(AppUserDetails userDetails) {
         return generateJwtTokenFromUsername(userDetails.getUsername());
     }
@@ -72,8 +72,6 @@ public class JwtService {
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
-
-
 
     public String getUserName(String token) {
         return Jwts.parser()

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.authentication.authentication.AuthenticationResponse;
-import ru.skillbox.authentication.dto.UserDto;
+import ru.skillbox.authentication.dto.RegUserDto;
 import ru.skillbox.authentication.repository.UserRepository;
 import ru.skillbox.authentication.authentication.AuthenticationRequest;
 import ru.skillbox.authentication.authentication.AuthenticationService;
@@ -21,14 +21,10 @@ public class UserController {
 
 
     @PostMapping("/register")
-    public void createUser(@RequestBody UserDto userDto) {
-        if (userRepository.existsByUsername(userDto.getFirstName())) {
-            throw new AlreadyExistsException("Username уже занят");
-        }
+    public void createUser(@RequestBody RegUserDto userDto) {
         if (userRepository.existsByEmail(userDto.getEmail())) {
             throw new AlreadyExistsException("Email уже занят");
         }
-
         authenticationService.register(userDto);
 
 

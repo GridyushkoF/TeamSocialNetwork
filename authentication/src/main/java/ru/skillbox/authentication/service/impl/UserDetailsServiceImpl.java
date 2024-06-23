@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.service;
+package ru.skillbox.authentication.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
