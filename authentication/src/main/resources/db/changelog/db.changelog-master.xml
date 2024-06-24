@@ -18,6 +18,17 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="createUserRolesTable" author="Sergei Ragaev">
+        <createTable tableName="user_roles">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_roles_pkey"/>
+            </column>
+            <column name="roles" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_roles_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+
     <changeSet id="createPasswordResetTokensTable" author="Sergei Ragaev">
         <createTable tableName="password_reset_tokens">
             <column name="id" type="BIGSERIAL">
@@ -31,6 +42,9 @@
 
     <changeSet id="createFKForPasswordResetTokensTable" author="Sergei Ragaev">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="password_reset_tokens" constraintName="fk_user_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+    <changeSet id="createFKForUserRolesTable" author="Sergei Ragaev">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_roles" constraintName="fk_user_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" validate="true"/>
     </changeSet>
 
 

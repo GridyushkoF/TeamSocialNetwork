@@ -1,58 +1,73 @@
 package ru.skillbox.authentication.config.Jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import ru.skillbox.authentication.Entity.User;
+import org.springframework.stereotype.Component;
+import ru.skillbox.authentication.model.AppUserDetails;
 
-import java.security.Key;
+import java.time.Duration;
 import java.util.Date;
-import java.util.Map;
 
-@Service
+@Component
+@Slf4j
 public class JwtService {
 
-    @Value("${security.jwt.expiration-minutes}")
-    private long EXPIRATION_MINUTES;
+    @Value("${security.jwt.secret}")
+    private String secretKey;
 
-    @Value("${security.jwt.secret-key}")
-    private String SECRET_KEY;
+    @Value("${security.jwt.tokenExpiration}")
+    private Duration tokenExpiration;
 
+    private final Algorithm algorithm;
 
-    public String generateToken(User user, Map<String, Object> extraClaims){
-
-        Date issuedAt = new Date(System.currentTimeMillis());
-        Date expiration = new Date(issuedAt.getTime() + (30 * 60 * 1000));
-
-
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(user.getFirstName())
-                .setIssuedAt(issuedAt)
-                .setExpiration(expiration)
-                .signWith(generateKey(), SignatureAlgorithm.HS256)
-                .compact();
+    public JwtService(Algorithm algorithm) {
+        this.algorithm = algorithm;
     }
 
 
-    private Key generateKey(){
-        byte[] secretAsBytes = Decoders.BASE64.decode(SECRET_KEY);
-
-        return Keys.hmacShaKeyFor(secretAsBytes);
+    public String generateJwtToken(AppUserDetails userDetails) {
+        return generateJwtTokenFromUsernameAndId(userDetails.getUsername(), userDetails.getId());
     }
 
-    public String extractEmail(String jwt) {
-
-       return extractAllClaims(jwt).getSubject();
-
+    public String generateJwtTokenFromUsernameAndId(String username, long id) {
+        return JWT.create()
+                .withSubject(username)
+                .withClaim("id", id)
+                .withIssuedAt(new Date())
+                .withExpiresAt(new Date(new Date().getTime() + tokenExpiration.toMillis()))
+                .sign(algorithm);
     }
 
-    public Claims extractAllClaims(String jwt){
-        return Jwts.parser().setSigningKey(generateKey()).build()
-                .parseClaimsJws(jwt).getBody();
+
+
+    public String getUserName(String token) {
+        return Jwts.parser()
+                .setSigningKey(secretKey.getBytes())
+                .parseClaimsJwt(token)
+                .getBody().getSubject();
     }
+
+    public boolean validate(String authToken) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJwt(authToken);
+            return true;
+        } catch (SignatureException e) {
+            log.error("Подписи не совпадают. " + e.getMessage() );
+        } catch (MalformedJwtException e) {
+            log.error("Невалидный токен. " + e.getMessage());
+        } catch (ExpiredJwtException e) {
+            log.error("Истекло время действия токена. " + e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.error("Неподдерживаемый токен. " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.error("Claims пустой. " + e.getMessage());
+        }
+        return false;
+    }
+
 }
