@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.skillbox.postservice.model.dto.PostType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +23,7 @@ public class PostDto {
     private String postText;
     private boolean isBlocked;
     private boolean isDelete;
-    private Long commentsAmount;
+    private Long commentsCount;
     private List<String> tags;
     private Long likeAmount;
     private boolean myLike;

@@ -18,10 +18,9 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>ru.skillbox</groupId>
-            <artifactId>post-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
