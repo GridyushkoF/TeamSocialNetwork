@@ -3,7 +3,6 @@ package ru.skillbox.postservice.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.postservice.service.LikeService;
 
@@ -21,6 +20,7 @@ public class LikeController {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
         likeService.likePost(postId,currentAuthUserId);
     }
+
     @DeleteMapping("/{id}/like")
     @ResponseStatus(HttpStatus.OK)
     public void unLikePost(
@@ -30,6 +30,7 @@ public class LikeController {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
         likeService.unlikePost(postId,currentAuthUserId);
     }
+
     @PostMapping("/{id}/comment/{commentId}/like")
     @ResponseStatus(HttpStatus.CREATED)
     public void likeComment(
@@ -40,6 +41,7 @@ public class LikeController {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
         likeService.likeComment(postId,commentId,currentAuthUserId);
     }
+
     @DeleteMapping("/{id}/comment/{commentId}/like")
     @ResponseStatus(HttpStatus.OK)
     public void unLikeComment(

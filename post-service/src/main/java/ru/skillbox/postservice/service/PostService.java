@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skillbox.postservice.exception.PostAccessException;
 import ru.skillbox.postservice.mapper.PostMapper;
 import ru.skillbox.postservice.model.dto.PhotoDto;
 import ru.skillbox.postservice.model.dto.PostDto;
@@ -46,6 +45,7 @@ public class PostService {
 
     @Transactional
     public void updatePost(PostDto postToUpdate, Long postId, Long authUserId) {
+        postToUpdate.setId(postId);
         postValidator.throwAccessExceptionIfUserNotAuthor(postToUpdate, authUserId);
         postValidator.throwExceptionIfPostNotValid(postId);
         postRepository.save(postMapper.postDtoToPost(postToUpdate));
@@ -89,10 +89,9 @@ public class PostService {
 
     @Transactional
     public PostDto createNewPost(PostDto postDto, Long publishDateMillis, Long authUserId) {
+        postDto.setAuthorId(authUserId);
+        postDto.setId(null);
         Post post = postMapper.postDtoToPost(postDto);
-        if(!authUserId.equals(post.getAuthorId())) {
-            throw new PostAccessException(post.getId());
-        }
         post.setPublishDate(LocalDateTime.ofInstant(Instant.ofEpochMilli(publishDateMillis), ZoneId.systemDefault()));
         postRepository.save(post);
         log.info("post created by dto " + postDto);
