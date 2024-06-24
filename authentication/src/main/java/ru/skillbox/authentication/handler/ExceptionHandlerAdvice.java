@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.skillbox.authentication.exception.AlreadyExistsException;
-import ru.skillbox.authentication.exception.EntityNotFoundException;
-import ru.skillbox.authentication.exception.IncorrectRecoveryLinkException;
-import ru.skillbox.authentication.exception.RefreshTokenException;
+import ru.skillbox.authentication.exception.*;
 
 @ControllerAdvice
 public class ExceptionHandlerAdvice {
@@ -32,6 +29,11 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(value = EntityNotFoundException.class)
     public ResponseEntity<ErrorResponseBody> entityNotFoundExceptionHandler(EntityNotFoundException ex) {
         return new ResponseEntity<>(new ErrorResponseBody(ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = CaptchaValidatedExcepction.class)
+    public ResponseEntity<ErrorResponseBody> captchaValidatedExcepction(CaptchaValidatedExcepction ex) {
+        return new ResponseEntity<>(new ErrorResponseBody(ex.getMessage()), HttpStatus.valueOf(500));
     }
 
 //    private ResponseEntity<ErrorResponseBody> buildResponse(HttpStatus httpStatus,
