@@ -57,5 +57,5 @@ public class Comment {
             joinColumns = @JoinColumn(name = "comment_id"),
             inverseJoinColumns = @JoinColumn(name = "like_id")
     )
-    private Set<Like> likes;
+    private Set<Like> likes = Set.of();
 }

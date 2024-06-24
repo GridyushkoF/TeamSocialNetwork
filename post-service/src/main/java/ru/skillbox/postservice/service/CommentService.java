@@ -52,6 +52,8 @@ public class CommentService {
 
     @Transactional
     public void updateComment(Long postId, Long commentId, CommentDto resultCommentDto, Long authUserId) {
+        resultCommentDto.setId(commentId);
+        resultCommentDto.setPostId(postId);
         postValidator.throwExceptionIfPostNotValid(postId);
         commentValidator.throwExceptionIfCommentNotValidWithAuthor(commentId,authUserId);
         Comment comment = commentRepository.getByIdOrThrowException(commentId);
@@ -82,13 +84,10 @@ public class CommentService {
     @Transactional
     public void createNewComment(Long postId, CommentDto commentDto, Long authUserId) {
         postValidator.throwExceptionIfPostNotValid(postId);
-        if (!commentDto.getAuthorId().equals(authUserId)) {
-            throw new CommentAccessException(commentDto.getId());
-        }
+        commentDto.setAuthorId(authUserId);
+        commentDto.setId(null);
+        commentDto.setPostId(postId);
         Comment comment = commentMapper.commentDtoToComment(commentDto);
-        if (comment.getLikes() == null) {
-            comment.setLikes(Set.of());
-        }
         commentRepository.save(comment);
         log.info("Comment created by dto:  " + commentDto);
     }
