@@ -68,13 +68,7 @@ public class User {
     @Column(name = "photo_name")
     private String photoName;
 
-//    @ElementCollection(targetClass = RoleType.class, fetch = FetchType.EAGER)
-//    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-//    @Column(name = "roles", nullable = false)
-//    @Enumerated(EnumType.STRING)
-//    @Builder.Default
-
-    @Column(name = "roles")
+    @Column(name = "role")
     private Role role;
 
     @CreationTimestamp
