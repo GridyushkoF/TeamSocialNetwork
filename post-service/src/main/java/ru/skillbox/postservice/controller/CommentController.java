@@ -20,20 +20,33 @@ public class CommentController {
 
     @PutMapping("/{id}/comment/{commentId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void updateComment(@PathVariable("id") Long postId, @PathVariable Long commentId, @RequestBody CommentDto commentDto, HttpServletRequest request) {
+    public void updateComment(
+            @PathVariable("id") Long postId,
+            @PathVariable Long commentId,
+            @RequestBody CommentDto commentDto,
+            HttpServletRequest request
+    ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        commentService.updateComment(postId, commentId, commentDto, currentAuthUserId);
+        commentService.updateComment(postId, commentId, commentDto,currentAuthUserId);
     }
 
     @DeleteMapping("/{id}/comment/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteComment(@PathVariable("id") Long postId, @PathVariable Long commentId, HttpServletRequest request) {
+    public void deleteComment(
+            @PathVariable("id") Long postId,
+            @PathVariable Long commentId,
+            HttpServletRequest request
+    ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        commentService.deleteComment(postId, commentId, currentAuthUserId);
+        commentService.deleteComment(postId, commentId,currentAuthUserId);
     }
 
     @GetMapping("/{id}/comment")
-    public ResponseEntity<PageCommentDto> getCommentsOnPost(@PathVariable("id") Long postId, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String sort) {
+    public ResponseEntity<PageCommentDto> getCommentsOnPost(
+            @PathVariable("id") Long postId,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sort") String sort) {
         Sort sortBy = Sort.by(sort);
         Pageable pageRequest = PageRequest.of(page, size, sortBy);
         return ResponseEntity.ok(commentService.getCommentsOnPost(postId, pageRequest));
@@ -41,13 +54,19 @@ public class CommentController {
 
     @PostMapping("/{id}/comment")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createComment(@PathVariable("id") Long postId, @RequestBody CommentDto commentDto, HttpServletRequest request) {
+    public void createComment(@PathVariable("id") Long postId,
+                                                @RequestBody CommentDto commentDto,
+                                                HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        commentService.createNewComment(postId, commentDto, currentAuthUserId);
+        commentService.createNewComment(postId, commentDto,currentAuthUserId);
     }
 
     @GetMapping("/{id}/comment/{commentId}/subcomment")
-    public ResponseEntity<PageCommentDto> getSubComments(@PathVariable("id") Long postId, @PathVariable("commentId") Long commentId, @RequestParam("page") Pageable page) {
+    public ResponseEntity<PageCommentDto> getSubComments(
+            @PathVariable("id") Long postId,
+            @PathVariable("commentId") Long commentId,
+            @RequestParam("page") Pageable page
+    ) {
         return ResponseEntity.ok(commentService.getSubComments(postId, commentId, page));
     }
 

@@ -27,33 +27,47 @@ public class PostController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void updatePostById(@PathVariable("id") Long postId, @RequestBody PostDto postDto, HttpServletRequest request) {
+    public void updatePostById(
+            @PathVariable("id") Long postId,
+            @RequestBody PostDto postDto,
+            HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        postService.updatePost(postDto, postId, currentAuthUserId);
+        postService.updatePost(postDto,postId,currentAuthUserId);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deletePostById(@PathVariable("id") Long postId, HttpServletRequest request) {
+    public void deletePostById(@PathVariable("id") Long postId,
+                                                 HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        postService.deletePostById(postId, currentAuthUserId);
+        postService.deletePostById(postId,currentAuthUserId);
     }
 
     @GetMapping
-    public ResponseEntity<PagePostDto> searchPosts(@ModelAttribute PostSearchDto searchDto, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String sort) {
-        return ResponseEntity.ok(postService.searchPosts(searchDto, PageRequest.of(page, size, Sort.by(sort))));
+    public ResponseEntity<PagePostDto> searchPosts(
+            @ModelAttribute PostSearchDto searchDto,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sort") String sort
+    ) {
+        return ResponseEntity.ok(postService.searchPosts(searchDto, PageRequest.of(page,size,Sort.by(sort))));
     }
 
     @PostMapping
-    public ResponseEntity<PostDto> createPost(@RequestParam(value = "publishDate", required = false) Long publishDateEpochMillis, @RequestBody PostDto postDto, HttpServletRequest request
+    public ResponseEntity<PostDto> createPost(
+            @RequestParam(value = "publishDate", required = false) Long publishDateEpochMillis,
+            @RequestBody PostDto postDto,
+            HttpServletRequest request
 
     ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        return ResponseEntity.status(HttpStatus.CREATED).body(postService.createNewPost(postDto, publishDateEpochMillis, currentAuthUserId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(postService.createNewPost(postDto, publishDateEpochMillis,currentAuthUserId));
     }
 
     @PostMapping("/storagePostPhoto")
-    public ResponseEntity<PhotoDto> uploadPhotoToStorage(@RequestParam(value = "file") MultipartFile file) {
+    public ResponseEntity<PhotoDto> uploadPhotoToStorage(
+            @RequestParam(value = "file") MultipartFile file
+    ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.uploadImage(file));
     }
 }

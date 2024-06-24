@@ -19,7 +19,7 @@ spring:
     drop-first: false
 
 server:
-  port: 8081
+  port: 0
 
 security:
   jwt:
