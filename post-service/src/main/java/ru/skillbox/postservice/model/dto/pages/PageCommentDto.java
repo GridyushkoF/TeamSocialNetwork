@@ -1,5 +1,6 @@
 package ru.skillbox.postservice.model.dto.pages;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

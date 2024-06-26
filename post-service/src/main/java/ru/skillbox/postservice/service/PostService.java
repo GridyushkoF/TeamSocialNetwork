@@ -88,23 +88,30 @@ public class PostService {
     }
 
     @Transactional
-    public PostDto createNewPost(PostDto postDto, Long publishDateMillis, Long authUserId) {
+    public void createNewPost(PostDto postDto, Long publishDateMillis, Long authUserId) {
         postDto.setAuthorId(authUserId);
         postDto.setId(null);
         Post post = postMapper.postDtoToPost(postDto);
         post.setPublishDate(LocalDateTime.ofInstant(Instant.ofEpochMilli(publishDateMillis), ZoneId.systemDefault()));
         postRepository.save(post);
         log.info("post created by dto " + postDto);
-        return postMapper.postToPostDto(post);
+        postMapper.postToPostDto(post);
     }
 
     public PhotoDto uploadImage(MultipartFile multipartFile) {
         //demo
         try {
+            File imagesDir = new File("/images/");
+            if (!imagesDir.exists()) {
+                imagesDir.mkdir();
+            }
             String originalFileName = multipartFile.getOriginalFilename();
             assert originalFileName != null;
-            String newFileName = UUID.randomUUID() + originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
-            multipartFile.transferTo(new File("/images/" + newFileName));
+            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+            String newFileName = UUID.randomUUID() + fileExtension;
+            String filePath = imagesDir.getPath() + File.separator + newFileName;
+
+            multipartFile.transferTo(new File(filePath));
             return new PhotoDto(newFileName);
         } catch (Exception e) {
             e.printStackTrace();
