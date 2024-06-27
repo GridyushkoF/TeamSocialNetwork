@@ -26,6 +26,9 @@ public class PostMapperDecorator implements PostMapper {
     public Post postDtoToPost(PostDto postDto) {
         Post post = delegate.postDtoToPost(postDto);
         List<Tag> dbTags = new ArrayList<>();
+        if(postDto.getTags() == null) {
+            postDto.setTags(new ArrayList<>());
+        }
         postDto.getTags().forEach(tagName -> {
             Optional<Tag> tagOptional = tagRepository.findTagByName(tagName);
             dbTags.add(tagOptional.orElseGet(() -> {
@@ -46,6 +49,9 @@ public class PostMapperDecorator implements PostMapper {
         PostDto postDto = delegate.postToPostDto(post);
         if(postDto.getTags() == null) {
             postDto.setTags(new ArrayList<>());
+        }
+        if(post.getTags() == null) {
+            post.setTags(new ArrayList<>());
         }
         postDto.getTags().addAll(post.getTags().stream().map(Tag::getName).collect(Collectors.toSet()));
         return postDto;

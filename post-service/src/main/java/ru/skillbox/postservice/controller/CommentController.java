@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.skillbox.postservice.model.dto.CommentDto;
 import ru.skillbox.postservice.model.dto.pages.PageCommentDto;
 import ru.skillbox.postservice.service.CommentService;
+import ru.skillbox.postservice.util.SortCreator;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,9 +47,13 @@ public class CommentController {
             @PathVariable("id") Long postId,
             @RequestParam("page") int page,
             @RequestParam("size") int size,
-            @RequestParam("sort") String sort) {
-        Sort sortBy = Sort.by(sort);
-        Pageable pageRequest = PageRequest.of(page, size, sortBy);
+            @RequestParam("sorted") boolean sorted,
+            @RequestParam("unsorted") boolean unsorted,
+            @RequestParam("empty") boolean empty
+            )
+    {
+        Sort sort = SortCreator.createSort(empty,sorted,unsorted);
+        Pageable pageRequest = PageRequest.of(page, size, sort);
         return ResponseEntity.ok(commentService.getCommentsOnPost(postId, pageRequest));
     }
 
@@ -65,9 +70,15 @@ public class CommentController {
     public ResponseEntity<PageCommentDto> getSubComments(
             @PathVariable("id") Long postId,
             @PathVariable("commentId") Long commentId,
-            @RequestParam("page") Pageable page
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sorted") boolean sorted,
+            @RequestParam("unsorted") boolean unsorted,
+            @RequestParam("empty") boolean empty
     ) {
-        return ResponseEntity.ok(commentService.getSubComments(postId, commentId, page));
+        Sort sort = SortCreator.createSort(empty,sorted,unsorted);
+        Pageable pageRequest = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(commentService.getSubComments(postId, commentId, pageRequest));
     }
 
 }
