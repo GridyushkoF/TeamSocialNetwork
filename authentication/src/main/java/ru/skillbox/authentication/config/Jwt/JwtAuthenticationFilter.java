@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.skillbox.authentication.service.UserDetailsServiceImpl;
+import ru.skillbox.authentication.service.impl.UserDetailsServiceImpl;
 
 import java.io.IOException;
 @Component

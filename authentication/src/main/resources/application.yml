@@ -1,0 +1,50 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+    database: postgresql
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+#  mail:
+#    host: smtp.mail.ru
+#    port: 587
+#    username: testMail@mail.ru
+#    password: passApplication
+#    properties:
+#      mail:
+#        transport:
+#          protocol: smtp
+#        smtp:
+#          auth: true
+#server:
+#  port: 4455
+
+
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    protocol: smtps
+    username: ru.kirill.service@yandex.ru
+    password: kfixqwdiisdphnuq
+
+
+service:
+  recovery:
+    salt: hdsllLkjhHvKkjhgxgfdGkLGJfyfXFzsSgrT89JCgfDFtfggGyGFgfc
+    uri: http://127.0.0.1:8080/api/v1/auth/password/recovery/{recoveryLink}
+
+
+
+security:
+  jwt:
+    secret: "SomeKey"
+    tokenExpiration: 3m
+    expiration-minutes: 30
+    secret-key: bXkgc2VjcmV0IGtleSBhbmQgdSBhcmUgbm9vYiBoYWNrZXI=

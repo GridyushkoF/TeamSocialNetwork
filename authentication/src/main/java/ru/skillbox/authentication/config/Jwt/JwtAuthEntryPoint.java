@@ -20,6 +20,7 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+
     @Override
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,

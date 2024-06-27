@@ -1,7 +1,5 @@
 package ru.skillbox.authentication.config.Jwt;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,36 +14,57 @@ import java.util.Date;
 public class JwtService {
 
     @Value("${security.jwt.secret}")
-    private String secretKey;
+    private String secret;
 
     @Value("${security.jwt.tokenExpiration}")
     private Duration tokenExpiration;
 
-    private final Algorithm algorithm;
 
-    public JwtService(Algorithm algorithm) {
-        this.algorithm = algorithm;
-    }
-
-
+    //    public String generateToken(UserDetails userDetails){
+//
+//        Date issuedAt = new Date(System.currentTimeMillis());
+//        Date expiration = new Date(issuedAt.getTime() + (30 * 60 * 1000));
+//
+//        return Jwts.builder()
+////                .claims(extraClaims)
+//                .subject(userDetails.getUsername())
+//                .issuedAt(issuedAt)
+//                .expiration(expiration)
+//                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+//                .compact();
+//    }
+//
+//
+//    private Key generateKey(){
+//        byte[] secreateAsBytes = Decoders.BASE64.decode(SECRET_KEY);
+//        return Keys.hmacShaKeyFor(secreateAsBytes);
+//    }
+//
+//    public String extractEmail(String jwt) {
+//       return extractAllClaims(jwt).getSubject();
+//    }
+//
+//    public Claims extractAllClaims(String jwt){
+//        return Jwts.parser().verifyWith((SecretKey) generateKey()).build()
+//                .parseSignedClaims(jwt).getPayload();
+//    }
+//
     public String generateJwtToken(AppUserDetails userDetails) {
-        return generateJwtTokenFromUsernameAndId(userDetails.getUsername(), userDetails.getId());
+        return generateJwtTokenFromUsername(userDetails.getUsername());
     }
 
-    public String generateJwtTokenFromUsernameAndId(String username, long id) {
-        return JWT.create()
-                .withSubject(username)
-                .withClaim("id", id)
-                .withIssuedAt(new Date())
-                .withExpiresAt(new Date(new Date().getTime() + tokenExpiration.toMillis()))
-                .sign(algorithm);
+    public String generateJwtTokenFromUsername(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + tokenExpiration.toMillis()))
+                .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
     }
-
-
 
     public String getUserName(String token) {
         return Jwts.parser()
-                .setSigningKey(secretKey.getBytes())
+                .setSigningKey(secret)
                 .parseClaimsJwt(token)
                 .getBody().getSubject();
     }
@@ -53,7 +72,7 @@ public class JwtService {
     public boolean validate(String authToken) {
         try {
             Jwts.parser()
-                    .setSigningKey(secretKey)
+                    .setSigningKey(secret)
                     .parseClaimsJwt(authToken);
             return true;
         } catch (SignatureException e) {
@@ -69,5 +88,4 @@ public class JwtService {
         }
         return false;
     }
-
 }

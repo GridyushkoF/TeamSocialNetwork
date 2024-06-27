@@ -9,4 +9,6 @@ import lombok.Data;
 public class AuthenticationRequest {
     private String email;
     private String password;
+    private String token;
+    private String code;
 }
