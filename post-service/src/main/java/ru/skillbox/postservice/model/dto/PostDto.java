@@ -1,5 +1,6 @@
 package ru.skillbox.postservice.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PostDto {
+public class PostDto implements Cloneable {
     private Long id;
     private LocalDateTime time;
     private LocalDateTime timeChanged;
@@ -28,4 +29,8 @@ public class PostDto {
     private boolean myLike;
     private String imagePath;
     private LocalDateTime publishDate;
+    @Override
+    public PostDto clone() throws CloneNotSupportedException {
+        return (PostDto) super.clone();
+    }
 }

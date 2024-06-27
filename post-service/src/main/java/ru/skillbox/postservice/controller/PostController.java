@@ -13,6 +13,7 @@ import ru.skillbox.postservice.model.dto.PostDto;
 import ru.skillbox.postservice.model.dto.PostSearchDto;
 import ru.skillbox.postservice.model.dto.pages.PagePostDto;
 import ru.skillbox.postservice.service.PostService;
+import ru.skillbox.postservice.util.SortCreator;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,27 +49,33 @@ public class PostController {
             @ModelAttribute PostSearchDto searchDto,
             @RequestParam("page") int page,
             @RequestParam("size") int size,
-            @RequestParam("sort") String sort
+            @RequestParam("sorted") boolean sorted,
+            @RequestParam("unsorted") boolean unsorted,
+            @RequestParam("empty") boolean isEmpty
     ) {
-        return ResponseEntity.ok(postService.searchPosts(searchDto, PageRequest.of(page,size,Sort.by(sort))));
+        Sort sort = SortCreator.createSort(isEmpty,sorted,unsorted);
+        return ResponseEntity.ok(
+                postService.searchPosts(searchDto, PageRequest.of(page, size, sort)));
     }
 
     @PostMapping
-    public ResponseEntity<PostDto> createPost(
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createPost(
             @RequestParam(value = "publishDate", required = false) Long publishDateEpochMillis,
             @RequestBody PostDto postDto,
             HttpServletRequest request
 
     ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        return ResponseEntity.status(HttpStatus.CREATED).body(postService.createNewPost(postDto, publishDateEpochMillis,currentAuthUserId));
+        postService.createNewPost(postDto, publishDateEpochMillis,currentAuthUserId);
     }
 
     @PostMapping("/storagePostPhoto")
     public ResponseEntity<PhotoDto> uploadPhotoToStorage(
             @RequestParam(value = "file") MultipartFile file
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(postService.uploadImage(file));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(postService.uploadImage(file));
     }
 }
 
