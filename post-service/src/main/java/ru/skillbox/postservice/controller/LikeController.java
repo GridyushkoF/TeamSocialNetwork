@@ -1,42 +1,55 @@
 package ru.skillbox.postservice.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.skillbox.postservice.service.LikeService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${app.apiPrefix}/post")
 public class LikeController {
+    private final LikeService likeService;
     @PostMapping("/{id}/like")
-    public ResponseEntity<Object> likePost(
-            @PathVariable("id") Long postId
+    @ResponseStatus(HttpStatus.CREATED)
+    public void likePost(
+            @PathVariable("id") Long postId,
+            HttpServletRequest request
     ) {
-        //LikeService.likePost(postId)
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+        likeService.likePost(postId,currentAuthUserId);
     }
+
     @DeleteMapping("/{id}/like")
-    public ResponseEntity<Object> unLikePost(
-            @PathVariable("id") Long postId
+    @ResponseStatus(HttpStatus.OK)
+    public void unLikePost(
+            @PathVariable("id") Long postId,
+            HttpServletRequest request
     ) {
-        //LikeService.unLikePost(postId)
-        return ResponseEntity.ok(null);
+        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+        likeService.unlikePost(postId,currentAuthUserId);
     }
+
     @PostMapping("/{id}/comment/{commentId}/like")
-    public ResponseEntity<Object> likeComment(
+    @ResponseStatus(HttpStatus.CREATED)
+    public void likeComment(
             @PathVariable("id") Long postId,
-            @PathVariable("commentId") Long commentId
+            @PathVariable("commentId") Long commentId,
+            HttpServletRequest request
     ) {
-        //LikeService.likeComment(postId,commentId)
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+        likeService.likeComment(postId,commentId,currentAuthUserId);
     }
+
     @DeleteMapping("/{id}/comment/{commentId}/like")
-    public ResponseEntity<Object> unLikeComment(
+    @ResponseStatus(HttpStatus.OK)
+    public void unLikeComment(
             @PathVariable("id") Long postId,
-            @PathVariable("commentId") Long commentId
+            @PathVariable("commentId") Long commentId,
+            HttpServletRequest request
     ) {
-        //LikeService.unlikeComment(postId,commentId)
-        return ResponseEntity.ok(null);
+        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+        likeService.unlikeComment(postId,commentId,currentAuthUserId);
     }
 }

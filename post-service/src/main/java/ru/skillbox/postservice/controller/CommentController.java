@@ -1,56 +1,73 @@
 package ru.skillbox.postservice.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.postservice.dto.CommentDto;
-import ru.skillbox.postservice.dto.pages.PageCommentDto;
-import ru.skillbox.postservice.dto.pages.Pageable;
+import ru.skillbox.postservice.model.dto.CommentDto;
+import ru.skillbox.postservice.model.dto.pages.PageCommentDto;
+import ru.skillbox.postservice.service.CommentService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${app.apiPrefix}/post")
 public class CommentController {
+    private final CommentService commentService;
+
     @PutMapping("/{id}/comment/{commentId}")
-    public ResponseEntity<Object> updateComment(
+    @ResponseStatus(HttpStatus.CREATED)
+    public void updateComment(
             @PathVariable("id") Long postId,
             @PathVariable Long commentId,
-            @RequestBody CommentDto commentDto
+            @RequestBody CommentDto commentDto,
+            HttpServletRequest request
     ) {
-        //CommentsService.updateComment(postId,commentId,commentDto)
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+        commentService.updateComment(postId, commentId, commentDto,currentAuthUserId);
     }
 
     @DeleteMapping("/{id}/comment/{commentId}")
-    public ResponseEntity<Object> deleteComment(
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteComment(
             @PathVariable("id") Long postId,
-            @PathVariable Long commentId
+            @PathVariable Long commentId,
+            HttpServletRequest request
     ) {
-        //CommentsService.delete(postId,commentId)
-        return ResponseEntity.ok(null);
+        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+        commentService.deleteComment(postId, commentId,currentAuthUserId);
     }
 
     @GetMapping("/{id}/comment")
     public ResponseEntity<PageCommentDto> getCommentsOnPost(
             @PathVariable("id") Long postId,
-            @RequestParam Pageable page) {
-        //CommentsService.getCommentsOnPost(postId,page)
-        return ResponseEntity.ok(new PageCommentDto());
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sort") String sort) {
+        Sort sortBy = Sort.by(sort);
+        Pageable pageRequest = PageRequest.of(page, size, sortBy);
+        return ResponseEntity.ok(commentService.getCommentsOnPost(postId, pageRequest));
     }
+
     @PostMapping("/{id}/comment")
-    public ResponseEntity<Object> createComment(@PathVariable("id") Long postId) {
-        //CommentsService.createComment(postId)
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createComment(@PathVariable("id") Long postId,
+                                                @RequestBody CommentDto commentDto,
+                                                HttpServletRequest request) {
+        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+        commentService.createNewComment(postId, commentDto,currentAuthUserId);
     }
+
     @GetMapping("/{id}/comment/{commentId}/subcomment")
-    public ResponseEntity<PageCommentDto> getSubComment(
+    public ResponseEntity<PageCommentDto> getSubComments(
             @PathVariable("id") Long postId,
             @PathVariable("commentId") Long commentId,
             @RequestParam("page") Pageable page
     ) {
-        //CommentsService.getSubComment(postId,commentId,page)
-        return ResponseEntity.ok(new PageCommentDto());
+        return ResponseEntity.ok(commentService.getSubComments(postId, commentId, page));
     }
 
 }
