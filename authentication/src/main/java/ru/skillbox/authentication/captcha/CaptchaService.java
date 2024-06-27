@@ -6,7 +6,6 @@ import lombok.Getter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -20,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Getter
 public class CaptchaService {
     private final Cage cage = new GCage();
-    private ConcurrentHashMap<String , Captcha> hashMap;
+    private ConcurrentHashMap<String , Captcha> hashMap = new ConcurrentHashMap<>();
 
     public String generateCaptcha(){
 
@@ -55,7 +54,7 @@ public class CaptchaService {
         long expereshionTime = TimeUnit.MINUTES.toMillis(5);
         long currentTime = System.currentTimeMillis();
         hashMap.entrySet().removeIf(entry ->
-                currentTime - entry.getValue().getTimeStemp() > expereshionTime);
+                currentTime - entry.getValue().getTimestamp() > expereshionTime);
     }
 
 }

@@ -12,6 +12,6 @@ import lombok.Setter;
 public class Captcha {
 
     private String text;
-    private long timeStemp;
+    private long timestamp;
 
 }
