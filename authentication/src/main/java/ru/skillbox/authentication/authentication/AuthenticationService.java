@@ -3,7 +3,6 @@ package ru.skillbox.authentication.authentication;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -89,7 +88,8 @@ public class AuthenticationService  {
 
     public void register(RegUserDto userDto) {
         User user = User.builder()
-                .username(userDto.getFirstName())
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
                 .email(userDto.getEmail())
                 .roles(Set.of(RoleType.USER))
                 .password(passwordEncoder.encode(userDto.getPassword1()))

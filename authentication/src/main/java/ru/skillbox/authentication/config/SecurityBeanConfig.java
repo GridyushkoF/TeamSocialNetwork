@@ -42,6 +42,15 @@ public class SecurityBeanConfig {
 
 
     @Bean
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoderImpl());
+
+        return provider;
+    }
+
+    @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration) throws Exception {
 
@@ -49,14 +58,6 @@ public class SecurityBeanConfig {
         //providerManager implements AuthenticationManager
     }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
-
-        return provider;
-    }
 
     @Bean
     public CryptoTool getCryptoTool() {
@@ -64,7 +65,7 @@ public class SecurityBeanConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoderImpl(){
         return new BCryptPasswordEncoder();
     }
 
