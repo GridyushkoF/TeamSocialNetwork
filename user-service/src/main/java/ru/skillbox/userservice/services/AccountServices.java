@@ -41,18 +41,15 @@ public class AccountServices {
         if (userEmail == null) {
             throw new NotAuthException("No auth user found!");
         }
-        // logic with DB
+        userRepository.deleteUserByEmail(userEmail);
         return userEmail;
     }
 
     public String blockAccount(boolean block, long id) {
-        if (block) {
-            // logic with DB
-            return "blocked";
-        } else {
-            // logic with DB
-            return "unblocked";
-        }
+        User currentUser = userRepository.findById(id).orElseThrow(() -> new NoSuchAccountException("Not found such user!"));
+        currentUser.setBlocked(block);
+        userRepository.save(currentUser);
+        return block ? "blocked" : "unblocked";
     }
 
     public List<AccountDto> getAllAccounts(Pageable page) {
@@ -76,8 +73,7 @@ public class AccountServices {
 
     public AccountDto getAccountById(Long id) {
         Optional<User> user = userRepository.findById(id);
-        AccountDto account = AccountDto.of(user.orElseThrow(() -> new NoSuchAccountException("Can't find Account with id: " + id)));
-        return account;
+        return AccountDto.of(user.orElseThrow(() -> new NoSuchAccountException("Can't find Account with id: " + id)));
     }
 
     public List<AccountDto> searchAccount(AccountSearchDto accountSearchDto, Pageable pageable) {
@@ -86,12 +82,12 @@ public class AccountServices {
     }
 
     public List<Long> getAllIds() {
-        // logic with DB
-        return List.of();
+        return userRepository.findAll().stream().map(User::getId).toList();
     }
 
     public List<AccountDto> getAccountIds(Long[] ids, Pageable page) {
-        // logic with DB
-        return List.of();
+        // TODO: когда в репозитории добавим пагинацию - нужно изменить вызов и передавать page
+        List<User> users = userRepository.findAllByIdIn(List.of(ids));
+        return users.stream().map(AccountDto::of).toList();
     }
 }
