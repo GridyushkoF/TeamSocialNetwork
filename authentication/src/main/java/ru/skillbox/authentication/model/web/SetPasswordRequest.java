@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.dto;
+package ru.skillbox.authentication.model.web;
 
 import lombok.Data;
 

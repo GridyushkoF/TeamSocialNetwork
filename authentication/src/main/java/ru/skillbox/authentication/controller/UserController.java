@@ -4,13 +4,13 @@ package ru.skillbox.authentication.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.authentication.authentication.AuthenticationResponse;
+import ru.skillbox.authentication.model.web.AuthenticationResponse;
 import ru.skillbox.authentication.captcha.CaptchaService;
-import ru.skillbox.authentication.dto.RegUserDto;
+import ru.skillbox.authentication.model.dto.RegUserDto;
 import ru.skillbox.authentication.exception.CaptchaValidatedExcepction;
 import ru.skillbox.authentication.repository.UserRepository;
-import ru.skillbox.authentication.authentication.AuthenticationRequest;
-import ru.skillbox.authentication.authentication.AuthenticationService;
+import ru.skillbox.authentication.model.web.AuthenticationRequest;
+import ru.skillbox.authentication.service.AuthenticationService;
 import ru.skillbox.authentication.exception.AlreadyExistsException;
 
 @RestController

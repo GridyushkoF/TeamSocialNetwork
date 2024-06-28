@@ -2,21 +2,16 @@ spring:
   application:
     name: authentication
   datasource:
-    url: jdbc:postgresql://localhost:5432/auth_user_db
+    url: jdbc:postgresql://localhost:5432/user_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
 
   mandatory-file-encoding: UTF-8
-
-  liquibase:
-    change-log: classpath://db/changelog/db.changelog-master.xml
-    enabled: true
-    drop-first: false
 
   mail:
     host: smtp.yandex.ru
@@ -48,7 +43,7 @@ service:
 
 security:
   jwt:
-    secret: "SomeKey"
+    secret: B9vPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY
     tokenExpiration: 12h
     expiration-minutes: 30
     secret-key: bXkgc2VjcmV0IGtleSBhbmQgdSBhcmUgbm9vYiBoYWNrZXI=

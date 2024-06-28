@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.entity;
+package ru.skillbox.authentication.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

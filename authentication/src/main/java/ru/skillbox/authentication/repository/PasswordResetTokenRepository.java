@@ -2,7 +2,7 @@ package ru.skillbox.authentication.repository;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.skillbox.authentication.entity.PasswordResetToken;
+import ru.skillbox.authentication.model.entity.PasswordResetToken;
 
 import java.util.Optional;
 

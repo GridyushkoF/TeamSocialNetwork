@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.config.Jwt;
+package ru.skillbox.authentication.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

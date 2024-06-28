@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.authentication;
+package ru.skillbox.authentication.service;
 
 
 
@@ -11,15 +11,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.skillbox.authentication.captcha.CaptchaService;
-import ru.skillbox.authentication.dto.RegUserDto;
-import ru.skillbox.authentication.entity.RoleType;
-import ru.skillbox.authentication.entity.User;
+import ru.skillbox.authentication.model.web.AuthenticationRequest;
+import ru.skillbox.authentication.model.web.AuthenticationResponse;
+import ru.skillbox.authentication.model.dto.RegUserDto;
+import ru.skillbox.authentication.model.entity.RoleType;
+import ru.skillbox.authentication.model.entity.User;
 import ru.skillbox.authentication.repository.UserRepository;
-import ru.skillbox.authentication.config.Jwt.JwtService;
-import ru.skillbox.authentication.model.AppUserDetails;
+import ru.skillbox.authentication.security.JwtService;
+import ru.skillbox.authentication.security.AppUserDetails;
 
 import java.util.List;
-import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -91,7 +92,7 @@ public class AuthenticationService  {
                 .firstName(userDto.getFirstName())
                 .lastName(userDto.getLastName())
                 .email(userDto.getEmail())
-                .roles(Set.of(RoleType.USER))
+                .role(RoleType.USER)
                 .password(passwordEncoder.encode(userDto.getPassword1()))
                 .build();
 

@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.config;
+package ru.skillbox.authentication.security;
 
 
 import lombok.RequiredArgsConstructor;
@@ -12,8 +12,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.skillbox.authentication.config.Jwt.JwtAuthEntryPoint;
-import ru.skillbox.authentication.config.Jwt.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity

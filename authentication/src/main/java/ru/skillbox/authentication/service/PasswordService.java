@@ -1,8 +1,8 @@
 package ru.skillbox.authentication.service;
 
-import ru.skillbox.authentication.dto.RecoveryPasswordRequest;
-import ru.skillbox.authentication.dto.SetPasswordRequest;
-import ru.skillbox.authentication.dto.SimpleResponse;
+import ru.skillbox.authentication.model.dto.RecoveryPasswordRequest;
+import ru.skillbox.authentication.model.web.SetPasswordRequest;
+import ru.skillbox.authentication.model.web.SimpleResponse;
 
 
 public interface PasswordService {
