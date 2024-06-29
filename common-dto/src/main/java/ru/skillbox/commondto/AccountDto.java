@@ -2,7 +2,9 @@ package ru.skillbox.commondto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import ru.skillbox.userservice.model.dto.Role;
 import ru.skillbox.userservice.model.dto.StatusCode;
+import ru.skillbox.userservice.model.entity.User;
 
 import java.time.LocalDateTime;
 
