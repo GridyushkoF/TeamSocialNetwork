@@ -30,17 +30,6 @@ public class PasswordResetController {
     private final PasswordService passwordService;
     private final UserRepository userRepository;
 
-
-
-    /*@PostMapping("/recovery")
-    public void resetPassword(@RequestParam("email") String email){
-        passwordResetService.sendPasswordResetToken(email);
-    }*/
-//    @PostMapping("/recovery")
-//    public void resetPassword(@RequestBody AuthenticationRequest request){
-//        passwordResetService.sendPasswordResetToken(request.getEmail());
-//    }
-
     @PostMapping("/recovery")
     public ResponseEntity<SimpleResponse> resetPassword(
             @RequestBody RecoveryPasswordRequest request) {
@@ -58,7 +47,6 @@ public class PasswordResetController {
             @RequestBody SetPasswordRequest request) {
         return ResponseEntity.ok(passwordService.setNewPassword(recoveryLink, request));
     }
-
 
     @GetMapping("/resetPassword")
     public String displayResetPassword(@RequestParam("token") String token){

@@ -18,11 +18,11 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Getter
 public class CaptchaService {
+
     private final Cage cage = new GCage();
     private ConcurrentHashMap<String , Captcha> hashMap = new ConcurrentHashMap<>();
 
-    public String generateCaptcha(){
-
+    public String generateCaptcha() {
         String text = cage.getTokenGenerator().next();
 
         String tokenCaptch = UUID.randomUUID().toString();

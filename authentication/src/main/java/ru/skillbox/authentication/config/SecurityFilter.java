@@ -11,17 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.skillbox.authentication.config.Jwt.JwtAuthEntryPoint;
-import ru.skillbox.authentication.config.Jwt.JwtAuthenticationFilter;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityFilter {
 
-    private final JwtAuthEntryPoint jwtAuthEntryPoint;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChainImpl(HttpSecurity httpSecurity) throws Exception {
@@ -30,13 +24,13 @@ public class SecurityFilter {
                         auth.requestMatchers("/api/v1/auth/**")
                                 .permitAll()
                                 .anyRequest().authenticated())
-                .exceptionHandling(conf -> conf.authenticationEntryPoint(jwtAuthEntryPoint))
+//                .exceptionHandling(conf -> conf.authenticationEntryPoint(jwtAuthEntryPoint))
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(new DaoAuthenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }

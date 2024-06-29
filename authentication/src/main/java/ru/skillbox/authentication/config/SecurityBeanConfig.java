@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -22,11 +24,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.skillbox.authentication.config.Jwt.JwtAuthEntryPoint;
-import ru.skillbox.authentication.config.Jwt.JwtAuthenticationFilter;
 import ru.skillbox.authentication.service.impl.UserDetailsServiceImpl;
 import ru.skillbox.authentication.utils.CryptoTool;
+
+import java.util.Properties;
 
 @Configuration
 @EnableWebSecurity
@@ -34,8 +35,6 @@ import ru.skillbox.authentication.utils.CryptoTool;
 public class SecurityBeanConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
-    private final JwtAuthEntryPoint jwtAuthEntryPoint;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Value("${service.recovery.salt}")
     private String salt;
@@ -51,11 +50,27 @@ public class SecurityBeanConfig {
     }
 
     @Bean
+    public JavaMailSender getJavaMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+
+        mailSender.setHost("smtp.yandex.ru");
+        mailSender.setPort(465);
+        mailSender.setProtocol("smtps");
+        mailSender.setUsername("ru.kirill.service@yandex.ru");
+        mailSender.setPassword("kfixqwdiisdphnuq");
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
+
+        return mailSender;
+    }
+
+    @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration) throws Exception {
-
         return authenticationConfiguration.getAuthenticationManager();
-        //providerManager implements AuthenticationManager
     }
 
 
@@ -89,32 +104,16 @@ public class SecurityBeanConfig {
                 .authorizeHttpRequests((auth) ->
                         auth.requestMatchers("/api/v1/auth/**")
                                 .permitAll()
-//                                .requestMatchers("/api/v1/app/**")
-//                                .permitAll()
                                 .requestMatchers("/swagger-ui/**")
                                 .permitAll()
                                 .requestMatchers("/v3/api-docs/**")
                                 .permitAll()
                                 .anyRequest().authenticated())
-                .exceptionHandling(conf -> conf.authenticationEntryPoint(jwtAuthEntryPoint))
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(new DaoAuthenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
-
-
-        /*@Bean
-        public UserDetailsService detailsService(){
-            return email -> {
-                    userRepository.findByEmail(email)
-                        .orElseThrow(() -> new RuntimeException("User is not found"));
-            };
-        }
-         */
-
 }

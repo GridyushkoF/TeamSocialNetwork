@@ -65,8 +65,7 @@ public class PasswordServiceImpl implements PasswordService {
         if (id != null) {
         var userOpt = userRepository.findById(id);
             User user = userOpt.get();
-//            TODO пока для теста не кодирую пароль. Позже добавить passwordEncoder;
-            user.setPassword(request.getPassword());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
             userRepository.save(user);
             return new SimpleResponse("Пароль успешно изменён");
         } else {

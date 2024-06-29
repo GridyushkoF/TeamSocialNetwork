@@ -24,7 +24,6 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class AuthenticationService  {
-
     private final AuthenticationManager authenticationManager;
     private final CaptchaService captchaService;
     private final UserRepository userRepository;
@@ -48,31 +47,8 @@ public class AuthenticationService  {
                 .stream().map(GrantedAuthority::getAuthority).toList();
 //        TODO Добавить реализацию рефреш токена. Данный метод должен возвращать два токена
 
-//        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-
         String jwt = jwtService.generateJwtToken(userDetails);
-
         return new AuthenticationResponse(jwt);
-
-//
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//        AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
-//
-//        List<String> roles = userDetails.getAuthorities()
-//                .stream().map(GrantedAuthority::getAuthority).toList();
-//
-//        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-//
-//        return AuthResponse.builder()
-//                .id(userDetails.getId())
-//                .username(userDetails.getUsername())
-//                .refreshToken(refreshToken.getToken())
-//                .roles(roles)
-//                .token(jwtUtils.generateJwtToken(userDetails))
-//                .email(userDetails.getEmail())
-//                .build();
-
     }
 
 //    private Map<String, Object> generateExtrsClaims(User users) {
@@ -98,25 +74,10 @@ public class AuthenticationService  {
         userRepository.save(user);
     }
 
-//    public RefreshTokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
-//        String requestRefreshToken = refreshTokenRequest.getRefreshToken();
-//
-//        return refreshTokenService.findByRefreshToken(requestRefreshToken)
-//                .map(refreshTokenService::checkRefreshToken)
-//                .map(RefreshToken::getUserId)
-//                .map(userId -> {
-//                    User tokenOwner = userRepository.findById(userId)
-//                            .orElseThrow(() -> new RefreshTokenException("Ошибка при получении токена по user id"));
-//                    String token = jwtUtils.generateJwtTokenFromUsername(tokenOwner.getUsername());
-//                    return new RefreshTokenResponse(token, refreshTokenService.createRefreshToken(userId).getToken());
-//                }).orElseThrow(() -> new RefreshTokenException(requestRefreshToken, "Токен не найден"));
-//    }
-
     public void logout() {
         var currentPrincipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (currentPrincipal instanceof AppUserDetails userDetails) {
             Long userId = userDetails.getId();
-//            refreshTokenService.deleteByUserId(userId);
         }
     }
 }

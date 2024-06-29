@@ -10,8 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Captcha {
-
     private String text;
     private long timestamp;
-
 }
