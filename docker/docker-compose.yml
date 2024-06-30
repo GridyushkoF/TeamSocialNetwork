@@ -11,3 +11,12 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - ./pg-init-scripts:/docker-entrypoint-initdb.d
+
+  frontend:
+    image: skillboxteam32/front:latest
+    ports:
+      - "8099:80"
+    tty: true
+    restart: always
+    volumes:
+      - ./nginx-config:/etc/nginx/conf.d
