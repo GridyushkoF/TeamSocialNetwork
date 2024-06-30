@@ -41,7 +41,7 @@
 <!--            <column name="email" value="admin@socialnetwork.com"/>-->
 <!--            <column name="first_name" value="firstname"/>-->
 <!--            <column name="last_name" value="lastname"/>-->
-<!--            <column name="password" value="$2a$10$56fEHY86Cg3KZdBG4LIFV.bfv2Mhox0ptayasvG5zQgo15fQde.9G"/>-->
+<!--            <column name="password" value="$2a$10$jKwjnyGxN/oBixbpgyG7rug2QB/k6U7/35JyFPChXv6W5/QUvCa/u"/>-->
 <!--            <column name="role" value="ADMIN"/>-->
 <!--        </insert>-->
 <!--    </changeSet>-->
