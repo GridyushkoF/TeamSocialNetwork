@@ -8,12 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skillbox.postservice.model.dto.PhotoDto;
-import ru.skillbox.postservice.model.dto.PostDto;
-import ru.skillbox.postservice.model.dto.PostSearchDto;
-import ru.skillbox.postservice.model.dto.pages.PagePostDto;
+import ru.skillbox.commondto.post.PhotoDto;
+import ru.skillbox.commondto.post.PostDto;
+import ru.skillbox.commondto.post.PostSearchDto;
+import ru.skillbox.commondto.post.pages.PagePostDto;
 import ru.skillbox.postservice.service.PostService;
-import ru.skillbox.postservice.util.SortCreator;
+import ru.skillbox.postservice.util.SortCreatorUtil;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,7 +53,7 @@ public class PostController {
             @RequestParam("unsorted") boolean unsorted,
             @RequestParam("empty") boolean isEmpty
     ) {
-        Sort sort = SortCreator.createSort(isEmpty,sorted,unsorted);
+        Sort sort = SortCreatorUtil.createSort(isEmpty,sorted,unsorted);
         return ResponseEntity.ok(
                 postService.searchPosts(searchDto, PageRequest.of(page, size, sort)));
     }

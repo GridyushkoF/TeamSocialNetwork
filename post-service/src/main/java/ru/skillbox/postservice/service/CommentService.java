@@ -6,20 +6,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.skillbox.postservice.exception.CommentAccessException;
 import ru.skillbox.postservice.mapper.CommentMapper;
-import ru.skillbox.postservice.model.dto.CommentDto;
-import ru.skillbox.postservice.model.dto.pages.PageCommentDto;
+import ru.skillbox.commondto.post.CommentDto;
+import ru.skillbox.commondto.post.pages.PageCommentDto;
 import ru.skillbox.postservice.model.entity.Comment;
 import ru.skillbox.postservice.model.entity.LikeEntityType;
 import ru.skillbox.postservice.repository.CommentRepository;
 import ru.skillbox.postservice.repository.LikeRepository;
-import ru.skillbox.postservice.repository.PostRepository;
 import ru.skillbox.postservice.util.CommentValidatorUtil;
 import ru.skillbox.postservice.util.PostValidatorUtil;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor

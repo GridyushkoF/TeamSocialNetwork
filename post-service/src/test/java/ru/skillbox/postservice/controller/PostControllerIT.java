@@ -9,9 +9,9 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.skillbox.postservice.TestDependenciesContainer;
-import ru.skillbox.postservice.model.dto.PostDto;
-import ru.skillbox.postservice.model.dto.PostSearchDto;
-import ru.skillbox.postservice.model.dto.PostType;
+import ru.skillbox.commondto.post.PostDto;
+import ru.skillbox.commondto.post.PostSearchDto;
+import ru.skillbox.commondto.post.PostType;
 import ru.skillbox.postservice.model.entity.Post;
 
 import java.util.List;

@@ -84,6 +84,11 @@
 			<artifactId>jackson-datatype-jsr310</artifactId>
 			<version>${jackson-jsr310.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>ru.skillbox</groupId>
+			<artifactId>common-dto</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 
 	</dependencies>
 
