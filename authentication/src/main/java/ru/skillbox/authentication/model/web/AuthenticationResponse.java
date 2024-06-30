@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.authentication;
+package ru.skillbox.authentication.model.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

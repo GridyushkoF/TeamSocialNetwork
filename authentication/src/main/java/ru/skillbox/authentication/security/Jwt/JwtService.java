@@ -1,16 +1,12 @@
-package ru.skillbox.authentication.config.Jwt;
+package ru.skillbox.authentication.security.Jwt;
 
-import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.skillbox.authentication.model.AppUserDetails;
+import ru.skillbox.authentication.security.AppUserDetails;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import java.security.Key;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
@@ -21,16 +17,9 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtService {
 
-    private final Key key;
     private final Algorithm algorithm;
 
-
-//    @Value("${security.jwt.secret}")
-//    private String secret;
-
-//    @Value("${security.jwt.tokenExpiration}")
     private final Duration tokenExpiration = Duration.ofMinutes(30);
-
 
     public String generateJwtToken(AppUserDetails user) {
         return JWT.create()
@@ -41,8 +30,6 @@ public class JwtService {
                 .withClaim("id", user.getId())
                 .sign(algorithm);
     }
-
-
     public String encodedSecret(String secret) {
         return Base64.getEncoder().encodeToString(secret.getBytes());
     }

@@ -1,14 +1,14 @@
-package ru.skillbox.authentication.model;
+package ru.skillbox.authentication.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.skillbox.authentication.entity.User;
+import ru.skillbox.authentication.model.entity.User;
 
 
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.Collections;
 
 @RequiredArgsConstructor
 public class AppUserDetails implements UserDetails {
@@ -25,9 +25,7 @@ public class AppUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream()
-                .map(r -> new SimpleGrantedAuthority(r.name()))
-                .collect(Collectors.toList());
+        return Collections.singleton(new SimpleGrantedAuthority(user.getRole().name()));
     }
 
     @Override

@@ -2,21 +2,18 @@ spring:
   application:
     name: authentication
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5432/auth_user_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
-
-  mandatory-file-encoding: UTF-8
-
-  liquibase:
-    change-log: classpath://db/changelog/db.changelog-master.xml
-    enabled: true
-    drop-first: false
+    defer-datasource-initialization: true
+  sql:
+    init:
+       mode: always
 
   mail:
     host: smtp.yandex.ru
@@ -25,14 +22,8 @@ spring:
     username: ru.kirill.service@yandex.ru
     password: kfixqwdiisdphnuq
 
-
 server:
   port: 0
-
-#security:
-#  jwt:
-#    tokenExpiration: 24h
-#    secret: B9vPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY
 
 eureka:
   client:

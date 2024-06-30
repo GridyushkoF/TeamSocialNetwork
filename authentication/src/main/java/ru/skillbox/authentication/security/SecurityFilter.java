@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.config;
+package ru.skillbox.authentication.security;
 
 
 import lombok.RequiredArgsConstructor;

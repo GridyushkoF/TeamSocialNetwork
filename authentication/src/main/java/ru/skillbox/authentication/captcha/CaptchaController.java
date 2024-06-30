@@ -1,7 +1,6 @@
 package ru.skillbox.authentication.captcha;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CaptchaController {
 
-    private CaptchaService captchaService;
+    private final CaptchaService captchaService;
 
     @GetMapping("/captcha")
     public ResponseEntity<?> getCaptcha() throws IOException {

@@ -40,7 +40,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>com.github.cage</groupId>
 			<artifactId>cage</artifactId>
@@ -69,21 +68,6 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
-
-		<!-- Зависимость для JWT (Java JSON Web Token) -->
-<!--		<dependency>-->
-<!--			<groupId>io.jsonwebtoken</groupId>-->
-<!--			<artifactId>jjwt</artifactId>-->
-<!--			<version>0.9.1</version>-->
-<!--		</dependency>-->
-
-<!--		&lt;!&ndash; Зависимость для JAXB API &ndash;&gt;-->
-<!--		<dependency>-->
-<!--			<groupId>javax.xml.bind</groupId>-->
-<!--			<artifactId>jaxb-api</artifactId>-->
-<!--			<version>2.3.1</version>-->
-<!--		</dependency>-->
-
 		<dependency>
 			<groupId>org.hashids</groupId>
 			<artifactId>hashids</artifactId>

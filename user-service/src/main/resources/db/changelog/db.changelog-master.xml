@@ -34,18 +34,28 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="createUserRoleTable" author="Sergei Ragaev">
-        <createTable tableName="roles">
-            <column name="id" type="BIGSERIAL">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="user_id" type="BIGINT">
-                <constraints nullable="false" />
-            </column>
-            <column name="role" type="varchar (255)">
-                <constraints nullable="false" />
-            </column>
-        </createTable>
-    </changeSet>
+<!--    <changeSet id="insertAdminIntoUserTable" author="Sergei Ragaev">-->
+<!--        <insert tableName="users">-->
+<!--            <column name="id" value="1" />-->
+<!--            <column name="reg_date" value="2024-06-30 12:06:47.297523"/>-->
+<!--            <column name="email" value="admin@socialnetwork.com"/>-->
+<!--            <column name="first_name" value="firstname"/>-->
+<!--            <column name="last_name" value="lastname"/>-->
+<!--            <column name="password" value="$2a$10$56fEHY86Cg3KZdBG4LIFV.bfv2Mhox0ptayasvG5zQgo15fQde.9G"/>-->
+<!--            <column name="role" value="ADMIN"/>-->
+<!--        </insert>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="dropSequenceUserTable" author="Sergei Ragaev">-->
+<!--        <dropSequence-->
+<!--                sequenceName="users_id_seq"/>-->
+<!--    </changeSet>-->
+<!--    <changeSet id="createSequenceUserTable" author="Sergei Ragaev">-->
+<!--        <createSequence-->
+<!--                sequenceName="users_id_seq"-->
+<!--                startValue="2"/>-->
+<!--    </changeSet>-->
+
+
 
 </databaseChangeLog>
