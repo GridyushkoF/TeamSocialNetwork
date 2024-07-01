@@ -14,7 +14,7 @@ import ru.skillbox.authentication.model.entity.User;
 import ru.skillbox.authentication.exception.IncorrectRecoveryLinkException;
 import ru.skillbox.authentication.repository.UserRepository;
 import ru.skillbox.authentication.service.PasswordService;
-import ru.skillbox.authentication.utils.CryptoTool;
+import ru.skillbox.authentication.service.utils.CryptoTool;
 
 @Service
 @Slf4j

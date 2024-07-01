@@ -1,12 +1,13 @@
-package ru.skillbox.authentication.security.Jwt;
+package ru.skillbox.authentication.service.security.Jwt;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.skillbox.authentication.security.AppUserDetails;
+import ru.skillbox.authentication.service.security.AppUserDetails;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;

@@ -1,10 +1,11 @@
-package ru.skillbox.authentication.captcha;
+package ru.skillbox.authentication.controller.captcha;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.skillbox.authentication.service.CaptchaService;
 
 
 import java.io.IOException;

@@ -1,10 +1,11 @@
-package ru.skillbox.authentication.captcha;
+package ru.skillbox.authentication.service;
 
 import com.github.cage.Cage;
 import com.github.cage.GCage;
 import lombok.Getter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import ru.skillbox.authentication.controller.captcha.Captcha;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -20,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class CaptchaService {
 
     private final Cage cage = new GCage();
-    private ConcurrentHashMap<String , Captcha> hashMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String , Captcha> hashMap = new ConcurrentHashMap<>();
 
     public String generateCaptcha() {
         String text = cage.getTokenGenerator().next();
@@ -51,10 +52,10 @@ public class CaptchaService {
 
     @Scheduled(fixedRate = 60 * 1000)
     public void CleanUpCaptcha(){
-        long expereshionTime = TimeUnit.MINUTES.toMillis(5);
+        long expirationTime = TimeUnit.MINUTES.toMillis(5);
         long currentTime = System.currentTimeMillis();
         hashMap.entrySet().removeIf(entry ->
-                currentTime - entry.getValue().getTimestamp() > expereshionTime);
+                currentTime - entry.getValue().getTimestamp() > expirationTime);
     }
 
 }

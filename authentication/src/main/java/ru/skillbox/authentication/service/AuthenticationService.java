@@ -16,8 +16,8 @@ import ru.skillbox.authentication.model.dto.RegUserDto;
 import ru.skillbox.authentication.model.entity.Role;
 import ru.skillbox.authentication.model.entity.User;
 import ru.skillbox.authentication.repository.UserRepository;
-import ru.skillbox.authentication.security.Jwt.JwtService;
-import ru.skillbox.authentication.security.AppUserDetails;
+import ru.skillbox.authentication.service.security.Jwt.JwtService;
+import ru.skillbox.authentication.service.security.AppUserDetails;
 
 import java.util.List;
 

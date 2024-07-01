@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.security;
+package ru.skillbox.authentication.service.security;
 
 
 import io.swagger.v3.oas.models.Components;
@@ -25,7 +25,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.skillbox.authentication.service.impl.UserDetailsServiceImpl;
-import ru.skillbox.authentication.utils.CryptoTool;
+import ru.skillbox.authentication.service.utils.CryptoTool;
 
 import java.util.Properties;
 

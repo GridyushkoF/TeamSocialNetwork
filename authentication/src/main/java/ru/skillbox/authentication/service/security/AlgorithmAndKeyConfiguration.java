@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.security;
+package ru.skillbox.authentication.service.security;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import io.jsonwebtoken.security.Keys;

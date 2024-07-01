@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.skillbox.authentication.model.entity.User;
 import ru.skillbox.authentication.repository.UserRepository;
-import ru.skillbox.authentication.security.AppUserDetails;
+import ru.skillbox.authentication.service.security.AppUserDetails;
 
 @RequiredArgsConstructor
 @Service

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.authentication.model.web.AuthenticationResponse;
-import ru.skillbox.authentication.captcha.CaptchaService;
+import ru.skillbox.authentication.service.CaptchaService;
 import ru.skillbox.authentication.model.dto.RegUserDto;
 import ru.skillbox.authentication.exception.CaptchaValidatedExcepction;
 import ru.skillbox.authentication.repository.UserRepository;
