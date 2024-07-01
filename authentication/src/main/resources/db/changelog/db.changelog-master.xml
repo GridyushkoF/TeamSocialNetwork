@@ -13,39 +13,37 @@
             <column name="email" type="varchar (255)"/>
             <column name="first_name" type="varchar (255)"/>
             <column name="last_name" type="varchar (255)"/>
+            <column name="reg_date" type="TIMESTAMP  WITHOUT TIME ZONE"/>
             <column name="role" type="varchar (255)"/>
             <column name="password" type="varchar (255)"/>
         </createTable>
     </changeSet>
-
-    <changeSet id="createUserRolesTable" author="Sergei Ragaev">
-        <createTable tableName="user_roles">
-            <column name="user_id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="user_roles_pkey"/>
-            </column>
-            <column name="roles" type="VARCHAR(255)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="user_roles_pkey"/>
-            </column>
-        </createTable>
+    <changeSet id="insertAdminIntoUserTable" author="Sergei Ragaev">
+        <insert tableName="users">
+            <column name="id" value="1" />
+            <column name="reg_date" value="2024-06-30 12:06:47.297523"/>
+            <column name="email" value="admin@socialnetwork.com"/>
+            <column name="first_name" value="firstname"/>
+            <column name="last_name" value="lastname"/>
+            <column name="password" value="$2a$10$jKwjnyGxN/oBixbpgyG7rug2QB/k6U7/35JyFPChXv6W5/QUvCa/u"/>
+            <column name="role" value="ADMIN"/>
+        </insert>
     </changeSet>
-
-    <changeSet id="createPasswordResetTokensTable" author="Sergei Ragaev">
+    <changeSet id="updateSequenceOfUserTable" author="Sergei Ragaev" >
+        <sql dbms="postgresql" endDelimiter=";">ALTER SEQUENCE users_id_seq restart with 2;
+        </sql>
+    </changeSet>
+    <changeSet id="createPasswordResetTokenTable" author="Sergei Ragaev" >
         <createTable tableName="password_reset_tokens">
+            <column name="expiry_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
             <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="expiry_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
             <column name="user_id" type="BIGINT"/>
             <column name="token" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-
-    <changeSet id="createFKForPasswordResetTokensTable" author="Sergei Ragaev">
+    <changeSet id="createFKForPasswordResetTokenTable" author="Sergei Ragaev" >
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="password_reset_tokens" constraintName="fk_user_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" validate="true"/>
     </changeSet>
-    <changeSet id="createFKForUserRolesTable" author="Sergei Ragaev">
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_roles" constraintName="fk_user_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" validate="true"/>
-    </changeSet>
-
-
 </databaseChangeLog>

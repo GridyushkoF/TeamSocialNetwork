@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.captcha;
+package ru.skillbox.authentication.controller.captcha;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,8 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Captcha {
-
     private String text;
     private long timestamp;
-
 }

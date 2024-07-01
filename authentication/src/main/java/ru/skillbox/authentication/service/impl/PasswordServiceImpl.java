@@ -7,14 +7,14 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.skillbox.authentication.dto.RecoveryPasswordRequest;
-import ru.skillbox.authentication.dto.SetPasswordRequest;
-import ru.skillbox.authentication.dto.SimpleResponse;
-import ru.skillbox.authentication.entity.User;
+import ru.skillbox.authentication.model.dto.RecoveryPasswordRequest;
+import ru.skillbox.authentication.model.dto.SetPasswordRequest;
+import ru.skillbox.authentication.model.dto.SimpleResponse;
+import ru.skillbox.authentication.model.entity.User;
 import ru.skillbox.authentication.exception.IncorrectRecoveryLinkException;
 import ru.skillbox.authentication.repository.UserRepository;
 import ru.skillbox.authentication.service.PasswordService;
-import ru.skillbox.authentication.utils.CryptoTool;
+import ru.skillbox.authentication.service.utils.CryptoTool;
 
 @Service
 @Slf4j
@@ -65,8 +65,7 @@ public class PasswordServiceImpl implements PasswordService {
         if (id != null) {
         var userOpt = userRepository.findById(id);
             User user = userOpt.get();
-//            TODO пока для теста не кодирую пароль. Позже добавить passwordEncoder;
-            user.setPassword(request.getPassword());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
             userRepository.save(user);
             return new SimpleResponse("Пароль успешно изменён");
         } else {

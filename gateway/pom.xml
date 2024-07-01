@@ -12,7 +12,7 @@
 	<artifactId>gateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>gateway</name>
-	<description>Educational Spring Cloud Gateway Server</description>
+	<description>Spring Cloud Gateway Server</description>
 
 	<dependencies>
 		<dependency>

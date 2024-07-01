@@ -12,7 +12,7 @@
 	<artifactId>discovery</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>discovery</name>
-	<description>Educational project for Spring Cloud</description>
+	<description>Spring Cloud discovery</description>
 
 	<dependencies>
 		<dependency>

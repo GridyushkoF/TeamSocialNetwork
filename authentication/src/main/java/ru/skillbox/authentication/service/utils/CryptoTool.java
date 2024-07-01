@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.utils;
+package ru.skillbox.authentication.service.utils;
 
 import org.hashids.Hashids;
 

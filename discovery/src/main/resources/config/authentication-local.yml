@@ -11,20 +11,20 @@ spring:
       ddl-auto: none
     show-sql: true
 
-  mandatory-file-encoding: UTF-8
-
   liquibase:
     change-log: classpath://db/changelog/db.changelog-master.xml
     enabled: true
     drop-first: false
 
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    protocol: smtps
+    username: ru.kirill.service@yandex.ru
+    password: kfixqwdiisdphnuq
+
 server:
   port: 0
-
-security:
-  jwt:
-    tokenExpiration: 24h
-    secret: B9vPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY
 
 eureka:
   client:
@@ -32,3 +32,15 @@ eureka:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka/}
     enabled: true
 
+service:
+  recovery:
+    salt: hdsllLkjhHvKkjhgxgfdGkLGJfyfXFzsSgrT89JCgfDFtfggGyGFgfc
+    uri: http://127.0.0.1:9090/api/v1/auth/password/recovery/{recoveryLink}
+
+
+security:
+  tokenExpiration: 12h
+  expiration-minutes: 30
+  secret-key: bXkgc2VjcmV0IGtleSBhbmQgdSBhcmUgbm9vYiBoYWNrZXI=
+  jwt:
+    secret: B9vPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY

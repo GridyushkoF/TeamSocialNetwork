@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.authentication;
+package ru.skillbox.authentication.model.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,4 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AuthenticationResponse {
     private String jwt;
-
-
 }

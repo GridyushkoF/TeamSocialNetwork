@@ -69,9 +69,9 @@ public class User {
     private String photoName;
 
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private Role role;
 
-    @CreationTimestamp
     @Column(name = "created_on")
     private LocalDateTime createdOn;
 
