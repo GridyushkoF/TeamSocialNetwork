@@ -11,13 +11,29 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="email" type="varchar (255)"/>
+            <column name="phone" type="varchar (255)"/>
+            <column name="photo" type="varchar (255)"/>
+            <column name="about" type="TEXT"/>
+            <column name="city" type="varchar (255)"/>
+            <column name="country" type="varchar (255)"/>
             <column name="first_name" type="varchar (255)"/>
             <column name="last_name" type="varchar (255)"/>
             <column name="reg_date" type="TIMESTAMP  WITHOUT TIME ZONE"/>
+            <column name="birth_date" type="TIMESTAMP  WITHOUT TIME ZONE"/>
+            <column name="message_permission" type="varchar (255)"/>
+            <column name="last_online_time" type="TIMESTAMP  WITHOUT TIME ZONE"/>
+            <column name="is_online" type="boolean"/>
+            <column name="is_blocked" type="boolean"/>
+            <column name="is_deleted" type="boolean"/>
+            <column name="photo_id" type="varchar (255)"/>
+            <column name="photo_name" type="varchar (255)"/>
             <column name="role" type="varchar (255)"/>
+            <column name="created_on" type="TIMESTAMP  WITHOUT TIME ZONE"/>
+            <column name="updated_on" type="TIMESTAMP  WITHOUT TIME ZONE"/>
             <column name="password" type="varchar (255)"/>
         </createTable>
     </changeSet>
+
     <changeSet id="insertAdminIntoUserTable" author="Sergei Ragaev">
         <insert tableName="users">
             <column name="id" value="1" />
