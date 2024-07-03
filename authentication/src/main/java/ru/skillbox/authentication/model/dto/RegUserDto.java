@@ -30,9 +30,9 @@ public class RegUserDto {
 
     @NotNull(message = "Поле password не может быть пустым")
     @Schema(description = "Code", example = "????")
-    private String code;
+    private String captchaCode;
 
     @NotNull(message = "Поле token не может быть пустым")
     @Schema(description = "Token", example = "????")
-    private String token;
+    private String captchaSecret;
 }

@@ -25,8 +25,8 @@ public class UserController {
 
     @PostMapping("/register")
     public void createUser(@RequestBody RegUserDto userDto) {
-        if (!captchaService.validateCaptcha(userDto.getToken()
-                , userDto.getCode())){
+        if (!captchaService.validateCaptcha(userDto.getCaptchaSecret()
+                , userDto.getCaptchaCode())){
             throw new CaptchaValidatedExcepction("No pass captcha");
         }
 

@@ -27,7 +27,7 @@ public class CaptchaController {
 
         Map<String , String> response = new HashMap<>();
 
-        response.put("token" , token);
+        response.put("secret" , token);
         response.put("image" , "data:image/png;base64," + image);
 
         return ResponseEntity.ok(response);
