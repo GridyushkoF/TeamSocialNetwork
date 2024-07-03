@@ -10,8 +10,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.skillbox.postservice.TestDependenciesContainer;
-import ru.skillbox.postservice.model.dto.CommentDto;
-import ru.skillbox.postservice.model.dto.pages.PageCommentDto;;
+import ru.skillbox.commondto.post.CommentDto;
+import ru.skillbox.commondto.post.pages.PageCommentDto;;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

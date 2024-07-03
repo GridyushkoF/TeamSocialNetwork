@@ -8,10 +8,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.postservice.model.dto.CommentDto;
-import ru.skillbox.postservice.model.dto.pages.PageCommentDto;
+import ru.skillbox.commondto.post.CommentDto;
+import ru.skillbox.commondto.post.pages.PageCommentDto;
 import ru.skillbox.postservice.service.CommentService;
-import ru.skillbox.postservice.util.SortCreator;
+import ru.skillbox.postservice.util.SortCreatorUtil;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,7 +52,7 @@ public class CommentController {
             @RequestParam("empty") boolean empty
             )
     {
-        Sort sort = SortCreator.createSort(empty,sorted,unsorted);
+        Sort sort = SortCreatorUtil.createSort(empty,sorted,unsorted);
         Pageable pageRequest = PageRequest.of(page, size, sort);
         return ResponseEntity.ok(commentService.getCommentsOnPost(postId, pageRequest));
     }
@@ -76,7 +76,7 @@ public class CommentController {
             @RequestParam("unsorted") boolean unsorted,
             @RequestParam("empty") boolean empty
     ) {
-        Sort sort = SortCreator.createSort(empty,sorted,unsorted);
+        Sort sort = SortCreatorUtil.createSort(empty,sorted,unsorted);
         Pageable pageRequest = PageRequest.of(page, size, sort);
         return ResponseEntity.ok(commentService.getSubComments(postId, commentId, pageRequest));
     }

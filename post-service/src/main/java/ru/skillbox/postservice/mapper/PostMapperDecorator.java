@@ -3,7 +3,7 @@ package ru.skillbox.postservice.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import ru.skillbox.postservice.model.dto.PostDto;
+import ru.skillbox.commondto.post.PostDto;
 import ru.skillbox.postservice.model.entity.Post;
 import ru.skillbox.postservice.model.entity.Tag;
 import ru.skillbox.postservice.repository.TagRepository;

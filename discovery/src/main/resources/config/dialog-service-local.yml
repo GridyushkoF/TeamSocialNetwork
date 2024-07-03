@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: dialog-service
+app:
+  apiPrefix: /api/v1

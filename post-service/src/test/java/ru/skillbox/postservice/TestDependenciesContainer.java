@@ -8,22 +8,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import ru.skillbox.postservice.mapper.CommentMapper;
 import ru.skillbox.postservice.mapper.PostMapper;
-import ru.skillbox.postservice.model.dto.CommentDto;
-import ru.skillbox.postservice.model.dto.CommentType;
-import ru.skillbox.postservice.model.dto.PostDto;
-import ru.skillbox.postservice.model.dto.PostType;
+import ru.skillbox.commondto.post.CommentDto;
+import ru.skillbox.commondto.post.CommentType;
+import ru.skillbox.commondto.post.PostDto;
+import ru.skillbox.commondto.post.PostType;
 import ru.skillbox.postservice.model.entity.Comment;
 import ru.skillbox.postservice.model.entity.Post;
 import ru.skillbox.postservice.repository.CommentRepository;
 import ru.skillbox.postservice.repository.LikeRepository;
 import ru.skillbox.postservice.repository.PostRepository;
 import ru.skillbox.postservice.repository.TagRepository;
-import ru.skillbox.postservice.service.PostService;
 
 import java.util.List;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 public class TestDependenciesContainer {
