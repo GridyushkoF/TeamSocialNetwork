@@ -117,5 +117,4 @@
             <column name="like_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-
 </databaseChangeLog>

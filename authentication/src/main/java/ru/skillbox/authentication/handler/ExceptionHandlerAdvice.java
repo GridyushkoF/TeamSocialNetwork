@@ -35,14 +35,4 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity<ErrorResponseBody> captchaValidatedExcepction(CaptchaValidatedExcepction ex) {
         return new ResponseEntity<>(new ErrorResponseBody(ex.getMessage()), HttpStatus.valueOf(500));
     }
-
-//    private ResponseEntity<ErrorResponseBody> buildResponse(HttpStatus httpStatus,
-//                                                            Exception ex,
-//                                                            WebRequest webRequest) {
-//        return ResponseEntity.status(httpStatus)
-//                .body(ErrorResponseBody.builder()
-//                        .message(ex.getMessage())
-//                        .description(webRequest.getDescription(false))
-//                        .build());
-//    }
 }

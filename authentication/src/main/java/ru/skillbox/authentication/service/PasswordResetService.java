@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.skillbox.authentication.entity.PasswordResetToken;
-import ru.skillbox.authentication.entity.User;
+import ru.skillbox.authentication.model.entity.PasswordResetToken;
+import ru.skillbox.authentication.model.entity.User;
 import ru.skillbox.authentication.repository.PasswordResetTokenRepository;
 import ru.skillbox.authentication.repository.UserRepository;
 
@@ -17,11 +17,7 @@ import java.util.UUID;
 public class PasswordResetService {
 
     private final PasswordResetTokenRepository passwordResetTokenRepository;
-
     private final UserRepository userRepository;
-
-//    private final JavaMailSender mailSender;
-
     private final PasswordEncoder passwordEncode;
 
 

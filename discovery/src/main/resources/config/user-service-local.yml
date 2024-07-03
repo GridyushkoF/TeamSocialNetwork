@@ -18,14 +18,15 @@ spring:
     enabled: true
     drop-first: false
 
-custom:
-  rest:
-    basePath: /api/v1
 eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka/}
     enabled: true
+
+custom:
+  rest:
+    basePath: /api/v1
 
 server:
   port: 0

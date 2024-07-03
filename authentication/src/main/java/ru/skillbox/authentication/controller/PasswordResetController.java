@@ -3,17 +3,13 @@ package ru.skillbox.authentication.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.authentication.dto.RecoveryPasswordRequest;
-import ru.skillbox.authentication.dto.SetPasswordRequest;
-import ru.skillbox.authentication.dto.SimpleResponse;
-import ru.skillbox.authentication.entity.User;
-import ru.skillbox.authentication.exception.AlreadyExistsException;
+import ru.skillbox.authentication.model.dto.RecoveryPasswordRequest;
+import ru.skillbox.authentication.model.dto.SetPasswordRequest;
+import ru.skillbox.authentication.model.dto.SimpleResponse;
+import ru.skillbox.authentication.model.entity.User;
 import ru.skillbox.authentication.exception.EntityNotFoundException;
-import ru.skillbox.authentication.exception.IncorrectRecoveryLinkException;
-import ru.skillbox.authentication.handler.ErrorResponseBody;
 import ru.skillbox.authentication.repository.PasswordResetTokenRepository;
 import ru.skillbox.authentication.repository.UserRepository;
 import ru.skillbox.authentication.service.PasswordService;
@@ -29,17 +25,6 @@ public class PasswordResetController {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PasswordService passwordService;
     private final UserRepository userRepository;
-
-
-
-    /*@PostMapping("/recovery")
-    public void resetPassword(@RequestParam("email") String email){
-        passwordResetService.sendPasswordResetToken(email);
-    }*/
-//    @PostMapping("/recovery")
-//    public void resetPassword(@RequestBody AuthenticationRequest request){
-//        passwordResetService.sendPasswordResetToken(request.getEmail());
-//    }
 
     @PostMapping("/recovery")
     public ResponseEntity<SimpleResponse> resetPassword(
@@ -58,7 +43,6 @@ public class PasswordResetController {
             @RequestBody SetPasswordRequest request) {
         return ResponseEntity.ok(passwordService.setNewPassword(recoveryLink, request));
     }
-
 
     @GetMapping("/resetPassword")
     public String displayResetPassword(@RequestParam("token") String token){
