@@ -1,5 +1,6 @@
 package ru.skillbox.userservice.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -34,8 +35,8 @@ public class AccountController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<AccountDto> getUserAccount(Principal principal) {
-        return ResponseEntity.ok(accountServices.getUserAccount(principal.getName()));
+    public ResponseEntity<AccountDto> getUserAccount(HttpServletRequest request) {
+        return ResponseEntity.ok(accountServices.getAccountById(Long.parseLong(request.getHeader("id"))));
     }
 
     @PutMapping("/me")

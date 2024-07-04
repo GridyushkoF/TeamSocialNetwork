@@ -20,7 +20,7 @@ public class CaptchaController {
     private final CaptchaService captchaService;
 
     @GetMapping("/captcha")
-    public ResponseEntity<?> getCaptcha() throws IOException {
+    public ResponseEntity<Map<String , String>> getCaptcha() throws IOException {
         String token = captchaService.generateCaptcha();
         String text = captchaService.getHashMap().get(token).getText();
         String image = captchaService.generateCaptchaImage(text);

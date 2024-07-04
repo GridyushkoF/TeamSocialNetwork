@@ -39,8 +39,23 @@ service:
 
 
 security:
-  tokenExpiration: 12h
-  expiration-minutes: 30
-  secret-key: bXkgc2VjcmV0IGtleSBhbmQgdSBhcmUgbm9vYiBoYWNrZXI=
   jwt:
+    tokenExpiration: 1h
     secret: B9vPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+    metrics:
+      enabled: true
