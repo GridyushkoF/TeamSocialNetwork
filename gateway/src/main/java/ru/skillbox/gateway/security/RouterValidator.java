@@ -11,7 +11,9 @@ public class RouterValidator {
     public static final List<Pattern> openEndpoints = List.of(
             Pattern.compile("/api/v1/auth/register"),
             Pattern.compile("/api/v1/auth/login"),
-            Pattern.compile("/api/v1/auth/captcha")
+            Pattern.compile("/api/v1/auth/captcha"),
+            Pattern.compile("/api/v1/auth/v3/api-docs/*"),
+            Pattern.compile("/api/v1/auth/v3/api-docs.*")
     );
 
     public static final Predicate<ServerHttpRequest> isSecured =

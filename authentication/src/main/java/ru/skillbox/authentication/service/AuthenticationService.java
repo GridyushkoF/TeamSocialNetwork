@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -19,8 +18,6 @@ import ru.skillbox.authentication.repository.UserRepository;
 import ru.skillbox.authentication.service.security.Jwt.JwtService;
 import ru.skillbox.authentication.service.security.AppUserDetails;
 
-import java.util.List;
-
 @Component
 @RequiredArgsConstructor
 public class AuthenticationService  {
@@ -32,7 +29,6 @@ public class AuthenticationService  {
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest){
 
-
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
                         authenticationRequest.getEmail(),
@@ -42,12 +38,13 @@ public class AuthenticationService  {
 
         AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
 
-        List<String> roles = userDetails.getAuthorities()
-                .stream().map(GrantedAuthority::getAuthority).toList();
-//        TODO Добавить реализацию рефреш токена. Данный метод должен возвращать два токена
-
         String jwt = jwtService.generateJwtToken(userDetails);
-        return new AuthenticationResponse(jwt);
+
+        return AuthenticationResponse.builder()
+                .accessToken(jwt)
+                .refreshToken(jwt)
+                .build();
+
     }
 
     public void register(RegUserDto userDto) {
@@ -57,6 +54,9 @@ public class AuthenticationService  {
                 .email(userDto.getEmail())
                 .role(Role.USER)
                 .password(passwordEncoder.encode(userDto.getPassword1()))
+                .isOnline(false)
+                .isBlocked(false)
+                .isDeleted(false)
                 .build();
 
         userRepository.save(user);
