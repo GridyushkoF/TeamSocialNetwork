@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -102,13 +103,12 @@ public class SecurityBeanConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .authorizeHttpRequests((auth) ->
-                        auth.requestMatchers("/api/v1/auth/**")
+                        auth.requestMatchers("/api/v1/auth/**").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/v3/api-docs","/swagger-ui.html", "/swagger-ui/**")
                                 .permitAll()
-                                .requestMatchers("/swagger-ui/**")
-                                .permitAll()
-                                .requestMatchers("/v3/api-docs/**")
-                                .permitAll()
-                                .anyRequest().authenticated())
+                                .requestMatchers(HttpMethod.POST, "/login", "/register").permitAll()
+                                .anyRequest().authenticated()
+                                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->

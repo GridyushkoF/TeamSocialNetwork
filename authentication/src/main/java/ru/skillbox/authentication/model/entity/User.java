@@ -37,4 +37,13 @@ public class User implements Serializable {
     @Column(name = "reg_date")
     private LocalDateTime regDate;
 
+    @Column(name = "is_online")
+    private boolean isOnline;
+
+    @Column(name = "is_blocked")
+    private boolean isBlocked;
+
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
+
 }

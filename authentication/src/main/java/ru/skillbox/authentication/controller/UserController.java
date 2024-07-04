@@ -2,6 +2,7 @@ package ru.skillbox.authentication.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.authentication.model.web.AuthenticationResponse;
@@ -14,7 +15,6 @@ import ru.skillbox.authentication.service.AuthenticationService;
 import ru.skillbox.authentication.exception.AlreadyExistsException;
 
 @RestController
-@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -38,8 +38,12 @@ public class UserController {
 
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    public void logout() {
+    }
+
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> loginUser(@RequestBody AuthenticationRequest request){
-        return ResponseEntity.ok(authenticationService.login(request));
+    public ResponseEntity<AuthenticationResponse> loginUser(@RequestBody AuthenticationRequest authenticationRequest){
+        return ResponseEntity.ok(authenticationService.login(authenticationRequest));
     }
 }

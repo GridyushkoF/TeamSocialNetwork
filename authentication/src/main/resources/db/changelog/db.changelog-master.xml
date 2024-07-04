@@ -43,6 +43,9 @@
             <column name="last_name" value="lastname"/>
             <column name="password" value="$2a$10$jKwjnyGxN/oBixbpgyG7rug2QB/k6U7/35JyFPChXv6W5/QUvCa/u"/>
             <column name="role" value="ADMIN"/>
+            <column name="is_blocked" value="false"/>
+            <column name="is_online" value="false"/>
+            <column name="is_deleted" value="false"/>
         </insert>
     </changeSet>
     <changeSet id="updateSequenceOfUserTable" author="Sergei Ragaev" >
