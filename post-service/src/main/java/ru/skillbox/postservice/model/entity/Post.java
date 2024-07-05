@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import ru.skillbox.commondto.post.PostType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,7 +42,7 @@ public class Post {
 
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private PostType type;
 
     @Column(name = "post_text", columnDefinition = "TEXT")
     private String postText;

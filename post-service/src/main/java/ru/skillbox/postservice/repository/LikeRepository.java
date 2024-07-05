@@ -14,4 +14,6 @@ import java.util.List;
 public interface LikeRepository extends JpaRepository<Like, Long> {
     Optional<Like> findByEntityTypeAndEntityIdAndUserId(LikeEntityType likeEntityType, Long entityId, Long userId);
     List<Like> findAllByEntityTypeAndEntityId(LikeEntityType likeEntityType, Long entityId);
+    Long countAllByEntityTypeAndEntityId(LikeEntityType likeEntityType, Long entityId);
+    boolean existsByEntityTypeAndEntityIdAndUserId(LikeEntityType likeEntityType, Long entityId,Long userId);
 }

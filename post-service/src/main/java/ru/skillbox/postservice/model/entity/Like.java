@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.skillbox.commondto.post.LikeReactionType;
 
 @Entity
 @Getter
@@ -27,5 +28,8 @@ public class Like {
     private LikeEntityType entityType;
     @Column(name = "entity_id")
     private Long entityId;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "reaction_type")
+    private LikeReactionType reactionType;
 
 }

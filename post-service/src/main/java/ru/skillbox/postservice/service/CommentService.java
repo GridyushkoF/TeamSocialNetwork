@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.skillbox.commondto.post.CommentType;
 import ru.skillbox.postservice.mapper.CommentMapper;
 import ru.skillbox.commondto.post.CommentDto;
 import ru.skillbox.commondto.post.pages.PageCommentDto;
@@ -17,6 +18,7 @@ import ru.skillbox.postservice.util.CommentValidatorUtil;
 import ru.skillbox.postservice.util.PostValidatorUtil;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -29,9 +31,21 @@ public class CommentService {
     private final LikeRepository likeRepository;
     private final CommentMapper commentMapper;
 
-    private PageCommentDto buildPageCommentDto(Page<Comment> pageOfComments) {
+    private PageCommentDto buildPageCommentDto(Page<Comment> pageOfComments, Long userId) {
         List<CommentDto> commentDtoList = pageOfComments.getContent().stream()
-                .map(commentMapper::commentToCommentDto).toList();
+                .map(commentMapper::commentToCommentDto)
+                .peek(commentDto -> {
+                    Long likesAmount = likeRepository.countAllByEntityTypeAndEntityId(LikeEntityType.COMMENT,commentDto.getId());
+                    commentDto.setLikeAmount(likesAmount);
+                    boolean myLike = likeRepository.existsByEntityTypeAndEntityIdAndUserId(
+                            LikeEntityType.COMMENT,
+                            commentDto.getId(),
+                            userId
+                            );
+                    commentDto.setMyLike(myLike);
+                })
+                .toList();
+
         return PageCommentDto.builder()
                 .totalElements(pageOfComments.getTotalElements())
                 .totalPages(pageOfComments.getTotalPages())
@@ -72,14 +86,19 @@ public class CommentService {
     }
 
     @Transactional
-    public PageCommentDto getCommentsOnPost(Long postId, Pageable pageable) {
+    public PageCommentDto getCommentsOnPost(Long postId, Pageable pageable, Long userId) {
         postValidator.throwExceptionIfPostNotValid(postId);
         Page<Comment> commentsOnPost = commentRepository.findAllByPostId(postId, pageable);
-        return buildPageCommentDto(commentsOnPost);
+        return buildPageCommentDto(commentsOnPost,userId);
     }
 
     @Transactional
     public void createNewComment(Long postId, CommentDto commentDto, Long authUserId) {
+        if (Objects.isNull(commentDto.getCommentType())) {
+            commentDto.setCommentType(CommentType.POST);
+        } else if(Objects.nonNull(commentDto.getParentId())) {
+            commentDto.setCommentType(CommentType.COMMENT);
+        }
         postValidator.throwExceptionIfPostNotValid(postId);
         commentDto.setAuthorId(authUserId);
         commentDto.setId(null);
@@ -92,9 +111,10 @@ public class CommentService {
     @Transactional
     public PageCommentDto getSubComments(Long postId,
                                          Long commentId,
-                                         Pageable page) {
+                                         Pageable page,
+                                         Long userId) {
         postValidator.throwExceptionIfPostNotValid(postId);
         Page<Comment> subCommentsPage = commentRepository.findAllByParentId(commentId, page);
-        return buildPageCommentDto(subCommentsPage);
+        return buildPageCommentDto(subCommentsPage, userId);
     }
 }

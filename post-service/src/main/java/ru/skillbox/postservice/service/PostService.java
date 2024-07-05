@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,11 +13,13 @@ import ru.skillbox.commondto.post.PhotoDto;
 import ru.skillbox.commondto.post.PostDto;
 import ru.skillbox.commondto.post.PostSearchDto;
 import ru.skillbox.commondto.post.pages.PagePostDto;
+import ru.skillbox.postservice.mapper.PostMapperDecorator;
 import ru.skillbox.postservice.model.entity.LikeEntityType;
 import ru.skillbox.postservice.model.entity.Post;
 import ru.skillbox.postservice.repository.CommentRepository;
 import ru.skillbox.postservice.repository.LikeRepository;
 import ru.skillbox.postservice.repository.PostRepository;
+import ru.skillbox.postservice.service.specification_api.PostSpecificationService;
 import ru.skillbox.postservice.util.PostValidatorUtil;
 
 import java.io.File;
@@ -35,6 +38,8 @@ public class PostService {
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
     private final PostMapper postMapper;
+    private final PostSpecificationService postSpecificationService;
+    private final PostMapperDecorator postMapperDecorator;
 
     @Transactional
     public PostDto getPostById(Long postId) {
@@ -44,12 +49,24 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost(PostDto postToUpdate, Long postId, Long authUserId) {
-        postToUpdate.setId(postId);
+    public void updatePost(PostDto postToUpdate, Long authUserId) {
         postValidator.throwAccessExceptionIfUserNotAuthor(postToUpdate, authUserId);
-        postValidator.throwExceptionIfPostNotValid(postId);
-        postRepository.save(postMapper.postDtoToPost(postToUpdate));
-        log.info("post with id " + postId + " was updated by postDto: " + postToUpdate);
+        postValidator.throwExceptionIfPostNotValid(postToUpdate.getId());
+        Post existingPost = postRepository.getPostByIdOrThrowException(postToUpdate.getId());
+        existingPost.setTime(postToUpdate.getTime() != null ? postToUpdate.getTime() : existingPost.getTime());
+        existingPost.setTimeChanged(postToUpdate.getTimeChanged() != null ? postToUpdate.getTimeChanged() : existingPost.getTimeChanged());
+        existingPost.setAuthorId(postToUpdate.getAuthorId() != null ? postToUpdate.getAuthorId() : existingPost.getAuthorId());
+        existingPost.setTitle(postToUpdate.getTitle() != null ? postToUpdate.getTitle() : existingPost.getTitle());
+        existingPost.setType(postToUpdate.getType() != null ? postToUpdate.getType() : existingPost.getType());
+        existingPost.setPostText(postToUpdate.getPostText() != null ? postToUpdate.getPostText() : existingPost.getPostText());
+        existingPost.setBlocked(postToUpdate.isBlocked());
+        existingPost.setDelete(postToUpdate.isDelete());
+        existingPost.setTags(postToUpdate.getTags() != null ? postMapperDecorator.convertTagsAndGet(postToUpdate,existingPost).getTags() : existingPost.getTags());
+        existingPost.setMyLike(postToUpdate.isMyLike());
+        existingPost.setImagePath(postToUpdate.getImagePath() != null ? postToUpdate.getImagePath() : existingPost.getImagePath());
+        existingPost.setPublishDate(postToUpdate.getPublishDate() != null ? postToUpdate.getPublishDate() : existingPost.getPublishDate());
+        postRepository.save(existingPost);
+        log.info("post with id " + postToUpdate.getId() + " was updated by postDto: " + postToUpdate);
     }
 
 
@@ -68,10 +85,23 @@ public class PostService {
     }
 
     @Transactional
-    public PagePostDto searchPosts(PostSearchDto postSearchDto, Pageable pageable) {
-        //Without specification api, pageable only
-        Page<Post> postsPage = postRepository.findAll(pageable);
+    public PagePostDto searchPosts(PostSearchDto postSearchDto, Pageable pageable,Long userId) {
+        Specification<Post> postSpecification = postSpecificationService.getSpecificationByDto(postSearchDto);
+        Page<Post> postsPage = postRepository.findAll(postSpecification,pageable);
         List<PostDto> content = postsPage.get().map(postMapper::postToPostDto).toList();
+        content = content.stream()
+                .peek(postDto -> {
+                    boolean myLike = likeRepository.existsByEntityTypeAndEntityIdAndUserId(LikeEntityType.POST,postDto.getId(),userId);
+                    postDto.setMyLike(myLike);
+                    Long likesAmount = likeRepository.countAllByEntityTypeAndEntityId(LikeEntityType.POST,postDto.getId());
+                    postDto.setLikeAmount(likesAmount);
+                    Long commentsCount = commentRepository.countByPostId(postDto.getId());
+                    postDto.setCommentsCount(commentsCount);
+                }).toList();
+        return buildPagePostDto(pageable, postsPage, content);
+    }
+
+    private static PagePostDto buildPagePostDto(Pageable pageable, Page<Post> postsPage, List<PostDto> content) {
         return PagePostDto.builder()
                 .totalElements(postsPage.getTotalElements())
                 .totalPages(postsPage.getTotalPages())

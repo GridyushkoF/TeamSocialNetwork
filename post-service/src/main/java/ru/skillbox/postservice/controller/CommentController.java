@@ -13,6 +13,8 @@ import ru.skillbox.commondto.post.pages.PageCommentDto;
 import ru.skillbox.postservice.service.CommentService;
 import ru.skillbox.postservice.util.SortCreatorUtil;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${app.apiPrefix}/post")
@@ -47,14 +49,13 @@ public class CommentController {
             @PathVariable("id") Long postId,
             @RequestParam("page") int page,
             @RequestParam("size") int size,
-            @RequestParam("sorted") boolean sorted,
-            @RequestParam("unsorted") boolean unsorted,
-            @RequestParam("empty") boolean empty
+            @RequestParam("sort") List<String> sort,
+            HttpServletRequest request
             )
     {
-        Sort sort = SortCreatorUtil.createSort(empty,sorted,unsorted);
-        Pageable pageRequest = PageRequest.of(page, size, sort);
-        return ResponseEntity.ok(commentService.getCommentsOnPost(postId, pageRequest));
+        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+        PageRequest pageRequest = PageRequest.of(page,size,SortCreatorUtil.createSort(sort));
+        return ResponseEntity.ok(commentService.getCommentsOnPost(postId, pageRequest,currentAuthUserId));
     }
 
     @PostMapping("/{id}/comment")
@@ -72,13 +73,12 @@ public class CommentController {
             @PathVariable("commentId") Long commentId,
             @RequestParam("page") int page,
             @RequestParam("size") int size,
-            @RequestParam("sorted") boolean sorted,
-            @RequestParam("unsorted") boolean unsorted,
-            @RequestParam("empty") boolean empty
+            @RequestParam("sort") List<String> sort,
+            HttpServletRequest request
     ) {
-        Sort sort = SortCreatorUtil.createSort(empty,sorted,unsorted);
-        Pageable pageRequest = PageRequest.of(page, size, sort);
-        return ResponseEntity.ok(commentService.getSubComments(postId, commentId, pageRequest));
+        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+        Pageable pageable = PageRequest.of(page, size, SortCreatorUtil.createSort(sort));
+        return ResponseEntity.ok(commentService.getSubComments(postId, commentId, pageable,currentAuthUserId));
     }
 
 }

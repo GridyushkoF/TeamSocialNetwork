@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.skillbox.commondto.post.LikeDto;
 import ru.skillbox.postservice.service.LikeService;
 
 @RestController
@@ -15,10 +16,11 @@ public class LikeController {
     @ResponseStatus(HttpStatus.CREATED)
     public void likePost(
             @PathVariable("id") Long postId,
+            @RequestBody LikeDto likeDto,
             HttpServletRequest request
     ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        likeService.likePost(postId,currentAuthUserId);
+        likeService.likePost(postId,likeDto,currentAuthUserId);
     }
 
     @DeleteMapping("/{id}/like")
