@@ -5,7 +5,7 @@ import com.github.cage.GCage;
 import lombok.Getter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import ru.skillbox.authentication.controller.captcha.Captcha;
+import ru.skillbox.authentication.model.dto.Captcha;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

@@ -26,6 +26,11 @@ public class ExceptionHandlerAdvice {
         return new ResponseEntity<>(new ErrorResponseBody(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = IncorrectPasswordException.class)
+    public ResponseEntity<ErrorResponseBody> incorrectPasswordExceptionHandler(IncorrectPasswordException ex) {
+        return new ResponseEntity<>(new ErrorResponseBody(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(value = EntityNotFoundException.class)
     public ResponseEntity<ErrorResponseBody> entityNotFoundExceptionHandler(EntityNotFoundException ex) {
         return new ResponseEntity<>(new ErrorResponseBody(ex.getMessage()), HttpStatus.NOT_FOUND);

@@ -16,7 +16,6 @@ import ru.skillbox.authentication.exception.AlreadyExistsException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth")
 public class UserController {
 
     private final CaptchaService captchaService;

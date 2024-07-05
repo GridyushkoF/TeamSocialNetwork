@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import ru.skillbox.authentication.exception.IncorrectPasswordException;
 import ru.skillbox.authentication.model.web.AuthenticationRequest;
 import ru.skillbox.authentication.model.web.AuthenticationResponse;
 import ru.skillbox.authentication.model.dto.RegUserDto;
@@ -29,22 +30,25 @@ public class AuthenticationService  {
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest){
 
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(
-                        authenticationRequest.getEmail(),
-                        authenticationRequest.getPassword()));
+        try {
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(
+                            authenticationRequest.getEmail(),
+                            authenticationRequest.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
+            AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
 
-        String jwt = jwtService.generateJwtToken(userDetails);
+            String jwt = jwtService.generateJwtToken(userDetails);
 
-        return AuthenticationResponse.builder()
-                .accessToken(jwt)
-                .refreshToken(jwt)
-                .build();
-
+            return AuthenticationResponse.builder()
+                    .accessToken(jwt)
+                    .refreshToken(jwt)
+                    .build();
+        } catch (RuntimeException e) {
+            throw new IncorrectPasswordException("Для пользователя с e-mail " + authenticationRequest.getEmail() + " указан неверный пароль!");
+        }
     }
 
     public void register(RegUserDto userDto) {
@@ -60,12 +64,5 @@ public class AuthenticationService  {
                 .build();
 
         userRepository.save(user);
-    }
-
-    public void logout() {
-        var currentPrincipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (currentPrincipal instanceof AppUserDetails userDetails) {
-            Long userId = userDetails.getId();
-        }
     }
 }

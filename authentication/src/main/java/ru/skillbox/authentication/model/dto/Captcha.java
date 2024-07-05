@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.controller.captcha;
+package ru.skillbox.authentication.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
