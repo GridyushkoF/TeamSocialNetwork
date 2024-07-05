@@ -13,22 +13,22 @@ public class CommentValidatorUtil {
 
     public void throwExceptionIfCommentNotValid(Long commentId) {
         Comment comment = commentRepository.getByIdOrThrowException(commentId);
-        if (!isCommentDenied(comment)) {
+        if (!isCommentAllowed(comment)) {
             throw new CommentAccessException(comment.getId());
         }
     }
     public void throwExceptionIfCommentNotValidWithAuthor(Long commentId, Long userId) {
         Comment comment = commentRepository.getByIdOrThrowException(commentId);
-        if (!comment.getAuthorId().equals(userId) || !isCommentDenied(comment)) {
+        if (!comment.getAuthorId().equals(userId) || !isCommentAllowed(comment)) {
             throw new CommentAccessException(comment.getId());
         }
     }
 
-    private boolean isCommentDenied(Long commentId) {
-        return isCommentDenied(commentRepository.getByIdOrThrowException(commentId));
+    public boolean isCommentAllowed(Long commentId) {
+        return isCommentAllowed(commentRepository.getByIdOrThrowException(commentId));
     }
 
-    private boolean isCommentDenied(Comment comment) {
+    public boolean isCommentAllowed(Comment comment) {
         return !(comment.isBlocked() || comment.isDelete());
     }
 }
