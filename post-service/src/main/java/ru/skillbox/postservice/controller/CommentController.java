@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,16 +20,15 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
 
-    @PutMapping("/{id}/comment/{commentId}")
+    @PutMapping("/{id}/comment")
     @ResponseStatus(HttpStatus.CREATED)
     public void updateComment(
             @PathVariable("id") Long postId,
-            @PathVariable Long commentId,
             @RequestBody CommentDto commentDto,
             HttpServletRequest request
     ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        commentService.updateComment(postId, commentId, commentDto,currentAuthUserId);
+        commentService.updateComment(postId, commentDto,currentAuthUserId);
     }
 
     @DeleteMapping("/{id}/comment/{commentId}")
@@ -50,12 +48,13 @@ public class CommentController {
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam("sort") List<String> sort,
+            @RequestParam(value = "isDeleted",defaultValue = "false") boolean isDeleted,
             HttpServletRequest request
             )
     {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
         PageRequest pageRequest = PageRequest.of(page,size,SortCreatorUtil.createSort(sort));
-        return ResponseEntity.ok(commentService.getCommentsOnPost(postId, pageRequest,currentAuthUserId));
+        return ResponseEntity.ok(commentService.getCommentsOnPost(postId, pageRequest,currentAuthUserId, isDeleted));
     }
 
     @PostMapping("/{id}/comment")
@@ -74,11 +73,12 @@ public class CommentController {
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam("sort") List<String> sort,
+            @RequestParam(value = "isDeleted", defaultValue = "false") boolean isDeleted,
             HttpServletRequest request
     ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
         Pageable pageable = PageRequest.of(page, size, SortCreatorUtil.createSort(sort));
-        return ResponseEntity.ok(commentService.getSubComments(postId, commentId, pageable,currentAuthUserId));
+        return ResponseEntity.ok(commentService.getSubComments(postId, commentId, pageable,currentAuthUserId,isDeleted));
     }
 
 }

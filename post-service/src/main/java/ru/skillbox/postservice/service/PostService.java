@@ -2,6 +2,7 @@ package ru.skillbox.postservice.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,6 +21,7 @@ import ru.skillbox.postservice.repository.CommentRepository;
 import ru.skillbox.postservice.repository.LikeRepository;
 import ru.skillbox.postservice.repository.PostRepository;
 import ru.skillbox.postservice.service.specification_api.PostSpecificationService;
+import ru.skillbox.postservice.util.ColumnsUtil;
 import ru.skillbox.postservice.util.PostValidatorUtil;
 
 import java.io.File;
@@ -53,18 +55,10 @@ public class PostService {
         postValidator.throwAccessExceptionIfUserNotAuthor(postToUpdate, authUserId);
         postValidator.throwExceptionIfPostNotValid(postToUpdate.getId());
         Post existingPost = postRepository.getPostByIdOrThrowException(postToUpdate.getId());
-        existingPost.setTime(postToUpdate.getTime() != null ? postToUpdate.getTime() : existingPost.getTime());
-        existingPost.setTimeChanged(postToUpdate.getTimeChanged() != null ? postToUpdate.getTimeChanged() : existingPost.getTimeChanged());
-        existingPost.setAuthorId(postToUpdate.getAuthorId() != null ? postToUpdate.getAuthorId() : existingPost.getAuthorId());
-        existingPost.setTitle(postToUpdate.getTitle() != null ? postToUpdate.getTitle() : existingPost.getTitle());
-        existingPost.setType(postToUpdate.getType() != null ? postToUpdate.getType() : existingPost.getType());
-        existingPost.setPostText(postToUpdate.getPostText() != null ? postToUpdate.getPostText() : existingPost.getPostText());
+        BeanUtils.copyProperties(postToUpdate, existingPost, ColumnsUtil.getNullPropertyNames(postToUpdate));
         existingPost.setBlocked(postToUpdate.isBlocked());
         existingPost.setDelete(postToUpdate.isDelete());
         existingPost.setTags(postToUpdate.getTags() != null ? postMapperDecorator.convertTagsAndGet(postToUpdate,existingPost).getTags() : existingPost.getTags());
-        existingPost.setMyLike(postToUpdate.isMyLike());
-        existingPost.setImagePath(postToUpdate.getImagePath() != null ? postToUpdate.getImagePath() : existingPost.getImagePath());
-        existingPost.setPublishDate(postToUpdate.getPublishDate() != null ? postToUpdate.getPublishDate() : existingPost.getPublishDate());
         postRepository.save(existingPost);
         log.info("post with id " + postToUpdate.getId() + " was updated by postDto: " + postToUpdate);
     }
