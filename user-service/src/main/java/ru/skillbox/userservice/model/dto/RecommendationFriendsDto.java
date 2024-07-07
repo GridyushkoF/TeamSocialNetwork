@@ -7,7 +7,9 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class AccountRecoveryRq {
-    String email;
-    String password;
+public class RecommendationFriendsDto {
+    private Long id;
+    private String photo;
+    private String firstName;
+    private String lastName;
 }

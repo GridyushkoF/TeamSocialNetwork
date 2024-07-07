@@ -1,11 +1,15 @@
 package ru.skillbox.userservice.model.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@Accessors(chain = true)
 public class AccountSearchDto {
     List<Long> ids;
     String author;
