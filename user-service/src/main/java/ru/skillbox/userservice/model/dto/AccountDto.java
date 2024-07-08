@@ -1,15 +1,17 @@
 package ru.skillbox.userservice.model.dto;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import ru.skillbox.userservice.model.entity.User;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 
 @Data
 @Accessors(chain = true)
+@Builder
 public class AccountDto {
-    long id;
+    Long id;
     String email;
     String phone;
     String photo;
@@ -32,32 +34,6 @@ public class AccountDto {
     Role role;
     LocalDateTime createdOn;
     LocalDateTime updatedOn;
+    @Length(min = 8, message = "Минимальная длина пароля 8 символов!")
     String password;
-
-    public static AccountDto of(User user) {
-        return new AccountDto()
-                .setId(user.getId())
-                .setEmail(user.getEmail())
-                .setPhone(user.getPhone())
-                .setAbout(user.getAbout())
-                .setCity(user.getCity())
-                .setCountry(user.getCountry())
-                .setStatusCode(StatusCode.NONE)
-                .setFirstName(user.getFirstName())
-                .setLastName(user.getLastName())
-                .setRegDate(user.getRegDate())
-                .setBirthDate(user.getBirthDate())
-                .setMessagePermission(user.getMessagePermission())
-                .setLastOnlineTime(user.getLastOnlineTime())
-                .setOnline(user.isOnline())
-                .setBlocked(user.isBlocked())
-                .setDeleted(user.isDeleted())
-                .setPhotoId(user.getPhotoId())
-                .setPhotoName(user.getPhotoName())
-                //.setRole(user.getRoles()) ??
-                .setCreatedOn(user.getCreatedOn())
-                .setUpdatedOn(user.getUpdatedOn())
-                .setPassword(user.getPassword());
-
-    }
 }
