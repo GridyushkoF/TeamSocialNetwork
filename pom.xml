@@ -12,6 +12,8 @@
     <groupId>ru.skillbox</groupId>
     <artifactId>socialnetwork</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <description>Spring Cloud Service</description>
+    <name>social-network</name>
     <packaging>pom</packaging>
 
     <properties>

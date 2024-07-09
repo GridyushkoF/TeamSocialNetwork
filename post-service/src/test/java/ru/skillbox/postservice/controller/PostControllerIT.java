@@ -135,7 +135,7 @@ public class PostControllerIT extends TestDependenciesContainer {
                         .postText("This is a test post to update")
                         .authorId(1L)
                         .type(PostType.POSTED)
-                        .tags(List.of("string"))
+//                        .tags(List.of("string"))
                         .build(),1L);
 
     }
@@ -154,7 +154,7 @@ public class PostControllerIT extends TestDependenciesContainer {
                         .postText("This is a test post to delete")
                         .authorId(1L)
                         .type(PostType.POSTED)
-                        .tags(List.of("string"))
+//                        .tags(List.of("string"))
                         .build(),1L);
     }
 

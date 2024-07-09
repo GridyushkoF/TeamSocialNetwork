@@ -2,8 +2,8 @@ package ru.skillbox.userservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.skillbox.commondto.account.StatusCode;
 import ru.skillbox.userservice.exception.NoSuchAccountException;
-import ru.skillbox.userservice.model.dto.StatusCode;
 import ru.skillbox.userservice.model.entity.Friendship;
 import ru.skillbox.userservice.model.entity.FriendshipId;
 import ru.skillbox.userservice.model.entity.User;

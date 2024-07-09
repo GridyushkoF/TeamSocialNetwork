@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.skillbox.userservice.model.dto.StatusCode;
+import ru.skillbox.commondto.account.StatusCode;
 
 @Entity
 @Getter

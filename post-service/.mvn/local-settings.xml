@@ -1,0 +1,11 @@
+<settings>
+    <mirrors>
+        <mirror>
+            <id>repository-unblocker</id>
+            <mirrorOf>repository</mirrorOf>
+            <name>repository</name>
+            <url>http://localhost/repository</url>
+<!--            <url>http://95.174.93.240/repository</url>-->
+        </mirror>
+    </mirrors>
+</settings>

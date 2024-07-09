@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.skillbox.userservice.model.dto.AccountByFilterDto;
-import ru.skillbox.userservice.model.dto.AccountDto;
-import ru.skillbox.userservice.model.dto.AccountRecoveryRq;
+import ru.skillbox.commondto.account.AccountByFilterDto;
+import ru.skillbox.commondto.account.AccountDto;
+import ru.skillbox.commondto.account.AccountRecoveryRq;
 import ru.skillbox.userservice.service.AccountService;
 
 import java.util.List;

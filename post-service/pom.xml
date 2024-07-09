@@ -92,6 +92,14 @@
 
 	</dependencies>
 
+	<repositories>
+		<repository>
+			<id>repository</id>
+<!--			<url>http://localhost/repository</url>-->
+			<url>http://95.174.93.240/repository</url>
+		</repository>
+	</repositories>
+
 	<build>
 		<plugins>
 			<plugin>
