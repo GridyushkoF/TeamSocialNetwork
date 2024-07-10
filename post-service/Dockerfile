@@ -10,7 +10,7 @@ COPY ./$DIRECTORY/.mvn/ .mvn/
 
 WORKDIR /build/$DIRECTORY
 RUN --mount=type=bind,source=$DIRECTORY/pom.xml,target=pom.xml \
-    --mount=type=cache,target=/root/.m2 ./mvnw dependency:go-offline -DskipTests
+    --mount=type=cache,target=/root/.m2 ./mvnw dependency:purge-local-repository -DskipTests
 
 FROM deps as package
 
