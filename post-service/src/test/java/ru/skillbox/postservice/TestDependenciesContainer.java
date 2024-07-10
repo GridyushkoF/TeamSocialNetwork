@@ -64,7 +64,7 @@ public class TestDependenciesContainer {
                 .postText("This is a test post")
                 .authorId(1L)
                 .type(PostType.POSTED)
-                .tags(List.of("string"))
+//                .tags(List.of("string"))
                 .build();
     }
     protected CommentDto generateTestCommentDto(Long postId) {

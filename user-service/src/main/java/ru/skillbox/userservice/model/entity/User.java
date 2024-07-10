@@ -6,18 +6,19 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import ru.skillbox.userservice.model.dto.AccountDto;
-import ru.skillbox.userservice.model.dto.Role;
+import ru.skillbox.commondto.account.Role;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
 @Table(name = "users")
 @Accessors(chain = true)
 @ToString(exclude = "friends")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,29 +93,4 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "account_id_to",
                     referencedColumnName = "id"))
     private Set<User> friends;
-
-    public static User of(AccountDto accountDto) {
-        return new User()
-                .setEmail(accountDto.getEmail())
-                .setPhone(accountDto.getPhone())
-                .setAbout(accountDto.getAbout())
-                .setCity(accountDto.getCity())
-                .setCountry(accountDto.getCountry())
-                .setFirstName(accountDto.getFirstName())
-                .setLastName(accountDto.getLastName())
-                .setRegDate(accountDto.getRegDate())
-                .setBirthDate(accountDto.getBirthDate())
-                .setMessagePermission(accountDto.getMessagePermission())
-                .setLastOnlineTime(accountDto.getLastOnlineTime())
-                .setOnline(accountDto.isOnline())
-                .setBlocked(accountDto.isBlocked())
-                .setDeleted(accountDto.isDeleted())
-                .setPhotoId(accountDto.getPhotoId())
-                .setPhotoName(accountDto.getPhotoName())
-                .setRole(accountDto.getRole())
-                .setCreatedOn(accountDto.getCreatedOn())
-                .setUpdatedOn(accountDto.getUpdatedOn())
-                .setPassword(accountDto.getPassword());
-
-    }
 }

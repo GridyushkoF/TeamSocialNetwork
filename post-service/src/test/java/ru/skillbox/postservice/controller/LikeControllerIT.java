@@ -133,6 +133,6 @@ public class LikeControllerIT extends TestDependenciesContainer {
 
     //-------------UTIL-METHODS--------------------
     public void saveTestLikeInDb(LikeEntityType likeEntityType, Long entityId, Long userId) {
-        likeRepository.save(new Like(null, userId, likeEntityType, entityId));
+        likeRepository.save(new Like(null, userId, likeEntityType, entityId, null));
     }
 }

@@ -117,4 +117,14 @@
             <column name="like_id" type="BIGINT"/>
         </createTable>
     </changeSet>
+    <changeSet id="createReactionsEnumInLikes" author="Gridyushko Fedor">
+        <addColumn tableName="likes">
+            <column name="reaction_type" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="removeMyLikeFromBd" author="Gridyushko Fedor">
+        <dropColumn tableName="posts">
+            <column name="my_like"/>
+        </dropColumn>
+    </changeSet>
 </databaseChangeLog>

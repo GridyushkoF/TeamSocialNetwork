@@ -11,9 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skillbox.commondto.post.PhotoDto;
 import ru.skillbox.commondto.post.PostDto;
 import ru.skillbox.commondto.post.PostSearchDto;
+import ru.skillbox.commondto.post.PostType;
 import ru.skillbox.commondto.post.pages.PagePostDto;
 import ru.skillbox.postservice.service.PostService;
 import ru.skillbox.postservice.util.SortCreatorUtil;
+
+import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,14 +30,13 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostById(postId));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void updatePostById(
-            @PathVariable("id") Long postId,
             @RequestBody PostDto postDto,
             HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        postService.updatePost(postDto,postId,currentAuthUserId);
+        postService.updatePost(postDto,currentAuthUserId);
     }
 
     @DeleteMapping("/{id}")
@@ -47,15 +50,17 @@ public class PostController {
     @GetMapping
     public ResponseEntity<PagePostDto> searchPosts(
             @ModelAttribute PostSearchDto searchDto,
-            @RequestParam("page") int page,
-            @RequestParam("size") int size,
-            @RequestParam("sorted") boolean sorted,
-            @RequestParam("unsorted") boolean unsorted,
-            @RequestParam("empty") boolean isEmpty
+            @RequestParam(value = "page",defaultValue = "0") int page,
+            @RequestParam(value = "size",defaultValue = "5") int size,
+            @RequestParam(value = "sort") List<String> sort,
+            HttpServletRequest request
     ) {
-        Sort sort = SortCreatorUtil.createSort(isEmpty,sorted,unsorted);
+        if(page == -1) {
+            page = 0;
+        }
+        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
         return ResponseEntity.ok(
-                postService.searchPosts(searchDto, PageRequest.of(page, size, sort)));
+                postService.searchPosts(searchDto, PageRequest.of(page,size,SortCreatorUtil.createSort(sort)),currentAuthUserId));
     }
 
     @PostMapping
@@ -66,6 +71,12 @@ public class PostController {
             HttpServletRequest request
 
     ) {
+        if(Objects.isNull(publishDateEpochMillis)) {
+            publishDateEpochMillis = System.currentTimeMillis();
+            postDto.setType(PostType.POSTED);
+        } else {
+            postDto.setType(PostType.QUEUED);
+        }
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
         postService.createNewPost(postDto, publishDateEpochMillis,currentAuthUserId);
     }

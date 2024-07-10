@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.skillbox.commondto.post.LikeDto;
 import ru.skillbox.postservice.exception.LikeException;
 import ru.skillbox.postservice.model.entity.Comment;
 import ru.skillbox.postservice.model.entity.Like;
@@ -37,11 +38,11 @@ public class LikeService {
         return likeRepository.findByEntityTypeAndEntityIdAndUserId(LikeEntityType.COMMENT,commentId,userId);
     }
     @Transactional
-    public void likePost(Long postId, Long userId) {
+    public void likePost(Long postId, LikeDto likeDto, Long userId) {
         Optional<Like> likeOptional = getLikeIfPostValid(postId, userId);
         if (likeOptional.isEmpty()) {
             Post post = postRepository.getPostByIdOrThrowException(postId);
-            Like like = new Like(null, userId, LikeEntityType.POST, postId);
+            Like like = new Like(null, userId, LikeEntityType.POST, postId,likeDto.getReactionType());
             likeRepository.save(like);
             post.getLikes().add(like);
             postRepository.save(post);
@@ -68,7 +69,7 @@ public class LikeService {
         Optional<Like> likeOptional = getLikeOnCommentIfValid(postId,commentId, userId);
         if(likeOptional.isEmpty()) {
             Comment comment = commentRepository.getByIdOrThrowException(commentId);
-            Like like = new Like(null,userId,LikeEntityType.COMMENT,commentId);
+            Like like = new Like(null,userId,LikeEntityType.COMMENT,commentId,null);
             likeRepository.save(like);
             comment.getLikes().add(like);
             commentRepository.save(comment);

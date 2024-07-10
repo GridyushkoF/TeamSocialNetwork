@@ -11,9 +11,9 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    Page<Comment> findAllByPostId(Long postId, Pageable pageable);
+    Page<Comment> findAllByPostIdAndParentId(Long postId,Long parentId, Pageable pageable);
     List<Comment> findAllByPostId(Long postId);
-    int countByPostId(Long postId);
+    Long countByPostId(Long postId);
     Page<Comment> findAllByParentId(Long parentId, Pageable pageable);
     default Comment getByIdOrThrowException (Long id) {
         return findById(id).orElseThrow(() -> new CommentNotFoundException(id));
