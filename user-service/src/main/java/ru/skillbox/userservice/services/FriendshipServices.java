@@ -113,8 +113,4 @@ public class FriendshipServices {
                 .collect(Collectors.toList());
     }
 
-    public void deleteFriend(Long currentAuthUserId, Long accountId) {
-        setFriendship(currentAuthUserId, accountId, StatusCode.NONE);
-        setFriendship(accountId, currentAuthUserId, StatusCode.NONE);
-    }
 }
