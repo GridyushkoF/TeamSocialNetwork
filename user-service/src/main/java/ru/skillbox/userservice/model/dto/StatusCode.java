@@ -9,6 +9,6 @@ public enum StatusCode {
     SUBSCRIBED,
     NONE,
     WATCHING,
-    REJECTING,
-    APPROVED
+    REJECTING
+
 }
