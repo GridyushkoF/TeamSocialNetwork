@@ -5,6 +5,7 @@ services:
       dockerfile: ./discovery/Dockerfile
       args:
       - DIRECTORY=discovery
+      no_cache: true
     image: discovery:0.0.1-SNAPSHOT
     ports:
       - "8761:8761"
@@ -16,6 +17,7 @@ services:
       dockerfile: ./authentication/Dockerfile
       args:
         - DIRECTORY=authentication
+      no_cache: true
     image: authentication:0.0.1-SNAPSHOT
 #    ports:
 #      - "8083:8083"
@@ -36,6 +38,7 @@ services:
       dockerfile: ./post-service/Dockerfile
       args:
         - DIRECTORY=post-service
+      no_cache: true
     image: post-service:0.0.1-SNAPSHOT
 #    ports:
 #      - "8080:8080"
@@ -55,6 +58,7 @@ services:
       dockerfile: ./user-service/Dockerfile
       args:
         - DIRECTORY=user-service
+      no_cache: true
     image: user-service:0.0.1-SNAPSHOT
 #    ports:
 #      - "8081:8081"
@@ -74,6 +78,7 @@ services:
       dockerfile: ./gateway/Dockerfile
       args:
         - DIRECTORY=gateway
+      no_cache: true
     image: gateway:0.0.1-SNAPSHOT
     ports:
       - "9090:9090"
@@ -85,3 +90,28 @@ services:
       - authentication
       - user-service
       - post-service
+
+  frontend:
+    build:
+      context: ../frontend/
+    image: skillgroup35/frontend
+    ports:
+      - "8099:8080"
+    tty: true
+    restart: always
+    volumes:
+      - ./nginx-config:/etc/nginx/conf.d
+    depends_on:
+      - gateway
+
+  repository:
+    build:
+      context: ./repository/
+    image: nginx
+    ports:
+      - "80:80"
+    tty: true
+    restart: always
+    volumes:
+      - ./repository/nginx-config-repo:/etc/nginx/conf.d
+      - .:/usr/share/nginx/html
