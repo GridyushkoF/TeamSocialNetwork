@@ -95,6 +95,9 @@
 	<repositories>
 		<repository>
 			<id>repository</id>
+			<releases>
+				<updatePolicy>always</updatePolicy>
+			</releases>
 <!--			<url>http://localhost/repository</url>-->
 			<url>http://95.174.93.240/repository</url>
 		</repository>

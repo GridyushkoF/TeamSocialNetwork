@@ -50,6 +50,9 @@
     <distributionManagement>
         <repository>
             <id>repository</id>
+            <releases>
+                <updatePolicy>always</updatePolicy>
+            </releases>
 <!--            <url>http://localhost/repository</url>-->
             <url>http://95.174.93.20/repository</url>
         </repository>
