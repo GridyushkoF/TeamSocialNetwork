@@ -25,6 +25,7 @@ services:
       - DATABASE_URL=jdbc:postgresql://psql:5432/user_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
+      - FRONT_HOST=http://95.174.93.240
     restart: always
     depends_on:
       - discovery

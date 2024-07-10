@@ -16,7 +16,7 @@ services:
       context: ../frontend/
     image: skillgroup35/frontend
     ports:
-      - "8099:8099"
+      - "8099:8080"
     tty: true
     restart: always
     volumes:
