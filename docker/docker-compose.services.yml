@@ -103,15 +103,3 @@ services:
       - ./nginx-config:/etc/nginx/conf.d
     depends_on:
       - gateway
-
-  repository:
-    build:
-      context: ./repository/
-    image: nginx
-    ports:
-      - "80:80"
-    tty: true
-    restart: always
-    volumes:
-      - ./repository/nginx-config-repo:/etc/nginx/conf.d
-      - .:/usr/share/nginx/html
