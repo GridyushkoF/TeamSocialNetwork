@@ -75,5 +75,4 @@ public class Post {
             inverseJoinColumns = @JoinColumn(name = "like_id")
     )
     private Set<Like> likes;
-    private boolean myLike;
 }
