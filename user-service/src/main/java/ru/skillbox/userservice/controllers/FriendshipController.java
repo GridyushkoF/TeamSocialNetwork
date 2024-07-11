@@ -4,14 +4,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.userservice.services.FriendshipServices;
+import ru.skillbox.userservice.services.FriendshipService;
 
 @RestController
 @RequestMapping("/friends")
 @RequiredArgsConstructor
 public class FriendshipController {
 
-    private final FriendshipServices friendshipServices;
+    private final FriendshipService friendshipServices;
 
     @PostMapping("/{id}/request")
     @ResponseStatus(HttpStatus.OK)

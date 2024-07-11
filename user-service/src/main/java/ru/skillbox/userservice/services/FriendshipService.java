@@ -1,5 +1,6 @@
 package ru.skillbox.userservice.services;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,11 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class FriendshipServices {
+@AllArgsConstructor
+public class FriendshipService {
 
-    @Autowired
-    public FriendshipServices(FriendshipRepository friendshipRepository, UserRepository userRepository) {
+     @Autowired
+    public FriendshipService(FriendshipRepository friendshipRepository, UserRepository userRepository) {
         this.friendshipRepository = friendshipRepository;
         this.userRepository = userRepository;
     }
@@ -83,18 +85,12 @@ public class FriendshipServices {
         Set<User> currentFriends = currentUser.getFriends();
 
         List<User> allUsers = userRepository.findAll();
-        List<User> recommendations = new ArrayList<>();
 
-        for (User user : allUsers) {
-            if (user.getId() != currentAuthUserId && !currentFriends.contains(user)) {
-                Set<User> userFriends = user.getFriends();
-                if (!Collections.disjoint(currentFriends, userFriends)) {
-                    recommendations.add(user);
-                }
-            }
-        }
-
-        return recommendations;
+        return allUsers.stream()
+                .filter(user -> user.getId() != currentAuthUserId)
+                .filter(user -> !currentFriends.contains(user))
+                .filter(user -> !Collections.disjoint(currentFriends, user.getFriends()))
+                .toList();
     }
 
     public List<User> getFriends(Long currentAuthUserId) {
@@ -110,7 +106,7 @@ public class FriendshipServices {
         List<Friendship> blockedFriendships = friendshipRepository.findByStatusCodeAndAccountIdFrom(StatusCode.BLOCKED, currentAuthUserId);
         return blockedFriendships.stream()
                 .map(friendship -> friendship.getId().getAccountIdTo())
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }
