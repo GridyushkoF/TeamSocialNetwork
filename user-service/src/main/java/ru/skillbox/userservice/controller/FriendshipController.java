@@ -1,17 +1,17 @@
-package ru.skillbox.userservice.controllers;
+package ru.skillbox.userservice.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.userservice.services.FriendshipServices;
+import ru.skillbox.userservice.service.FriendshipService;
 
 @RestController
 @RequestMapping("/friends")
 @RequiredArgsConstructor
 public class FriendshipController {
 
-    private final FriendshipServices friendshipServices;
+    private final FriendshipService friendshipService;
 
     @PostMapping("/{id}/request")
     @ResponseStatus(HttpStatus.OK)
@@ -20,7 +20,7 @@ public class FriendshipController {
             HttpServletRequest request) {
         {
             Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-            friendshipServices.requestFriendship(currentAuthUserId, accountId);
+            friendshipService.requestFriendship(currentAuthUserId, accountId);
         }
     }
 
@@ -31,7 +31,7 @@ public class FriendshipController {
             HttpServletRequest request) {
         {
             Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-            friendshipServices.deleteFriendship(currentAuthUserId, accountId);
+            friendshipService.deleteFriendship(currentAuthUserId, accountId);
         }
     }
 
