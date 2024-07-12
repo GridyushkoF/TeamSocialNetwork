@@ -1,4 +1,4 @@
-package ru.skillbox.userservice.exceptions;
+package ru.skillbox.userservice.exception;
 
 public class AccountAlreadyExistsException extends RuntimeException {
 

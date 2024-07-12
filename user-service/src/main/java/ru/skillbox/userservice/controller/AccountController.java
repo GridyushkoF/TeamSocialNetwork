@@ -1,6 +1,7 @@
 package ru.skillbox.userservice.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -14,83 +15,82 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.skillbox.userservice.model.dto.AccountByFilterDto;
-import ru.skillbox.userservice.model.dto.AccountDto;
-import ru.skillbox.userservice.model.dto.AccountRecoveryRq;
-import ru.skillbox.userservice.model.dto.AccountSearchDto;
-import ru.skillbox.userservice.service.AccountServices;
+import ru.skillbox.commondto.account.AccountByFilterDto;
+import ru.skillbox.commondto.account.AccountDto;
+import ru.skillbox.commondto.account.AccountRecoveryRq;
+import ru.skillbox.userservice.service.AccountService;
 
-import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/account")
 @RequiredArgsConstructor
 public class AccountController {
 
-    private final AccountServices accountServices;
+    private final AccountService accountService;
 
     @PutMapping("/recovery")
-    public ResponseEntity<String> recoveryUserAccount(@RequestBody AccountRecoveryRq recoveryRq) {
-        return ResponseEntity.ok(accountServices.recoveryUserAccount(recoveryRq));
+    public ResponseEntity<String> recoveryUserAccount(@Valid @RequestBody AccountRecoveryRq recoveryRq) {
+        return ResponseEntity.ok(accountService.recoveryUserAccount(recoveryRq));
     }
 
     @GetMapping("/me")
     public ResponseEntity<AccountDto> getUserAccount(HttpServletRequest request) {
-        return ResponseEntity.ok(accountServices.getAccountById(Long.parseLong(request.getHeader("id"))));
+        return ResponseEntity.ok(accountService.getAccountById(Long.parseLong(request.getHeader("id"))));
     }
 
     @PutMapping("/me")
-    public ResponseEntity<AccountDto> updateUserAccount(@RequestBody AccountDto accountDto) {
-        return ResponseEntity.ok(accountServices.updateUserAccount(accountDto));
+    public ResponseEntity<AccountDto> updateUserAccount(@Valid @RequestBody AccountDto accountDto, HttpServletRequest request) {
+        return ResponseEntity.ok(accountService.updateUserAccount(accountDto, Long.parseLong(request.getHeader("id"))));
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<String> deleteUserAccount(Principal principal) {
-        return ResponseEntity.ok(accountServices.deleteUserAccount(principal.getName()));
+    public ResponseEntity<String> deleteUserAccount(HttpServletRequest request) {
+        return ResponseEntity.ok(accountService.deleteUserAccount(Long.parseLong(request.getHeader("id"))));
     }
 
     @PutMapping("/block/{id}")
     public ResponseEntity<String> blockAccountById(@PathVariable Integer id) {
-        return ResponseEntity.ok(accountServices.blockAccount(true, id));
+        return ResponseEntity.ok(accountService.blockAccount(true, id));
     }
 
     @DeleteMapping("/block/{id}")
     public ResponseEntity<String> unblockAccountById(@PathVariable Integer id) {
-        return ResponseEntity.ok(accountServices.blockAccount(false, id));
+        return ResponseEntity.ok(accountService.blockAccount(false, id));
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllAccounts(@RequestParam Pageable page) {
-        return ResponseEntity.ok(accountServices.getAllAccounts(page));
+    public ResponseEntity<?> getAllAccounts(@RequestParam Pageable page, HttpServletRequest request) {
+        return ResponseEntity.ok(accountService.getAllAccounts(page, Long.parseLong(request.getHeader("id"))));
     }
 
     @PostMapping
     public ResponseEntity<?> createAccount(@RequestBody AccountDto accountDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(accountServices.createAccount(accountDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createAccount(accountDto));
     }
 
     @PostMapping("/searchByFilter")
     public ResponseEntity<AccountDto> searchAccountByFilter(@RequestBody AccountByFilterDto filterDto) {
-        return ResponseEntity.ok(accountServices.searchAccountByFilter(filterDto));
+        return ResponseEntity.ok(accountService.searchAccountByFilter(filterDto));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AccountDto> getAccountById(@PathVariable Long id) {
-        return ResponseEntity.ok(accountServices.getAccountById(id));
+        return ResponseEntity.ok(accountService.getAccountById(id));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchAccount(@RequestParam AccountSearchDto searchDto, @RequestParam Pageable page) {
-        return ResponseEntity.ok(accountServices.searchAccount(searchDto, page));
+    public ResponseEntity<List<AccountDto>> searchAccount(@RequestParam boolean isDeleted, HttpServletRequest request) {
+        return ResponseEntity.ok(accountService.searchAccount(isDeleted, Long.parseLong(request.getHeader("id"))));
     }
 
     @GetMapping("/ids")
     public ResponseEntity<?> getAllIds() {
-        return ResponseEntity.ok(accountServices.getAllIds());
+        return ResponseEntity.ok(accountService.getAllIds());
     }
 
     @GetMapping("/accountIds")
     public ResponseEntity<?> getAccountIds(@RequestParam Long[] ids, @RequestParam Pageable page) {
-        return ResponseEntity.ok(accountServices.getAccountIds(ids, page));
+        return ResponseEntity.ok(accountService.getAccountIds(ids, page));
     }
 }

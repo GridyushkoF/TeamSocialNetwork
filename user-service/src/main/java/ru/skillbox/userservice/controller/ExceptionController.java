@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.skillbox.userservice.exceptions.BadRequestException;
-import ru.skillbox.userservice.exceptions.NotAuthException;
+import ru.skillbox.userservice.exception.BadRequestException;
+import ru.skillbox.userservice.exception.NotAuthException;
 import ru.skillbox.userservice.model.entity.ErrorDetail;
 
 import java.util.Date;

@@ -1,14 +1,14 @@
 package ru.skillbox.commondto.account;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
 @Data
-@Accessors(chain = true)
+@Builder
 public class AccountDto {
-    long id;
+    Long id;
     String email;
     String phone;
     String photo;

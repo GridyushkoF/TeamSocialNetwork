@@ -11,7 +11,7 @@ import ru.skillbox.userservice.service.FriendshipService;
 @RequiredArgsConstructor
 public class FriendshipController {
 
-    private final FriendshipService friendshipServices;
+    private final FriendshipService friendshipService;
 
     @PostMapping("/{id}/request")
     @ResponseStatus(HttpStatus.OK)
@@ -20,7 +20,7 @@ public class FriendshipController {
             HttpServletRequest request) {
         {
             Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-            friendshipServices.requestFriendship(currentAuthUserId, accountId);
+            friendshipService.requestFriendship(currentAuthUserId, accountId);
         }
     }
 
@@ -31,7 +31,7 @@ public class FriendshipController {
             HttpServletRequest request) {
         {
             Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-            friendshipServices.deleteFriendship(currentAuthUserId, accountId);
+            friendshipService.deleteFriendship(currentAuthUserId, accountId);
         }
     }
 
