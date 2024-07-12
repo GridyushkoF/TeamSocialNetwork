@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: notification-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/notification_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+  mandatory-file-encoding: UTF-8
+
+  liquibase:
+    change-log: classpath://db/changelog/db.changelog-master.xml
+    enabled: false
+    drop-first: false
+
+server:
+  port: 0
+app:
+  apiPrefix: /api/v1
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka/}
+    enabled: true

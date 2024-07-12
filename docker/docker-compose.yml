@@ -5,7 +5,7 @@ services:
       - "5432:5432"
     restart: always
     environment:
-      - POSTGRES_MULTIPLE_DATABASES="user_db","post_db"
+      - POSTGRES_MULTIPLE_DATABASES="user_db","post_db","dialog_db","notification_db"
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
@@ -14,7 +14,7 @@ services:
   frontend:
     build:
       context: ../frontend/
-    image: skillgroup32/frontend
+    image: skillgroup35/frontend
     ports:
       - "8099:80"
     tty: true
@@ -29,9 +29,43 @@ services:
       - "6379:6379"
     volumes:
       - ./redis/data:/root/redis
-      #- ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     environment:
       - REDIS_PASSWORD=redis
       - REDIS_PORT=6379
-      #  - REDIS_DATABASES=16
       - REDIS_DATABASES=1
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    restart: on-failure
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+      - "9094:9094"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://localhost:9094
+      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+    volumes:
+      - kafka:/data
+    restart: on-failure
+
+  # Convenient UI for Apache Kafka https://github.com/provectus/kafka-ui
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "9999:8080"
+    restart: always
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+
+volumes:
+  kafka:
