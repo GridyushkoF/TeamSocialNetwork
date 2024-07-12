@@ -1,8 +1,6 @@
-package ru.skillbox.userservice.services;
+package ru.skillbox.userservice.service;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.skillbox.userservice.model.dto.StatusCode;
 import ru.skillbox.userservice.model.entity.Friendship;
@@ -11,22 +9,13 @@ import ru.skillbox.userservice.model.entity.User;
 import ru.skillbox.userservice.repository.FriendshipRepository;
 import ru.skillbox.userservice.repository.UserRepository;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@AllArgsConstructor
 public class FriendshipService {
-
-     @Autowired
-    public FriendshipService(FriendshipRepository friendshipRepository, UserRepository userRepository) {
-        this.friendshipRepository = friendshipRepository;
-        this.userRepository = userRepository;
-    }
 
     private final UserRepository userRepository;
     private final FriendshipRepository friendshipRepository;
@@ -103,7 +92,7 @@ public class FriendshipService {
     }
 
     public List<Long> getBlockedFriendIds(Long currentAuthUserId) {
-        List<Friendship> blockedFriendships = friendshipRepository.findByStatusCodeAndAccountIdFrom(StatusCode.BLOCKED, currentAuthUserId);
+        List<Friendship> blockedFriendships = friendshipRepository.findByStatusCodeAndIdAccountIdFrom(StatusCode.BLOCKED, currentAuthUserId);
         return blockedFriendships.stream()
                 .map(friendship -> friendship.getId().getAccountIdTo())
                 .toList();

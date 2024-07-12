@@ -1,4 +1,4 @@
-package ru.skillbox.userservice.controllers;
+package ru.skillbox.userservice.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import ru.skillbox.userservice.model.dto.AccountByFilterDto;
 import ru.skillbox.userservice.model.dto.AccountDto;
 import ru.skillbox.userservice.model.dto.AccountRecoveryRq;
 import ru.skillbox.userservice.model.dto.AccountSearchDto;
-import ru.skillbox.userservice.services.AccountServices;
+import ru.skillbox.userservice.service.AccountServices;
 
 import java.security.Principal;
 

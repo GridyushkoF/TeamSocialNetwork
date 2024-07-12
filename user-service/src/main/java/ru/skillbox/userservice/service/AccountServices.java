@@ -1,4 +1,4 @@
-package ru.skillbox.userservice.services;
+package ru.skillbox.userservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
