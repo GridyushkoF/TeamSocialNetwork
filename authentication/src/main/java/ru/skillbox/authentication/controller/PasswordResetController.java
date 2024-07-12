@@ -24,11 +24,6 @@ public class PasswordResetController {
     @PostMapping("/recovery/")
     public ResponseEntity<SimpleResponse> resetPassword(
             @RequestBody RecoveryPasswordRequest request) {
-        if (!userRepository.existsByEmail(request.getEmail())) {
-            log.error("Восстановление по емаил: " + request.getEmail()
-                    + " не удалось. Email не найден в БД");
-            throw new EntityNotFoundException("Пользователь с данным Email не зарегистрирован");
-        }
         return ResponseEntity.ok(passwordService.sendToEmail(request));
     }
 
