@@ -1,4 +1,4 @@
-package ru.skillbox.userservice.services;
+package ru.skillbox.userservice.service;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
