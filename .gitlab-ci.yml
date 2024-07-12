@@ -10,7 +10,7 @@ cache:
   key: "$CI_COMMIT_SHA"
 
 variables:
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repositry"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
 
 build-job:       # This job runs in the build stage, which runs first.
