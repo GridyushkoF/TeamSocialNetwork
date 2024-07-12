@@ -1,9 +1,11 @@
 package ru.skillbox.userservice.mapper.V1;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.skillbox.userservice.model.dto.AccountDto;
+import ru.skillbox.commondto.account.AccountDto;
 import ru.skillbox.userservice.model.entity.User;
 import ru.skillbox.userservice.service.FriendshipService;
+
+import java.util.Set;
 
 public abstract class UserMapperDelegate implements UserMapperV1 {
     @Autowired
@@ -30,7 +32,7 @@ public abstract class UserMapperDelegate implements UserMapperV1 {
                 .isOnline(request.isOnline())
                 .role(request.getRole())
                 .messagePermission(request.getMessagePermission())
-                .friends(friendshipService.getFriends(authUserId))
+                .friends((Set<User>) friendshipService.getFriends(authUserId))
                 .password(request.getPassword())
                 .build();
     }

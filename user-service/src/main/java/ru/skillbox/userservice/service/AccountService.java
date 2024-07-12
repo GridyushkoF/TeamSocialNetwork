@@ -5,11 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.skillbox.commondto.account.AccountByFilterDto;
+import ru.skillbox.commondto.account.AccountDto;
+import ru.skillbox.commondto.account.AccountRecoveryRq;
+import ru.skillbox.commondto.account.AccountSearchDto;
 import ru.skillbox.userservice.exception.AccountAlreadyExistsException;
 import ru.skillbox.userservice.exception.NoSuchAccountException;
 import ru.skillbox.userservice.exception.NotAuthException;
 import ru.skillbox.userservice.mapper.V1.UserMapperV1;
-import ru.skillbox.userservice.model.dto.*;
 import ru.skillbox.userservice.model.entity.User;
 import ru.skillbox.userservice.repository.UserRepository;
 import ru.skillbox.userservice.util.BeanUtil;
@@ -18,7 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AccountServices {
+public class AccountService {
 
     private final UserRepository userRepository;
     private final UserMapperV1 userMapper;

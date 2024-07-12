@@ -2,7 +2,7 @@ package ru.skillbox.userservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.skillbox.userservice.model.dto.StatusCode;
+import ru.skillbox.commondto.account.StatusCode;
 import ru.skillbox.userservice.model.entity.Friendship;
 import ru.skillbox.userservice.model.entity.FriendshipId;
 import ru.skillbox.userservice.model.entity.User;
@@ -34,11 +34,11 @@ public class FriendshipService {
         setFriendship(accountId, currentAuthUserId, StatusCode.REQUEST_FROM);
     }
 
-    private void setFriendship(Long accountIdFrom, Long accountIdTo, StatusCode statusCode) {
+    private Friendship setFriendship(Long accountIdFrom, Long accountIdTo, StatusCode statusCode) {
         Friendship friendshipFrom = friendshipRepository.findById(new FriendshipId(accountIdFrom, accountIdTo))
                 .orElse(new Friendship(new FriendshipId(accountIdFrom, accountIdTo)));
         friendshipFrom.setStatusCode(statusCode);
-        friendshipRepository.save(friendshipFrom);
+        return friendshipRepository.save(friendshipFrom);
     }
 
     public void deleteFriendship(Long currentAuthUserId, Long accountId) {
@@ -98,4 +98,9 @@ public class FriendshipService {
                 .toList();
     }
 
+    public StatusCode getStatusCode(Long accountIdFrom, Long accountIdTo) {
+        Friendship friendshipFrom = friendshipRepository.findById(new FriendshipId(accountIdFrom, accountIdTo))
+                .orElse(setFriendship(accountIdFrom, accountIdTo, StatusCode.NONE));
+        return friendshipFrom.getStatusCode();
+    }
 }
