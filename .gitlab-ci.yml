@@ -33,3 +33,7 @@ deploy-job:      # This job runs in the deploy stage.
   script:
     - echo "Deploying application..."
     - mvn clean package -DskipTests
+  artifacts:
+    paths: 
+      - target/*.jar
+   
