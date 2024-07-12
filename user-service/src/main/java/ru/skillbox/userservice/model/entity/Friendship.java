@@ -10,7 +10,6 @@ import ru.skillbox.userservice.model.dto.StatusCode;
 @Getter
 @Setter
 @NoArgsConstructor
-@IdClass(FriendshipId.class)
 public class Friendship {
     public Friendship(FriendshipId friendshipId) {
         this.id = friendshipId;

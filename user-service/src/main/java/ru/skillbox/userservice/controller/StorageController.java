@@ -1,4 +1,4 @@
-package ru.skillbox.userservice.controllers;
+package ru.skillbox.userservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skillbox.userservice.model.dto.AccountDto;
-import ru.skillbox.userservice.services.StorageServices;
+import ru.skillbox.userservice.service.StorageServices;
 
 @RestController
 @RequestMapping("/storage")

@@ -1,10 +1,10 @@
-package ru.skillbox.userservice.controllers;
+package ru.skillbox.userservice.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.userservice.services.FriendshipService;
+import ru.skillbox.userservice.service.FriendshipService;
 
 @RestController
 @RequestMapping("/friends")

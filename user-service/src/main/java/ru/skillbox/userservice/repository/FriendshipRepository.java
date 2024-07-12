@@ -18,5 +18,5 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Friendsh
     int countByAccountIdFromAndStatusCode(@Param("accountIdFrom") Long accountIdFrom,
                                           @Param("statusCode") StatusCode statusCode);
 
-    List<Friendship> findByStatusCodeAndAccountIdFrom(StatusCode statusCode, Long accountIdFrom);
+    List<Friendship> findByStatusCodeAndIdAccountIdFrom(StatusCode statusCode, Long accountIdFrom);
 }
