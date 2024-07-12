@@ -4,26 +4,35 @@ stages:          # List of stages for jobs, and their order of execution
   - test
   - deploy
 
+cache:
+  paths:
+    - .m2/repository
+  key: "$CI_COMMIT_SHA"
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repositry"
+  MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
+
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
   image: maven:latest
   script:
     - echo "Compiling the code..."
-    - mvn clean complie -DskipTests
+    - mvn clean complie $MAVEN_OPTS_CLI -DskipTests
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   image: maven:latest
   script:
-    - echo "Running unit tests... This will take about 60 seconds."
-    - mvn test --fail-at-end
+    - echo "Running unit tests..."
+    - mvn test $MAVEN_OPTS_CLI
 
 lint-test-job:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
   image: maven:latest
   script:
-    - echo "Linting code... This will take about 10 seconds."
-    - mvn checkstyle:checkstyle -Dcheckstyle.output.format=xml
+    - echo "Linting code..."
+    - mvn checkstyle:checkstyle $MAVEN_OPTS_CLI -Dcheckstyle.output.format=xml
     - cat target/checkstyle-result.xml
 
 deploy-job:      # This job runs in the deploy stage.
@@ -32,7 +41,7 @@ deploy-job:      # This job runs in the deploy stage.
   environment: production
   script:
     - echo "Deploying application..."
-    - mvn clean package -DskipTests
+    - mvn clean package $MAVEN_OPTS_CLI -DskipTests
   artifacts:
     paths: 
       - target/*.jar
