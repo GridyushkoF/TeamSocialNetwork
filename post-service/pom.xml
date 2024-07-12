@@ -134,6 +134,14 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.13</version>
+				<configuration>
+					<repository>socialnetwork/post-service</repository>
+				</configuration>
+			</plugin>
 
 		</plugins>
 	</build>

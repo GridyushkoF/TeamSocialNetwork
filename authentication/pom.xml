@@ -163,6 +163,14 @@
 					<propertyFile>src/main/resources/liquibase.properties</propertyFile>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.13</version>
+				<configuration>
+					<repository>socialnetwork/authentication</repository>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
