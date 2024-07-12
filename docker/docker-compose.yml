@@ -5,14 +5,16 @@ services:
       - "5432:5432"
     restart: always
     environment:
-      - POSTGRES_MULTIPLE_DATABASES="user_db","post_db","auth_user_db"
+      - POSTGRES_MULTIPLE_DATABASES="user_db","post_db"
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
       - ./pg-init-scripts:/docker-entrypoint-initdb.d
 
   frontend:
-    image: skillboxteam32/front:latest
+    build:
+      context: ../frontend/
+    image: skillgroup32/frontend
     ports:
       - "8099:80"
     tty: true

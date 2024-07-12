@@ -42,7 +42,6 @@
         <module>common-dto</module>
         <module>gateway</module>
         <module>discovery</module>
-        <module>redis</module>
     </modules>
 
 </project>
