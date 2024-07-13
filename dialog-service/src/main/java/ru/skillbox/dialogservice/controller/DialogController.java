@@ -31,12 +31,12 @@ public class DialogController {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
         return ResponseEntity.ok(service.getDialogs(offset, itemPerPage,currentAuthUserId,request));
     }
-    @GetMapping("/unreaded")
-    public ResponseEntity<UnreadCountRs> getUnreaded (
+    @GetMapping("/unread")
+    public ResponseEntity<UnreadCountRs> getUnread(
             HttpServletRequest request
     ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        return ResponseEntity.ok(service.getUnreaded(currentAuthUserId));
+        return ResponseEntity.ok(service.getUnread(currentAuthUserId));
     }
     @GetMapping("/messages")
     public ResponseEntity<GetMessagesRs> getMessages(

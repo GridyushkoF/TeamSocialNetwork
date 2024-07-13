@@ -29,27 +29,4 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="add-foreign-key-constraints-to-dialog" author="Gridyushko Fedor">
-        <addForeignKeyConstraint
-            baseColumnNames="member1_id"
-            baseTableName="dialog"
-            constraintName="fk_dialog_member1_id"
-            deferrable="false" initiallyDeferred="false"
-            onDelete="NO ACTION" onUpdate="NO ACTION"
-            referencedColumnNames="id"
-            referencedTableName="users"
-            validate="true"/>
-        <addForeignKeyConstraint
-            baseColumnNames="member2_id"
-            baseTableName="dialog"
-            constraintName="fk_dialog_member2_id"
-            deferrable="false"
-            initiallyDeferred="false"
-            onDelete="NO ACTION"
-            onUpdate="NO ACTION"
-            referencedColumnNames="id"
-            referencedTableName="users"
-            validate="true"/>
-    </changeSet>
-
 </databaseChangeLog>

@@ -18,7 +18,6 @@ import ru.skillbox.dialogservice.model.entity.Message;
 import ru.skillbox.dialogservice.repository.DialogRepository;
 import ru.skillbox.dialogservice.repository.MessageRepository;
 
-import javax.sound.midi.ShortMessage;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,7 +87,7 @@ public class DialogService {
                 }).toList();
     }
 
-    public UnreadCountRs getUnreaded(
+    public UnreadCountRs getUnread(
             Long currentAuthUserId) {
         Long totalUnreadCount = dialogRepository.findAllByMember1IdOrMember2Id(currentAuthUserId, Pageable.unpaged())
                 .stream()

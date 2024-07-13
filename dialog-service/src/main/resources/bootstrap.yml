@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: dialog-service
   profiles:
     active: local
   cloud:
