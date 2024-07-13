@@ -29,7 +29,7 @@ public class DialogController {
             HttpServletRequest request
             ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        return ResponseEntity.ok(service.getDialogs(offset, itemPerPage,currentAuthUserId));
+        return ResponseEntity.ok(service.getDialogs(offset, itemPerPage,currentAuthUserId,request));
     }
     @GetMapping("/unreaded")
     public ResponseEntity<UnreadCountRs> getUnreaded (
@@ -46,7 +46,7 @@ public class DialogController {
             HttpServletRequest request
     ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        return ResponseEntity.ok(service.getMessages(companionId, offset, itemPerPage, currentAuthUserId));
+        return ResponseEntity.ok(service.getMessages(companionId, offset, itemPerPage, currentAuthUserId,request));
     }
 
 }

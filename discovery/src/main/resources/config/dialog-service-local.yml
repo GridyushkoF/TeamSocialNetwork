@@ -1,6 +1,7 @@
 spring:
   application:
     name: dialog-service
+
   datasource:
     url: jdbc:postgresql://localhost:5432/dialog_db
     username: postgres
@@ -8,14 +9,14 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     show-sql: true
 
   mandatory-file-encoding: UTF-8
 
   liquibase:
     change-log: classpath://db/changelog/db.changelog-master.xml
-    enabled: false
+    enabled: true
     drop-first: false
 
 server:

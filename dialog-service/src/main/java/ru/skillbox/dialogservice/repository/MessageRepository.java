@@ -1,5 +1,7 @@
 package ru.skillbox.dialogservice.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -13,10 +15,15 @@ import java.util.Optional;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long>, PagingAndSortingRepository<Message,Long> {
+    String query = "SELECT m FROM Message m WHERE (m.authorId = :member1 AND m.recipientId = :member2)" +
+            " OR (m.authorId = :member2 AND m.recipientId = :member1) ORDER BY m.time DESC";
     List<Message> findAllByAuthorIdAndRecipientIdAndStatus(Long authorId, Long recipientId, MessageStatus status);
 
-    @Query("SELECT m FROM Message m WHERE (m.authorId = :member1 AND m.recipientId = :member2)" +
-            " OR (m.authorId = :member2 AND m.recipientId = :member1) ORDER BY m.time DESC")
+    @Query(query)
     Optional<Message> getLastMessageByMembers(@Param("member1") Long member1,
                                               @Param("member2") Long member2);
+    @Query(query)
+    Page<Message>  findAllByMembers(@Param("member1") Long member1,
+                                  @Param("member2") Long member2,
+                                  Pageable pageable);
 }

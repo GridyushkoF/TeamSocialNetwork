@@ -1,6 +1,5 @@
 package ru.skillbox.dialogservice.mapper;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
