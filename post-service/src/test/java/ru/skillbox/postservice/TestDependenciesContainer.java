@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
+import ru.skillbox.commondto.post.wrappers.TagWrapper;
 import ru.skillbox.postservice.mapper.CommentMapper;
 import ru.skillbox.postservice.mapper.PostMapper;
 import ru.skillbox.commondto.post.CommentDto;
@@ -64,7 +65,7 @@ public class TestDependenciesContainer {
                 .postText("This is a test post")
                 .authorId(1L)
                 .type(PostType.POSTED)
-                .tags(List.of("string"))
+                .tags(List.of(new TagWrapper("string")))
                 .build();
     }
     protected CommentDto generateTestCommentDto(Long postId) {

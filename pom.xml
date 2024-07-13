@@ -33,15 +33,15 @@
     </dependencyManagement>
 
     <modules>
-        <module>authentication</module>
-        <module>user-service</module>
-        <module>dialog-service</module>
-        <module>post-service</module>
-        <module>admin-service</module>
-        <module>notification-service</module>
-        <module>common-dto</module>
-        <module>gateway</module>
         <module>discovery</module>
+        <module>authentication</module>
+        <module>common-dto</module>
+        <module>user-service</module>
+        <module>post-service</module>
+        <module>dialog-service</module>
+        <module>notification-service</module>
+        <module>gateway</module>
+        <module>admin-service</module>
     </modules>
 
     <build>

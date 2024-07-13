@@ -41,12 +41,12 @@ public class GatewayConfig {
                                 .uri("lb://USER-SERVICE")
                 )
                 .route(
-                        "dialog_route", r -> r.path("/api/dialog/**")
+                        "dialog_route", r -> r.path("/api/v1/dialogs/**")
                                 .filters(f -> f.filter(filter))
                                 .uri("lb://DIALOG-SERVICE")
                 )
                 .route(
-                        "notification_route", r -> r.path("/api/notification/**")
+                        "notification_route", r -> r.path("/api/v1/notifications/**")
                                 .filters(f -> f.filter(filter))
                                 .uri("lb://NOTIFICATION-SERVICE")
                 )
