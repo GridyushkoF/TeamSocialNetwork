@@ -1,4 +1,6 @@
+
 package ru.skillbox.userservice.service;
+
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -7,15 +9,15 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skillbox.commondto.account.AccountDto;
 import ru.skillbox.userservice.exception.BadRequestException;
 
+
 import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class StorageService {
+public class StorageService{
 
     // private final ImageRepository imageRepository;
-
 
     @Async
     @Transactional

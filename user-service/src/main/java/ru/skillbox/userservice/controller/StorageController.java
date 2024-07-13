@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skillbox.userservice.service.StorageService;
 
+
 @RestController
 @RequestMapping("/storage")
 @RequiredArgsConstructor

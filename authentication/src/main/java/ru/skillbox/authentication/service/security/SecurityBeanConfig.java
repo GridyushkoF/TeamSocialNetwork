@@ -86,6 +86,7 @@ public class SecurityBeanConfig {
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(new DaoAuthenticationProvider())
+                .logout(l -> l.logoutUrl("/api/v1/auth/logout"))
                 .build();
     }
 }

@@ -1,5 +1,7 @@
 package ru.skillbox.authentication.service.security.Jwt;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +11,7 @@ import ru.skillbox.authentication.service.security.AppUserDetails;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+import java.security.Key;
 import java.time.Duration;
 import java.util.Date;
 
@@ -19,6 +22,7 @@ import java.util.Date;
 public class JwtService {
 
     private final Algorithm algorithm;
+    private final Key key;
 
     @Value("${security.jwt.tokenExpiration}")
     private Duration tokenExpiration;
@@ -31,5 +35,9 @@ public class JwtService {
                 .withSubject(user.getEmail())
                 .withClaim("id", user.getId())
                 .sign(algorithm);
+    }
+
+    public Claims getAllClaimsFromToken(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 }

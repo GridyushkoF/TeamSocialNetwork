@@ -6,10 +6,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class RecoveryPasswordRequest {
-    private String temp;
+    private long temp;
     private String email;
+
+    public RecoveryPasswordRequest() {
+        this.temp = System.currentTimeMillis();
+    }
+
+    public RecoveryPasswordRequest(long temp, String email) {
+        this.temp = temp;
+        this.email = email;
+    }
 }

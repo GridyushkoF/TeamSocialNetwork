@@ -3,6 +3,7 @@ package ru.skillbox.authentication.service;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,7 @@ import ru.skillbox.authentication.service.security.AppUserDetails;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService  {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
@@ -41,7 +43,8 @@ public class AuthenticationService  {
             AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
 
             String jwt = jwtService.generateJwtToken(userDetails);
-
+            log.info("Пользователь '" + authenticationRequest.getEmail() +
+                    "' успешно прошел аутентификацию.");
             return AuthenticationResponse.builder()
                     .accessToken(jwt)
                     .refreshToken(jwt)

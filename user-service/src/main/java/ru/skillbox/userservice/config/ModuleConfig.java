@@ -1,4 +1,4 @@
-package ru.skillbox.userservice.configuration;
+package ru.skillbox.userservice.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class ModuleConfiguration implements WebMvcConfigurer {
+public class ModuleConfig implements WebMvcConfigurer {
 
     @Value("${custom.rest.basePath}")
     private String basePath;
