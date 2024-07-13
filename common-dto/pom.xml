@@ -45,7 +45,7 @@
                 <artifactId>dockerfile-maven-plugin</artifactId>
                 <version>1.4.13</version>
                 <configuration>
-                    <repository>delivery/auth-service</repository>
+                    <repository>socialnetwork/common-dto</repository>
                 </configuration>
             </plugin>
         </plugins>
