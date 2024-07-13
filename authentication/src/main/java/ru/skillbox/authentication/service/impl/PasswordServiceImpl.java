@@ -7,6 +7,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.skillbox.authentication.exception.EntityNotFoundException;
 import ru.skillbox.authentication.model.dto.RecoveryPasswordRequest;
 import ru.skillbox.authentication.model.dto.SetPasswordRequest;
 import ru.skillbox.authentication.model.dto.SimpleResponse;
@@ -15,6 +16,8 @@ import ru.skillbox.authentication.exception.IncorrectRecoveryLinkException;
 import ru.skillbox.authentication.repository.UserRepository;
 import ru.skillbox.authentication.service.PasswordService;
 import ru.skillbox.authentication.service.utils.CryptoTool;
+
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -26,6 +29,8 @@ public class PasswordServiceImpl implements PasswordService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private long fifteenMin = 900_000;
+
     @Value("${spring.mail.username}")
     private String emailFrom;
     @Value("${service.recovery.uri}")
@@ -35,7 +40,7 @@ public class PasswordServiceImpl implements PasswordService {
     @Override
     public SimpleResponse sendToEmail(RecoveryPasswordRequest request) {
         String subject = "Восстановление пароля";
-        String messageBody = getMailBody(request.getEmail());
+        String messageBody = getMailBody(request);
         String emailTo = request.getEmail();
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -45,31 +50,43 @@ public class PasswordServiceImpl implements PasswordService {
         mailMessage.setText(messageBody);
 
         javaMailSender.send(mailMessage);
-
+        log.info("Ссылка для воостановления пароля успешно отправлена на Email " + emailTo);
         return new SimpleResponse("Ссылка для воостановления пароля успешно отправлена на Email");
     }
 
-    private String getMailBody(String email) {
-        var userOpt = userRepository.findByEmail(email);
+    private String getMailBody(RecoveryPasswordRequest request) {
+        var userOpt = userRepository.findByEmail(request.getEmail());
         if (userOpt.isPresent()) {
-            String hashId = cryptoTool.hashOf(userOpt.get().getId());
+            String encodedString = cryptoTool.encode(request.getTemp(), userOpt.get().getId());
             String msg  = "Для восстановления пароля перейдите по ссылке: " + activationUri;
-            return msg.replace("{recoveryLink}", hashId);
+            return msg.replace("{recoveryLink}", encodedString);
         }
-        return null;
+        log.error("Восстановление по емаил: " + request.getEmail()
+                + " не удалось. Email не найден в БД");
+        throw new EntityNotFoundException("Пользователь с данным Email не зарегистрирован");
     }
 
     @Override
     public SimpleResponse setNewPassword(String recoveryLink, SetPasswordRequest request) {
-        Long id = cryptoTool.idOf(recoveryLink);
-        if (id != null) {
-        var userOpt = userRepository.findById(id);
+        Map<Long, Long> decodedData = cryptoTool.decode(recoveryLink);
+        var entry = decodedData.entrySet().stream().findFirst();
+        if (entry.isPresent()) {
+            long id = entry.get().getValue();
+            long temp = entry.get().getKey();
+            long checkTemp = System.currentTimeMillis() - temp;
+            if (checkTemp > fifteenMin) {
+                log.error("Действие ссылки восстановления пароля истекло");
+                throw new IncorrectRecoveryLinkException("Действие ссылки истекло");
+            }
+            var userOpt = userRepository.findById(id);
             User user = userOpt.get();
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             userRepository.save(user);
+            log.info("Пароль успешно изменён");
             return new SimpleResponse("Пароль успешно изменён");
         } else {
-            throw new IncorrectRecoveryLinkException("Неверная ссылка восстановления пароля");
+            log.error("Пользователь прислал некорректную ссылку восстановления пароля");
+            throw new IncorrectRecoveryLinkException("Некорректная ссылка восстановления пароля");
         }
     }
 }
