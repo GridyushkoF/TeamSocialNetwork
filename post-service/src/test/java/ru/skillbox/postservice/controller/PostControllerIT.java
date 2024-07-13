@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ru.skillbox.commondto.post.wrappers.TagWrapper;
 import ru.skillbox.postservice.TestDependenciesContainer;
 import ru.skillbox.commondto.post.PostDto;
 import ru.skillbox.commondto.post.PostSearchDto;
@@ -135,7 +136,7 @@ public class PostControllerIT extends TestDependenciesContainer {
                         .postText("This is a test post to update")
                         .authorId(1L)
                         .type(PostType.POSTED)
-                        .tags(List.of("string"))
+                        .tags(List.of(new TagWrapper("string")))
                         .build(),1L);
 
     }
@@ -154,7 +155,7 @@ public class PostControllerIT extends TestDependenciesContainer {
                         .postText("This is a test post to delete")
                         .authorId(1L)
                         .type(PostType.POSTED)
-                        .tags(List.of("string"))
+                        .tags(List.of(new TagWrapper("string")))
                         .build(),1L);
     }
 

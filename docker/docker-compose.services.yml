@@ -1,0 +1,93 @@
+version: '3'
+services:
+  discovery:
+    image: socialnetwork/discovery:0.0.1-SNAPSHOT
+    ports:
+      - "8761:8761"
+    restart: always
+
+  authentication:
+    image: socialnetwork/authentication:0.0.1-SNAPSHOT
+#    ports:
+#      - "8083:8083"
+    environment:
+      - CONFIG_URI=http://discovery:8761
+      - EUREKA_URI=http://discovery:8761/eureka
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/user_db
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+    restart: always
+    depends_on:
+      - discovery
+
+  dialog-service:
+    image: socialnetwork/dialog-service:0.0.1-SNAPSHOT
+#    ports:
+#      - "8080:8080"
+    environment:
+      - CONFIG_URI=http://discovery:8761
+      - EUREKA_URI=http://discovery:8761/eureka
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/dialog_db
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+    restart: always
+    depends_on:
+      - discovery
+
+  notification-service:
+    image: socialnetwork/notification-service:0.0.1-SNAPSHOT
+#    ports:
+#      - "8081:8081"
+    environment:
+      - CONFIG_URI=http://discovery:8761
+      - EUREKA_URI=http://discovery:8761/eureka
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/notification_db
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+    restart: always
+    depends_on:
+      - discovery
+
+  post-service:
+    image: socialnetwork/post-service:0.0.1-SNAPSHOT
+#    ports:
+#      - "8082:8082"
+    environment:
+      - CONFIG_URI=http://discovery:8761
+      - EUREKA_URI=http://discovery:8761/eureka
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/post_db
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+    restart: always
+    depends_on:
+      - discovery
+
+  user-service:
+    image: socialnetwork/user-service:0.0.1-SNAPSHOT
+    ports:
+      - "8084:8084"
+    environment:
+      - CONFIG_URI=http://discovery:8761
+      - EUREKA_URI=http://discovery:8761/eureka
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/user_db
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+    restart: always
+    depends_on:
+      - discovery
+
+  gateway:
+    image: socialnetwork/gateway:0.0.1-SNAPSHOT
+    ports:
+      - "9090:9090"
+    environment:
+      - CONFIG_URI=http://discovery:8761
+      - EUREKA_URI=http://discovery:8761/eureka
+    restart: always
+    depends_on:
+      - discovery
+      - authentication
+      - dialog-service
+      - notification-service
+      - post-service
+      - user-service
