@@ -111,7 +111,7 @@ public class AccountService {
     }
 
     public List<AccountDto> searchAccount(boolean isDeleted, long authUserId) {
-        List<User> users = userRepository.findAllByDeleted(isDeleted);
+        List<User> users = userRepository.findAllByIsDeleted(isDeleted);
 
         return users.stream().map(user -> userMapper.userToResponse(authUserId, user)).toList();
     }

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skillbox.dialogservice.exception.DialogNotFoundException;
 import ru.skillbox.dialogservice.mapper.DialogMapperDecorator;
@@ -38,11 +39,7 @@ public class DialogService {
             message.setStatus(MessageStatus.READ);
             messageRepository.save(message);
         });
-        Optional<Dialog> dialogOptional = dialogRepository.findByMembersWithoutOrder(currentAuthUserId,companionId);
-        if(dialogOptional.isEmpty()) {
-            throw new DialogNotFoundException(currentAuthUserId,companionId);
-        }
-        Dialog dialog = dialogOptional.get();
+        Dialog dialog = getDialogOrCreateIfNotExists(companionId, currentAuthUserId);
         dialog.setUnreadCount(0L);
         dialogRepository.save(dialog);
 
@@ -52,6 +49,18 @@ public class DialogService {
                 new SetStatusMessageReadDto("successful read!"),
                 null
         );
+    }
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Dialog getDialogOrCreateIfNotExists(Long companionId, Long currentAuthUserId) {
+        Optional<Dialog> dialogOptional = dialogRepository.findByMembersWithoutOrder(currentAuthUserId, companionId);
+        Dialog dialog = null;
+        if(dialogOptional.isEmpty()) {
+            dialog = new Dialog(null,0L, currentAuthUserId, companionId);
+            dialogRepository.save(dialog);
+        } else {
+            dialog = dialogOptional.get();
+        }
+        return dialog;
     }
 
     public GetDialogsRs getDialogs(int offset,
@@ -101,11 +110,9 @@ public class DialogService {
     }
 
     public GetMessagesRs getMessages(Long companionId,
-                                     int offset,
-                                     int itemPerPage,
                                      Long currentAuthUserId,
-                                     HttpServletRequest request) {
-        Pageable pageable = generatePageableByOffsetAndPerPage(offset, itemPerPage);
+                                     Pageable pageable) {
+
         Page<Message> messagePage = messageRepository.findAllByMembers(currentAuthUserId,companionId,pageable);
         List<MessageDto> messageDtos = messagePage.getContent()
                 .stream()
@@ -121,8 +128,8 @@ public class DialogService {
                 null,
                 System.currentTimeMillis(),
                 (int) messagePage.getTotalElements(),
-                offset,
-                itemPerPage,
+                (int) pageable.getOffset(),
+                pageable.getPageSize(),
                 messageShortDtos
         );
 

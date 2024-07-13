@@ -29,4 +29,8 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="create-seq-for-dialog-table786550" author="Gridyushko Fedor">
+        <createSequence sequenceName="dialog_seq" incrementBy="50" startValue="1"/>
+    </changeSet>
+
 </databaseChangeLog>

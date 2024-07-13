@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.skillbox.commondto.account.AccountByFilterDto;
 import ru.skillbox.commondto.account.AccountDto;
 import ru.skillbox.commondto.account.AccountRecoveryRq;
+import ru.skillbox.userservice.model.dto.demo.UserDto;
+import ru.skillbox.userservice.model.dto.demo.UserSearchResponseDto;
 import ru.skillbox.userservice.service.AccountService;
 
 import java.util.List;
@@ -80,8 +82,9 @@ public class AccountController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<AccountDto>> searchAccount(@RequestParam boolean isDeleted, HttpServletRequest request) {
-        return ResponseEntity.ok(accountService.searchAccount(isDeleted, Long.parseLong(request.getHeader("id"))));
+    public ResponseEntity<UserSearchResponseDto> searchAccount(@RequestParam boolean isDeleted, HttpServletRequest request) {
+        List<AccountDto> userDtos = accountService.searchAccount(isDeleted, Long.parseLong(request.getHeader("id")));
+        return ResponseEntity.ok(new UserSearchResponseDto(userDtos));
     }
 
     @GetMapping("/ids")

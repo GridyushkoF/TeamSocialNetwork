@@ -45,7 +45,7 @@ public class DialogMapperDecorator implements DialogMapper{
     private AccountDto getAccountDtoByIdFromUserService(Long accountId, HttpServletRequest request) throws Exception {
         String url = "http://localhost:9090/api/v1/account/{accountId}";
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(request.getHeader("jwt"));
+        headers.add("Authorization",request.getHeader("Authorization"));
         HttpEntity<?> entity = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.exchange(
                 url,
@@ -62,7 +62,7 @@ public class DialogMapperDecorator implements DialogMapper{
         if(messageOptional.isPresent()) {
             return messageMapper.dialogToDialogDto(messageOptional.get());
         }
-        throw new MessageNotFoundException();
+        return new MessageDto();
     }
 
     @Override
