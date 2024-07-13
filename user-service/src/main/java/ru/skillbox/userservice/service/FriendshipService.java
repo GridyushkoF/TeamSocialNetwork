@@ -76,7 +76,7 @@ public class FriendshipService {
         List<User> allUsers = userRepository.findAll();
 
         return allUsers.stream()
-                .filter(user -> user.getId() != currentAuthUserId)
+                .filter(user -> !user.getId() .equals(currentAuthUserId))
                 .filter(user -> !currentFriends.contains(user))
                 .filter(user -> !Collections.disjoint(currentFriends, user.getFriends()))
                 .toList();
@@ -84,7 +84,7 @@ public class FriendshipService {
 
     public List<User> getFriends(Long currentAuthUserId) {
         User user = userRepository.findById(currentAuthUserId).orElseThrow();
-        return (List<User>) user.getFriends();
+        return user.getFriends().stream().toList();
     }
 
     public int getFriendRequestCount(Long currentAuthUserId) {
