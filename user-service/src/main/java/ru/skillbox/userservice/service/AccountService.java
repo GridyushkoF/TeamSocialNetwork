@@ -38,7 +38,7 @@ public class AccountService {
     @Transactional
     public AccountDto updateUserAccount(AccountDto accountDto, Long id) {
         if (accountDto.getId() != null && !accountDto.getId().equals(id))
-            new NotAuthException("Can't update Account with id:" + id);
+            throw new NotAuthException("Can't update Account with id:" + id);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchAccountException("Can't find Account with id:" + id));
         AccountDto existedAccount = userMapper.userToResponse(id, user);
@@ -111,7 +111,7 @@ public class AccountService {
     }
 
     public List<AccountDto> searchAccount(boolean isDeleted, long authUserId) {
-        List<User> users = userRepository.findAllByIsDeleted(isDeleted);
+        List<User> users = userRepository.findAllByDeleted(isDeleted);
 
         return users.stream().map(user -> userMapper.userToResponse(authUserId, user)).toList();
     }

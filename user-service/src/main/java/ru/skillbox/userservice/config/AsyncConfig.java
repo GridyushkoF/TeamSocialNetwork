@@ -1,4 +1,4 @@
-package ru.skillbox.userservice.configuration;
+package ru.skillbox.userservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

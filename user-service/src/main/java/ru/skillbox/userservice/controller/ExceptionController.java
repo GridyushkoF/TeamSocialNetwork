@@ -1,6 +1,5 @@
 package ru.skillbox.userservice.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -8,43 +7,30 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.skillbox.userservice.exception.BadRequestException;
 import ru.skillbox.userservice.exception.NotAuthException;
-import ru.skillbox.userservice.model.entity.ErrorDetail;
+import ru.skillbox.userservice.model.dto.ErrorDetail;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @ControllerAdvice
-@RequiredArgsConstructor
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
-
-    @ExceptionHandler
-    public ResponseEntity<?> badRequest(BadRequestException exception) {
-        return templateResponseException(exception, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorDetail> handleBadRequest(BadRequestException exception) {
+        return buildResponseEntity(exception, HttpStatus.BAD_REQUEST);
     }
 
-
-    @ExceptionHandler
-    public ResponseEntity<?> unAuthorized(NotAuthException exception) {
-        return templateResponseException(exception, HttpStatus.UNAUTHORIZED);
+    @ExceptionHandler(NotAuthException.class)
+    public ResponseEntity<ErrorDetail> handleUnauthorized(NotAuthException exception) {
+        return buildResponseEntity(exception, HttpStatus.UNAUTHORIZED);
     }
 
-
-    private ResponseEntity<?> templateResponseException(String message, Exception exception, HttpStatus status) {
-        return ResponseEntity.status(status.value())
-                .body(createDefaultErrorDetail(message, exception, status.value()));
-    }
-
-    private ResponseEntity<?> templateResponseException(Exception exception, HttpStatus status) {
-        return templateResponseException(exception.getMessage(), exception, status);
-    }
-
-    private ErrorDetail createDefaultErrorDetail(String message, Exception exception, int statusValue) {
-        return new ErrorDetail()
-                .setTitle(message)
-                .setStatus(statusValue)
-                .setTimeStamp(new Date().getTime())
+    private ResponseEntity<ErrorDetail> buildResponseEntity(Exception exception, HttpStatus status) {
+        var errorDetail = new ErrorDetail()
+                .setTitle(exception.getMessage())
+                .setStatus(status.value())
+                .setTimeStamp(LocalDateTime.now())
                 .setDetail(exception.getMessage())
                 .setDeveloperMessage(exception.getClass().getName());
+        return ResponseEntity.status(status).body(errorDetail);
     }
-
 }
