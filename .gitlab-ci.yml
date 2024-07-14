@@ -9,7 +9,7 @@ variables:
 deploy:
   stage: test
   script:
-    - './mvnw clean package -DskipTests=true dockerfile:build '
+    - 'mvn clean package -DskipTests=true dockerfile:build '
   
 # stages:          # List of stages for jobs, and their order of execution
 #   - deploy
