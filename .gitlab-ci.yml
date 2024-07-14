@@ -1,3 +1,4 @@
+
 stages:          # List of stages for jobs, and their order of execution
   - deploy
   - build
@@ -7,6 +8,9 @@ cache:
   paths:
     - .m2/repository
   key: "$CI_COMMIT_SHA"
+
+services:
+  - docker:dind
 
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
@@ -38,15 +42,11 @@ unit-test-job:   # This job runs in the test stage.
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  image: openjdk:17-jdk-alpine3.14
-  services:
-  - docker:dind
+  image: maven:latest
   environment: production
   script:
     - echo "Deploying application..."
-    # - mvn clean package $MAVEN_OPTS_CLI -DskipTests
-    - './mvnw clean package -DskipTests=true dockerfile:build '
+    - mvn clean package $MAVEN_OPTS_CLI -DskipTests
   artifacts:
     paths: 
       - target/*.jar
-   
