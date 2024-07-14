@@ -1,4 +1,4 @@
-image: openjdk:8-jdk-alpine
+image: maven:latest
 
 services:
   - docker:dind
@@ -9,7 +9,7 @@ variables:
 deploy:
   stage: test
   script:
-    - 'mvn clean package -DskipTests=true dockerfile:build '
+    - mvn clean package -DskipTests=true dockerfile:build
   
 # stages:          # List of stages for jobs, and their order of execution
 #   - deploy
