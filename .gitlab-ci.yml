@@ -1,61 +1,42 @@
-image: maven:latest
+stages:          # List of stages for jobs, and their order of execution
+  - build
+  - test
+  - deploy
 
-services:
-  - docker:dind
+cache:
+  paths:
+    - .m2/repository
+  key: "$CI_COMMIT_SHA"
+
 variables:
-  DOCKER_HOST: tcp://docker:2375
-  DOCKER_DRIVER: overlay2
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
 
-deploy:
-  stage: test
+build-job:       # This job runs in the build stage, which runs first.
+  stage: build
   script:
-    - mvn clean package -DskipTests=true
-  
-# stages:          # List of stages for jobs, and their order of execution
-#   - deploy
-#   - build
-#   - test
+    - echo "Compiling the code..."
+    - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
 
-# cache:
-#   paths:
-#     - .m2/repository
-#   key: "$CI_COMMIT_SHA"
+unit-test-job:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo "Running unit tests..."
+    - mvn test $MAVEN_OPTS_CLI
 
-# variables:
-#   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-#   MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
-#   DOCKER_HOST: tcp://localhost:2375
-#   DOCKER_DRIVER: overlay2
+#lint-test-job:   # This job also runs in the test stage.
+#  stage: test    # It can run at the same time as unit-test-job (in parallel).
+#  image: maven:latest
+#  script:
+#    - echo "Linting code..."
+#    - mvn checkstyle:checkstyle $MAVEN_OPTS_CLI -Dcheckstyle.output.format=xml
+#    - cat target/checkstyle-result.xml
 
-# build-job:       # This job runs in the build stage, which runs first.
-#   stage: build
-#   image: maven:latest
-#   script:
-#     - echo "Compiling the code..."
-#     - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
-
-# unit-test-job:   # This job runs in the test stage.
-#   stage: test    # It only starts when the job in the build stage completes successfully.
-#   image: maven:latest
-#   script:
-#     - echo "Running unit tests..."
-#     - mvn test $MAVEN_OPTS_CLI
-
-# #lint-test-job:   # This job also runs in the test stage.
-# #  stage: test    # It can run at the same time as unit-test-job (in parallel).
-# #  image: maven:latest
-# #  script:
-# #    - echo "Linting code..."
-# #    - mvn checkstyle:checkstyle $MAVEN_OPTS_CLI -Dcheckstyle.output.format=xml
-# #    - cat target/checkstyle-result.xml
-
-# deploy-job:      # This job runs in the deploy stage.
-#   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-#   image: maven:latest
-#   environment: production
-#   script:
-#     - echo "Deploying application..."
-#     - mvn clean package $MAVEN_OPTS_CLI -DskipTests
-#   artifacts:
-#     paths: 
-#       - target/*.jar
+deploy-job:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  script:
+    - echo "Deploying application..."
+    - mvn clean package $MAVEN_OPTS_CLI -DskipTests
+  # artifacts:
+  #   paths: 
+  #     - target/*.jar
