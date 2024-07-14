@@ -1,3 +1,8 @@
+image: openjdk:17-jdk-alpine3.14
+
+services:
+  - docker:dind
+
 stages:          # List of stages for jobs, and their order of execution
   - deploy
   - build
@@ -42,7 +47,8 @@ deploy-job:      # This job runs in the deploy stage.
   environment: production
   script:
     - echo "Deploying application..."
-    - mvn clean package $MAVEN_OPTS_CLI -DskipTests
+    # - mvn clean package $MAVEN_OPTS_CLI -DskipTests
+    - './mvnw clean package -DskipTests=true dockerfile:build '
   artifacts:
     paths: 
       - target/*.jar
