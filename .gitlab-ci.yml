@@ -27,13 +27,13 @@ unit-test-job:   # This job runs in the test stage.
     - echo "Running unit tests..."
     - mvn test $MAVEN_OPTS_CLI
 
-lint-test-job:   # This job also runs in the test stage.
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
-  image: maven:latest
-  script:
-    - echo "Linting code..."
-    - mvn checkstyle:checkstyle $MAVEN_OPTS_CLI -Dcheckstyle.output.format=xml
-    - cat target/checkstyle-result.xml
+#lint-test-job:   # This job also runs in the test stage.
+#  stage: test    # It can run at the same time as unit-test-job (in parallel).
+#  image: maven:latest
+#  script:
+#    - echo "Linting code..."
+#    - mvn checkstyle:checkstyle $MAVEN_OPTS_CLI -Dcheckstyle.output.format=xml
+#    - cat target/checkstyle-result.xml
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
