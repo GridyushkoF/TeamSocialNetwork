@@ -1,15 +1,3 @@
-image: openjdk:17-jdk-alpine3.14
-
-services:
-  - docker:dind
-
-deploy:
-  stage: test
-  script:
-    - 'mvnw clean package -DskipTests=true dockerfile:build '
-  only:
-    - pipeline
-
 stages:          # List of stages for jobs, and their order of execution
   - build
   - test
@@ -48,14 +36,14 @@ unit-test-job:   # This job runs in the test stage.
 #    - mvn checkstyle:checkstyle $MAVEN_OPTS_CLI -Dcheckstyle.output.format=xml
 #    - cat target/checkstyle-result.xml
 
-# deploy-job:      # This job runs in the deploy stage.
-#   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-#   image: maven:latest
-#   environment: production
-#   script:
-#     - echo "Deploying application..."
-#     - mvn clean package $MAVEN_OPTS_CLI -DskipTests
-#   artifacts:
-#     paths: 
-#       - target/*.jar
+deploy-job:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  image: maven:latest
+  environment: production
+  script:
+    - echo "Deploying application..."
+    - mvn clean package $MAVEN_OPTS_CLI -DskipTests
+  artifacts:
+    paths: 
+      - target/*.jar
    
