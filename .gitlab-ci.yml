@@ -6,7 +6,7 @@ services:
 deploy:
   stage: test
   script:
-    - './mvnw clean package -DskipTests=true dockerfile:build '
+    - 'mvnw clean package -DskipTests=true dockerfile:build '
   only:
     - pipeline
 
