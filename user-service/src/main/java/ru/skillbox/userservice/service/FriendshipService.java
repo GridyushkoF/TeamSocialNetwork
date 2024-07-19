@@ -47,8 +47,8 @@ public class FriendshipService {
     }
 
     public void approveFriendship(Long currentAuthUserId, Long accountId) {
-        setFriendship(currentAuthUserId, accountId, StatusCode.APPROVED);
-        setFriendship(accountId, currentAuthUserId, StatusCode.APPROVED);
+        setFriendship(currentAuthUserId, accountId, StatusCode.FRIEND);
+        setFriendship(accountId, currentAuthUserId, StatusCode.FRIEND);
     }
 
     public void blockFriend(Long currentAuthUserId, Long accountId) {

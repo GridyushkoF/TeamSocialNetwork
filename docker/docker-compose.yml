@@ -10,6 +10,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - ./pg-init-scripts:/docker-entrypoint-initdb.d
+      - database-data:/var/lib/postgresql/data/
 
   frontend:
     build:
@@ -69,3 +70,4 @@ services:
 
 volumes:
   kafka:
+  database-data:

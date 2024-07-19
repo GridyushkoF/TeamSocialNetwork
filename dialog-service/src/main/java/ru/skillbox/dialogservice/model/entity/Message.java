@@ -15,8 +15,10 @@ import ru.skillbox.dialogservice.model.dto.MessageStatus;
 @Builder
 public class Message {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "dialog_id", nullable = false)
+    private Long dialogId;
     @CreatedDate
     private Long time;
     @Column(name = "author_id")
@@ -25,5 +27,6 @@ public class Message {
     private Long recipientId;
     @Column(name = "message_text")
     private String messageText;
+    @Enumerated(EnumType.STRING)
     private MessageStatus status;
 }

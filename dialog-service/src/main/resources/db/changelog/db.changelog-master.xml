@@ -7,9 +7,10 @@
 
     <changeSet id="create-message-table" author="Gridyushko Fedor">
         <createTable tableName="message">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="message_pkey"/>
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
             </column>
+            <column name="dialog_id" type="BIGINT"/>
             <column name="time" type="BIGINT"/>
             <column name="author_id" type="BIGINT"/>
             <column name="recipient_id" type="BIGINT"/>
@@ -20,36 +21,13 @@
 
     <changeSet id="create-dialog-table" author="Gridyushko Fedor">
         <createTable tableName="dialog">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="dialog_pkey"/>
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
             </column>
             <column name="unread_count" type="BIGINT"/>
             <column name="member1_id" type="BIGINT"/>
             <column name="member2_id" type="BIGINT"/>
         </createTable>
-    </changeSet>
-
-    <changeSet id="add-foreign-key-constraints-to-dialog" author="Gridyushko Fedor">
-        <addForeignKeyConstraint
-            baseColumnNames="member1_id"
-            baseTableName="dialog"
-            constraintName="fk_dialog_member1_id"
-            deferrable="false" initiallyDeferred="false"
-            onDelete="NO ACTION" onUpdate="NO ACTION"
-            referencedColumnNames="id"
-            referencedTableName="users"
-            validate="true"/>
-        <addForeignKeyConstraint
-            baseColumnNames="member2_id"
-            baseTableName="dialog"
-            constraintName="fk_dialog_member2_id"
-            deferrable="false"
-            initiallyDeferred="false"
-            onDelete="NO ACTION"
-            onUpdate="NO ACTION"
-            referencedColumnNames="id"
-            referencedTableName="users"
-            validate="true"/>
     </changeSet>
 
 </databaseChangeLog>

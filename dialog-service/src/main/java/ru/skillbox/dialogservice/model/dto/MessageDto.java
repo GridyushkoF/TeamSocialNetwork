@@ -11,6 +11,7 @@ import lombok.Builder;
 @Builder
 public class MessageDto {
     private Long id;
+    private Long dialogId;
     private Long time;
     private Long authorId;
     private Long recipientId;
