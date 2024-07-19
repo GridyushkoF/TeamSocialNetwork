@@ -24,6 +24,8 @@ public class JwtService {
     private final Algorithm algorithm;
     private final Key key;
 
+    public static final String TOKEN_PREFIX = "Bearer ";
+
     @Value("${security.jwt.tokenExpiration}")
     private Duration tokenExpiration;
 
@@ -37,7 +39,36 @@ public class JwtService {
                 .sign(algorithm);
     }
 
+
+
+
     public Claims getAllClaimsFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    }
+
+    public String getUserName(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJwt(token)
+                .getBody().getSubject();
+    }
+
+
+    private boolean isTokenExpired(String tokenString) {
+        String jwtToken = tokenString.replace(TOKEN_PREFIX, "");
+        boolean result = true;
+        try {
+            result = getAllClaimsFromToken(jwtToken)
+                    .getExpiration()
+                    .before(new Date());
+        } catch (Exception ex) {
+            log.error("An exception was thrown during JWT verification: {}", ex.getMessage());
+        }
+        return result;
+    }
+
+    public boolean isInvalid(String token) {
+        return isTokenExpired(token);
     }
 }

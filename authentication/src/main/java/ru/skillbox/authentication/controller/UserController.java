@@ -25,6 +25,7 @@ import java.security.Principal;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("api/v1/auth")
 public class UserController {
 
     private final CaptchaService captchaService;

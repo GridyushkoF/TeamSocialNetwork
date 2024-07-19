@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,8 @@ import ru.skillbox.authentication.model.entity.User;
 import ru.skillbox.authentication.repository.UserRepository;
 import ru.skillbox.authentication.service.security.Jwt.JwtService;
 import ru.skillbox.authentication.service.security.AppUserDetails;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -42,7 +45,14 @@ public class AuthenticationService  {
 
             AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
 
+            List<String> roles = userDetails
+                    .getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .toList();
+
             String jwt = jwtService.generateJwtToken(userDetails);
+
             log.info("Пользователь '" + authenticationRequest.getEmail() +
                     "' успешно прошел аутентификацию.");
             return AuthenticationResponse.builder()

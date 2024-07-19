@@ -22,7 +22,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.skillbox.authentication.service.impl.UserDetailsServiceImpl;
+import ru.skillbox.authentication.service.security.Jwt.JwtAuthEntryPoint;
+import ru.skillbox.authentication.service.security.Jwt.JwtAuthenticationFilter;
 import ru.skillbox.authentication.service.utils.CryptoTool;
 
 @Configuration
@@ -31,6 +34,8 @@ import ru.skillbox.authentication.service.utils.CryptoTool;
 public class SecurityBeanConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
+    private final JwtAuthEntryPoint jwtAuthEntryPoint;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Value("${service.recovery.salt}")
     private String salt;
@@ -76,17 +81,42 @@ public class SecurityBeanConfig {
                         .version("1.0"));
     }
 
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+//        return httpSecurity
+//                .authorizeHttpRequests((auth) ->
+//                        auth.requestMatchers("/**").permitAll())
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .httpBasic(Customizer.withDefaults())
+//                .sessionManagement(httpSecuritySessionManagementConfigurer ->
+//                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .authenticationProvider(new DaoAuthenticationProvider())
+//                .logout(l -> l.logoutUrl("/api/v1/auth/logout"))
+//                .build();
+//    }
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .authorizeHttpRequests((auth) ->
-                        auth.requestMatchers("/**").permitAll())
+                        auth.requestMatchers("/api/v1/auth/**")
+                                .permitAll()
+                                .requestMatchers("/api/v1/app/**")
+                                .permitAll()
+                                .requestMatchers("/swagger-ui/**")
+                                .permitAll()
+                                .requestMatchers("/v3/api-docs/**")
+                                .permitAll()
+                                .anyRequest().authenticated())
+                .exceptionHandling(conf -> conf.authenticationEntryPoint(jwtAuthEntryPoint))
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(new DaoAuthenticationProvider())
-                .logout(l -> l.logoutUrl("/api/v1/auth/logout"))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
 }

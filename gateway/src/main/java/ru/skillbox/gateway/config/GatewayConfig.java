@@ -27,7 +27,6 @@ public class GatewayConfig {
                 )
                 .route(
                         "auth_route", r -> r.path("/api/v1/auth/**")
-                                .filters(f -> f.filter(filter))
                                 .uri("lb://AUTHENTICATION")
                 )
                 .route(
