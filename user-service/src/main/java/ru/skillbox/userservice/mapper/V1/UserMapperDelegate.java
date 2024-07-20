@@ -2,40 +2,14 @@ package ru.skillbox.userservice.mapper.V1;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.skillbox.commondto.account.AccountDto;
+import ru.skillbox.commondto.account.StatusCode;
+import ru.skillbox.userservice.model.entity.Friendship;
 import ru.skillbox.userservice.model.entity.User;
-import ru.skillbox.userservice.service.FriendshipService;
-
-import java.util.Set;
+import ru.skillbox.userservice.repository.FriendshipRepository;
 
 public abstract class UserMapperDelegate implements UserMapperV1 {
     @Autowired
-    private FriendshipService friendshipService;
-
-    @Override
-    public User requestToUser(Long authUserId, AccountDto request) {
-
-        return User.builder()
-                .id(authUserId)
-                .about(request.getAbout())
-                .birthDate(request.getBirthDate())
-                .city(request.getCity())
-                .country(request.getCountry())
-                .createdOn(request.getCreatedOn())
-                .email(request.getEmail())
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .phone(request.getPhone())
-                .photo(request.getPhoto())
-                .photoId(request.getPhotoId())
-                .isBlocked(request.isBlocked())
-                .isDeleted(request.isDeleted())
-                .isOnline(request.isOnline())
-                .role(request.getRole())
-                .messagePermission(request.getMessagePermission())
-                .friends((Set<User>) friendshipService.getFriends(authUserId))
-                .password(request.getPassword())
-                .build();
-    }
+    private FriendshipRepository friendshipRepository;
 
     @Override
     public AccountDto userToResponse(Long authUserId, User user) {
@@ -57,9 +31,19 @@ public abstract class UserMapperDelegate implements UserMapperV1 {
                 .isOnline(user.isOnline())
                 .role(user.getRole())
                 .messagePermission(user.getMessagePermission())
-                .statusCode(friendshipService.getStatusCode(authUserId, user.getId()))
+                .statusCode(getStatusCode(authUserId, user.getId()))
                 .lastOnlineTime(user.getLastOnlineTime())
                 .password(user.getPassword())
                 .build();
+    }
+
+    private StatusCode getStatusCode(Long authUserId, Long id) {
+        try {
+            Friendship friendshipFrom = friendshipRepository.findByAccountIdFromAndAccountIdTo(authUserId, id)
+                    .orElseThrow();
+            return friendshipFrom.getStatusCode();
+        } catch (Exception e) {
+            return StatusCode.NONE;
+        }
     }
 }
