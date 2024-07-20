@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class AllFriendsDto {
-    private Long id;
+public class FriendDto {
+    private Long friendId;
     private String photo;
     private StatusCode statusCode;
     private String firstName;

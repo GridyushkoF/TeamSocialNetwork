@@ -1,22 +1,17 @@
 package ru.skillbox.userservice.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import ru.skillbox.userservice.model.dto.AllFriendsDto;
-import ru.skillbox.userservice.model.dto.FriendSearchDto;
-import ru.skillbox.userservice.model.dto.RecommendationFriendsDto;
+import org.springframework.web.bind.annotation.*;
+import ru.skillbox.commondto.account.AccountDto;
+import ru.skillbox.commondto.account.StatusCode;
+import ru.skillbox.userservice.model.dto.FriendDto;
 import ru.skillbox.userservice.service.FriendshipService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/friends")
@@ -40,68 +35,50 @@ public class FriendController {
     }
 
     @PutMapping("/{id}/approve")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Void> approveFriend(@PathVariable("id") Long accountId, HttpServletRequest request) {
+    public void approveFriend(@PathVariable("id") Long accountId, HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
         friendshipService.approveFriendship(currentAuthUserId, accountId);
-        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/block/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Void> blockFriend(@PathVariable("id") Long accountId, HttpServletRequest request) {
+    public void blockFriend(@PathVariable("id") Long accountId, HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        friendshipService.blockFriend(currentAuthUserId, accountId);
-        return ResponseEntity.ok().build();
+        friendshipService.blockAccount(currentAuthUserId, accountId);
+    }
+
+    @PutMapping("/unblock/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void unblockFriend(@PathVariable("id") Long accountId, HttpServletRequest request) {
+        deleteFriendship(accountId, request);
     }
 
     @PostMapping("/subscribe/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Void> subscribe(@PathVariable("id") Long accountId, HttpServletRequest request) {
+    public void subscribe(@PathVariable("id") Long accountId, HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        friendshipService.subscribeToFriend(currentAuthUserId, accountId);
-        return ResponseEntity.ok().build();
+        friendshipService.subscribeToAccount(currentAuthUserId, accountId);
     }
 
     @GetMapping
-    public ResponseEntity<AllFriendsDto> getFriends(@Valid FriendSearchDto friendSearchDto, HttpServletRequest request) {
+    public ResponseEntity<Page<FriendDto>> getFriends(
+            @RequestParam StatusCode statusCode,
+            @RequestParam(defaultValue = "3") int size,
+            HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        //TODO: Сделать по-нормальному получение друзей
-        return ResponseEntity.ok(new AllFriendsDto());
-    }
-
-    @GetMapping("/{accountId}")
-    public ResponseEntity<Void> getFriendByAccountDto(@PathVariable("accountId") Long accountId, HttpServletRequest request) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        friendshipService.getFriendById(currentAuthUserId, accountId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(friendshipService.getFriendsByStatus(statusCode, size, currentAuthUserId));
     }
 
     @GetMapping("/recommendations")
-    public ResponseEntity<RecommendationFriendsDto> getByRecommendation(HttpServletRequest request) {
+    public ResponseEntity<List<AccountDto>> getByRecommendation(HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        //TODO: Сделать нормальное получение друзей по рекомендации
-        return ResponseEntity.ok(new RecommendationFriendsDto());
-    }
-
-    @GetMapping("/friendId")
-    public ResponseEntity<Void> getFriendId(HttpServletRequest request) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        friendshipService.getAllFriends(currentAuthUserId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(friendshipService.getFriendRecommendations(currentAuthUserId));
     }
 
     @GetMapping("/count")
-    public ResponseEntity<Void> requestCount(HttpServletRequest request) {
+    public ResponseEntity<Integer> requestCount(HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        friendshipService.getFriendRequestCount(currentAuthUserId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(friendshipService.getFriendRequestCount(currentAuthUserId));
     }
 
-    @GetMapping("/blockFriendId")
-    public ResponseEntity<Void> getBlockFriendId(HttpServletRequest request) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        friendshipService.getBlockedFriendIds(currentAuthUserId);
-        return ResponseEntity.ok().build();
-    }
 }
