@@ -21,7 +21,7 @@ public class WebSocketHandlerImpl implements WebSocketHandler {
     private final ObjectMapper mapper;
     private final MessageService service;
 
-    private final Map<Integer, WebSocketSession> sessions = new HashMap<>();
+    private final Map<Long, WebSocketSession> sessions = new HashMap<>();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
@@ -33,11 +33,18 @@ public class WebSocketHandlerImpl implements WebSocketHandler {
         ConversationMessageDto messageDto = mapper.readValue(message.getPayload().toString(),
                 ConversationMessageDto.class);
         if (messageDto.getType() == MessageType.MESSAGE) {
+            service.saveMessage(messageDto.getData());
+            session.sendMessage(message);
+
+            sessions.put(messageDto.getData().getAuthorId(), session);
             WebSocketSession socketSession = sessions.get(messageDto.getRecipientId());
             if (socketSession != null) {
-                socketSession.sendMessage(message);
+                try {
+                    socketSession.sendMessage(message);
+                } catch (Exception e) {
+                    sessions.remove(messageDto.getRecipientId());
+                }
             }
-            service.saveMessage(messageDto.getData());
         }
     }
 

@@ -3,7 +3,6 @@ package ru.skillbox.userservice.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,7 +80,7 @@ public class AccountController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<AccountDto>> searchAccount(@RequestParam boolean isDeleted, HttpServletRequest request) {
+    public ResponseEntity<List<AccountDto>> searchAccount(@RequestParam boolean isDeleted, HttpServletRequest request) {
         return ResponseEntity.ok(accountService.searchAccount(isDeleted, Long.parseLong(request.getHeader("id"))));
     }
 

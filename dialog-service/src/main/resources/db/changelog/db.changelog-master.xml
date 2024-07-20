@@ -11,7 +11,7 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="dialog_id" type="BIGINT"/>
-            <column name="time" type="BIGINT"/>
+            <column name="time" type="TIMESTAMP  WITHOUT TIME ZONE"/>
             <column name="author_id" type="BIGINT"/>
             <column name="recipient_id" type="BIGINT"/>
             <column name="message_text" type="VARCHAR(255)"/>

@@ -1,14 +1,12 @@
 package ru.skillbox.commondto.account;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@Data
 @Builder
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class AccountDto {
     Long id;
     String email;

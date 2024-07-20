@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
 import ru.skillbox.dialogservice.model.dto.MessageStatus;
+
+import java.time.Instant;
+
 
 @Entity
 @NoArgsConstructor
@@ -19,8 +22,8 @@ public class Message {
     private Long id;
     @Column(name = "dialog_id", nullable = false)
     private Long dialogId;
-    @CreatedDate
-    private Long time;
+    @CreationTimestamp
+    private Instant time;
     @Column(name = "author_id")
     private Long authorId;
     @Column(name = "recipient_id")

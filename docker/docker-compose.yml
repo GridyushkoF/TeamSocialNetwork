@@ -15,6 +15,7 @@ services:
   frontend:
     build:
       context: ../frontend/
+      no_cache: true
     image: skillgroup35/frontend
     ports:
       - "8099:80"
