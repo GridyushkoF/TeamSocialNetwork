@@ -1,4 +1,4 @@
-package ru.skillbox.dialogservice.websocket;
+package ru.skillbox.dialogservice.service.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
