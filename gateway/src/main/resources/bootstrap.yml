@@ -21,6 +21,8 @@ springdoc:
     urls:
       - name: auth
         url: /api/v1/auth/v3/api-docs
+      - name: dialogs
+        url: /api/v1/dialogs/v3/api-docs
 #      - name: post
 #        url: /api/v1/post/v3/api-docs
 #      - name: user

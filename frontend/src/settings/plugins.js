@@ -32,8 +32,8 @@ Vue.use(VueMoment, {
 
 // import chat from "@/plugins/socketio";
 import chat from '@/plugins/websocket';
-Vue.use(chat, { server: '82.202.214.42' }); // <- для стэнда, чтобы работал websocket.
+// Vue.use(chat, { server: '82.202.214.42' }); // <- для стэнда, чтобы работал websocket.
 
 // import VueSocketIO from 'vue-socket.io';
 // Vue.use(chat, { server: 'localhost:8080' }); // <- для локальной разработки. При выгрузке на стэнд закомментировать.
-// Vue.use(chat, { server: 'localhost:8099' });
+Vue.use(chat, { server: 'localhost:9090' });

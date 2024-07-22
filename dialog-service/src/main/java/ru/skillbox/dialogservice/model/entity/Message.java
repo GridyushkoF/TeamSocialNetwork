@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
 import ru.skillbox.dialogservice.model.dto.MessageStatus;
+
+import java.time.Instant;
+
 
 @Entity
 @NoArgsConstructor
@@ -15,15 +18,18 @@ import ru.skillbox.dialogservice.model.dto.MessageStatus;
 @Builder
 public class Message {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @CreatedDate
-    private Long time;
+    @Column(name = "dialog_id", nullable = false)
+    private Long dialogId;
+    @CreationTimestamp
+    private Instant time;
     @Column(name = "author_id")
     private Long authorId;
     @Column(name = "recipient_id")
     private Long recipientId;
     @Column(name = "message_text")
     private String messageText;
+    @Enumerated(EnumType.STRING)
     private MessageStatus status;
 }
