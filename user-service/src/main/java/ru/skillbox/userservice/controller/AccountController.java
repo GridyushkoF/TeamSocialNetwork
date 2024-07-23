@@ -21,6 +21,8 @@ import ru.skillbox.commondto.account.AccountDto;
 import ru.skillbox.commondto.account.AccountRecoveryRq;
 import ru.skillbox.userservice.service.AccountService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/account")
 @RequiredArgsConstructor
@@ -59,7 +61,7 @@ public class AccountController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllAccounts(@RequestParam Pageable page, HttpServletRequest request) {
+    public ResponseEntity<Page<AccountDto>> getAllAccounts(@RequestParam Pageable page, HttpServletRequest request) {
         return ResponseEntity.ok(accountService.getAllAccounts(page, Long.parseLong(request.getHeader("id"))));
     }
 
@@ -69,7 +71,7 @@ public class AccountController {
     }
 
     @PostMapping("/searchByFilter")
-    public ResponseEntity<AccountDto> searchAccountByFilter(@RequestBody AccountByFilterDto filterDto) {
+    public ResponseEntity<List<AccountDto>> searchAccountByFilter(@RequestBody AccountByFilterDto filterDto) {
         return ResponseEntity.ok(accountService.searchAccountByFilter(filterDto));
     }
 
