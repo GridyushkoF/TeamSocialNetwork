@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static jakarta.persistence.CascadeType.MERGE;
+import static jakarta.persistence.CascadeType.PERSIST;
 import static java.util.stream.Collectors.toSet;
 
 @Entity
@@ -91,7 +93,7 @@ public class User {
     private String password;
 
     @JsonIgnoreProperties("friendsFrom")
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = "friendship",
             joinColumns = @JoinColumn(name = "account_id_from",
                     referencedColumnName = "id"),
@@ -100,7 +102,7 @@ public class User {
     private List<User> friendsFrom;
 
     @JsonIgnoreProperties("friendsTo")
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = "friendship",
             joinColumns = @JoinColumn(name = "account_id_to"),
             inverseJoinColumns = @JoinColumn(name = "account_id_from")
