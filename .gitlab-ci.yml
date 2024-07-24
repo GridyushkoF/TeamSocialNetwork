@@ -1,6 +1,16 @@
-stages:          # List of stages for jobs, and their order of execution
+image: maven:3-eclipse-temurin-17
+
+variables:
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+  GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
+
+stages:
   - build
   - test
+  - sonarqube-check
+  - sonarqube-vulnerability-report
   - deploy
 
 cache:
@@ -8,33 +18,57 @@ cache:
     - .m2/repository
   key: "$CI_COMMIT_SHA"
 
-variables:
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-  MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
-
-build-job:       # This job runs in the build stage, which runs first.
+build-job:
   stage: build
   script:
     - echo "Compiling the code..."
     - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
 
-unit-test-job:   # This job runs in the test stage.
-  stage: test    # It only starts when the job in the build stage completes successfully.
+unit-test-job:
+  stage: test
   script:
     - echo "Running unit tests..."
     - mvn test $MAVEN_OPTS_CLI
 
-#lint-test-job:   # This job also runs in the test stage.
-#  stage: test    # It can run at the same time as unit-test-job (in parallel).
-#  script:
-#    - echo "Linting code..."
-#    - mvn checkstyle:checkstyle $MAVEN_OPTS_CLI -Dcheckstyle.output.format=xml
-##    - cat target/checkstyle-result.xml
+sonarqube-check:
+  stage: sonarqube-check
+  dependencies:
+    - build-job
+    - unit-test-job
+  cache:
+    policy: pull
+    key: "${CI_COMMIT_SHORT_SHA}"
+    paths:
+      - sonar-scanner/
 
-deploy-job:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  script:
+    - mvn verify sonar:sonar
+  allow_failure: false
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'main'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+
+sonarqube-vulnerability-report:
+  stage: sonarqube-vulnerability-report
+  script:
+    - 'curl -u "${SONAR_TOKEN}:" "${SONAR_HOST_URL}/api/issues/gitlab_sast_export?projectKey=javapro_team48_social_network_2115f87b-6fd2-41d5-ad1b-2f9b2d10f9cd&branch=${CI_COMMIT_BRANCH}&pullRequest=${CI_MERGE_REQUEST_IID}" -o gl-sast-sonar-report.json'
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'main'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+  artifacts:
+    expire_in: 1 day
+    reports:
+      sast: gl-sast-sonar-report.json
+
+deploy-job:
+  stage: deploy
   only:
-  - master
+    - master
   script:
     - echo "Deploying application..."
     - mvn clean package $MAVEN_OPTS_CLI -DskipTests
