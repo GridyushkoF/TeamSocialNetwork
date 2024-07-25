@@ -1,10 +1,10 @@
 package ru.skillbox.dialogservice.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 import lombok.Builder;
-import ru.skillbox.commondto.account.AccountDto;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,7 +12,9 @@ import ru.skillbox.commondto.account.AccountDto;
 @Builder
 public class DialogDto {
     private Long id;
-    private Long unreadCount;
-    private AccountDto conversationPartner;
-    private MessageDto lastMessage;
+    private int unreadCount;
+    @JsonProperty("conversationPartner1")
+    private Long member1Id;
+    @JsonProperty("conversationPartner2")
+    private Long member2Id;
 }

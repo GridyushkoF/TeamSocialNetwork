@@ -14,10 +14,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Dialog {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "unread_count")
-    private Long unreadCount;
+    private int unreadCount;
     @Column(name = "member1_id")
     private Long member1Id;
     @Column(name = "member2_id")

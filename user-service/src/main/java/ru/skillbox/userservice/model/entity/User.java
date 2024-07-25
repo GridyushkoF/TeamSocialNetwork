@@ -9,12 +9,18 @@ import org.hibernate.annotations.UpdateTimestamp;
 import ru.skillbox.commondto.account.Role;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
+
+import static jakarta.persistence.CascadeType.MERGE;
+import static jakarta.persistence.CascadeType.PERSIST;
+import static java.util.stream.Collectors.toSet;
 
 @Entity
 @Table(name = "users")
 @Accessors(chain = true)
-@ToString(exclude = "friends")
+@ToString(exclude = {"friendsFrom", "friendsTo"})
 @Builder
 @Getter
 @Setter
@@ -86,12 +92,25 @@ public class User {
 
     private String password;
 
-    @JsonIgnoreProperties("friends")
-    @ManyToMany(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("friendsFrom")
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = "friendship",
             joinColumns = @JoinColumn(name = "account_id_from",
                     referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "account_id_to",
                     referencedColumnName = "id"))
-    private Set<User> friends;
+    private List<User> friendsFrom;
+
+    @JsonIgnoreProperties("friendsTo")
+    @ManyToMany(cascade = {PERSIST, MERGE})
+    @JoinTable(name = "friendship",
+            joinColumns = @JoinColumn(name = "account_id_to"),
+            inverseJoinColumns = @JoinColumn(name = "account_id_from")
+    )
+    private List<User> friendsTo;
+
+    public Set<User> getFriends() {
+        return Stream.concat(friendsFrom.stream(), friendsTo.stream())
+                .collect(toSet());
+    }
 }

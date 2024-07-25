@@ -2,6 +2,9 @@ package ru.skillbox.userservice.service;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,9 +113,14 @@ public class AccountService {
         return List.of();
     }
 
-    public List<AccountDto> searchAccount(boolean isDeleted, long authUserId) {
-        List<User> users = userRepository.findAllByIsDeleted(isDeleted);
+    public Page<AccountDto> searchAccount(boolean isDeleted, long authUserId) {
 
-        return users.stream().map(user -> userMapper.userToResponse(authUserId, user)).toList();
+        Pageable nextPage = PageRequest.of(0, Integer.MAX_VALUE);
+
+        List<User> users = userRepository.findAllByIsDeleted(nextPage, isDeleted);
+
+        List<AccountDto> pageList = users.stream().map(user -> userMapper.userToResponse(authUserId, user)).toList();
+
+        return new PageImpl<>(pageList, nextPage, users.size());
     }
 }
