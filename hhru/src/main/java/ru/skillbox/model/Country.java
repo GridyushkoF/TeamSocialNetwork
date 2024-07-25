@@ -1,12 +1,13 @@
-package ru.skillbox;
+package ru.skillbox.model;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+//@Entity
 public class Country {
-    private Integer id;
+    private int id;
     private String name;
     private String url;
 }
