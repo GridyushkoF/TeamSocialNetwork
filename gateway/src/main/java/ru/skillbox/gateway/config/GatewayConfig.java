@@ -50,6 +50,11 @@ public class GatewayConfig {
                                 .filters(f -> f.filter(filter))
                                 .uri("lb://NOTIFICATION-SERVICE")
                 )
+                .route(
+                        "geo_route", r -> r.path("/api/v1/geo/**")
+                                .filters(f -> f.filter(filter))
+                                .uri("lb://GEO-SERVICE")
+                )
                 .build();
     }
 }

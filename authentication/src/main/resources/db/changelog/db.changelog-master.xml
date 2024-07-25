@@ -15,7 +15,7 @@
             <column name="photo" type="varchar (255)"/>
             <column name="about" type="TEXT"/>
             <column name="city" type="varchar (255)"/>
-            <column name="country" type="varchar (255)"/>
+            <column name="countryDto" type="varchar (255)"/>
             <column name="first_name" type="varchar (255)"/>
             <column name="last_name" type="varchar (255)"/>
             <column name="reg_date" type="TIMESTAMP  WITHOUT TIME ZONE"/>

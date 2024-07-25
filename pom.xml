@@ -43,7 +43,7 @@
         <module>notification-service</module>
         <module>gateway</module>
         <module>admin-service</module>
-        <module>hhru</module>
+        <module>geo-service</module>
     </modules>
 
     <build>
