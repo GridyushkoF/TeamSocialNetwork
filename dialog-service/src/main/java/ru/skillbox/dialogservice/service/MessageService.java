@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import ru.skillbox.dialogservice.mapper.MessageMapper;
 import ru.skillbox.dialogservice.model.dto.*;
 import ru.skillbox.dialogservice.model.entity.Message;
+import ru.skillbox.dialogservice.model.enums.MessageStatus;
 import ru.skillbox.dialogservice.repository.MessageRepository;
 
 import java.util.List;

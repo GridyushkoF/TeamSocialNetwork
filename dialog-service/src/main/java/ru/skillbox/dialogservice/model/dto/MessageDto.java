@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 import lombok.Builder;
+import ru.skillbox.dialogservice.model.enums.MessageStatus;
 
 import java.time.Instant;
 
