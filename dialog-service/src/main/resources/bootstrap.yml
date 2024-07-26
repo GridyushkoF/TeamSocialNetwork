@@ -19,6 +19,10 @@ eureka:
   instance:
     preferIpAddress: true
 
+app:
+  feignClient:
+    url: "http://localhost:9090/api/v1"
+
 # could be used for debugging
 #logging:
 #  level:

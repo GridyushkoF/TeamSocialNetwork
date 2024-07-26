@@ -25,7 +25,7 @@ public class WebSocketHandlerImpl implements WebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
-//        sessions.put(session.getPrincipal().getName().hashCode(), session);
+        sessions.put(Long.parseLong(session.getPrincipal().getName()), session);
     }
 
     @Override
@@ -36,7 +36,6 @@ public class WebSocketHandlerImpl implements WebSocketHandler {
             service.saveMessage(messageDto.getData());
             session.sendMessage(message);
 
-            sessions.put(messageDto.getData().getAuthorId(), session);
             WebSocketSession socketSession = sessions.get(messageDto.getRecipientId());
             if (socketSession != null) {
                 try {

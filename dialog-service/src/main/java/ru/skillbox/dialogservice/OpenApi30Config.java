@@ -8,8 +8,8 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@OpenAPIDefinition(info = @Info(title = "Dialogs API", version = "v1"),
-        servers = {@Server(url = "http://localhost:9090/api/v1/dialogs")})
+@OpenAPIDefinition(info = @Info(title = "Dialogs API", version = "v1", description = "Социальная сеть"),
+        servers = {@Server(url = "http://localhost:9090")})
 @SecurityScheme(
         name = "bearerAuth",
         type = SecuritySchemeType.HTTP,

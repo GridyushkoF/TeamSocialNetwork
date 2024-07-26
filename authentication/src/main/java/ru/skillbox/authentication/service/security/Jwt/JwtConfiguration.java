@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.service.security;
+package ru.skillbox.authentication.service.security.Jwt;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import io.jsonwebtoken.security.Keys;
@@ -8,21 +8,28 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.security.Key;
+import java.time.Duration;
 
 @Configuration
 @ConfigurationProperties("security.jwt")
 @Setter
-public class AlgorithmConfiguration {
+public class JwtConfiguration {
 
     private String secret;
-    @Bean
-    public Algorithm algorithm(){
-        return Algorithm.HMAC512(secret.getBytes());
-    }
+    private Duration tokenExpiration;
 
     @Bean
+    public Algorithm algorithm() {
+        return Algorithm.HMAC512(secret.getBytes());
+    }
+    @Bean
     public Key key(){
+
         return Keys.hmacShaKeyFor(secret.getBytes());
+    }
+    @Bean
+    public Duration tokenExpiration() {
+        return tokenExpiration;
     }
 
 }
