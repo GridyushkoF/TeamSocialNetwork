@@ -1,3 +1,5 @@
+image: maven:3-eclipse-temurin-17
+
 variables:
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
@@ -5,8 +7,8 @@ variables:
   MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
 
 stages:
-  - build
-  - test
+  # - build
+  # - test
   - sonarqube-check
   - deploy
 
@@ -39,7 +41,7 @@ sonarqube-check-job:
       - sonar-scanner/
 
   script:
-    - DOCKER_HOST=unix:///var/run/docker.sock mvn verify sonar:sonar $MAVEN_OPTS_CLI
+    -  mvn verify sonar:sonar $MAVEN_OPTS_CLI
   allow_failure: false
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
