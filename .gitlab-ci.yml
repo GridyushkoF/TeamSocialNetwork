@@ -27,11 +27,11 @@ unit-test-job:
     - echo "Running unit tests..."
     - mvn test $MAVEN_OPTS_CLI
 
-sonarqube-check:
+sonarqube-check-job:
   stage: sonarqube-check
-  dependencies:
-    - build-job
-    - unit-test-job
+  # dependencies:
+  #   - build-job
+  #   - unit-test-job
   cache:
     policy: pull
     key: "${CI_COMMIT_SHA}"
@@ -39,7 +39,7 @@ sonarqube-check:
       - sonar-scanner/
 
   script:
-    - mvn verify sonar:sonar $MAVEN_OPTS_CLI
+    - DOCKER_HOST=unix:///var/run/docker.sock mvn verify sonar:sonar $MAVEN_OPTS_CLI
   allow_failure: false
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
