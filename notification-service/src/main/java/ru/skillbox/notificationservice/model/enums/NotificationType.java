@@ -1,4 +1,4 @@
-package ru.skillbox.notificationservice.model.entity;
+package ru.skillbox.notificationservice.model.enums;
 
 public enum NotificationType {
     FRIEND_REQUEST,
@@ -7,6 +7,5 @@ public enum NotificationType {
     COMMENT_COMMENT,
     POST,
     MESSAGE,
-    SEND_PHONE_MESSAGE,
     SEND_EMAIL_MESSAGE,
 }

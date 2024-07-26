@@ -3,64 +3,60 @@ package ru.skillbox.notificationservice.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.notificationservice.model.dto.NotificationCreateDto;
-import ru.skillbox.notificationservice.model.dto.NotificationSettingDto;
-import ru.skillbox.notificationservice.model.entity.NotificationResponse;
-import ru.skillbox.notificationservice.util.settings.NotificationSettingResponse;
+import ru.skillbox.notificationservice.model.dto.*;
 import ru.skillbox.notificationservice.service.NotificationService;
-import ru.skillbox.notificationservice.util.settings.NotificationSettingData;
-import ru.skillbox.notificationservice.util.status.NotificationStatus;
-
-import java.time.LocalDateTime;
-import java.util.HashMap;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/notifications")
 public class NotificationController {
 
-    private NotificationService notificationService;
+    private final NotificationService notificationService;
 
     @GetMapping("/settings")
-    public NotificationSettingResponse getNotificationSetting(HttpServletRequest httpServletRequest){
+    public ResponseEntity<NotificationSettingsDto> getNotificationSetting(HttpServletRequest request){
 
-        return notificationService.getSettings(Long.parseLong(httpServletRequest.getHeader("id")));
+        return ResponseEntity.ok(notificationService.getSettings(request));
 
     }
 
     @PutMapping("/settings")
-    public ResponseEntity<?> updateNotificationSettings(@RequestBody NotificationSettingData notificationSettingData, HttpServletRequest httpServletRequest){
-        notificationService.updateSettings(notificationSettingData , Long.parseLong(httpServletRequest.getHeader("id")));
-
-        LocalDateTime dateTime = LocalDateTime.now();
-        NotificationStatus notificationStatus = new NotificationStatus(true);
-
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("time" , dateTime);
-        hashMap.put("status" , notificationStatus);
-
-        return ResponseEntity.ok(hashMap);
+    public ResponseEntity<NotificationSettingsDto> updateNotificationSettings(
+            @RequestBody SettingRq settingsData, HttpServletRequest request){
+        return ResponseEntity.ok(notificationService.updateSettings(settingsData, request));
     }
 
     @PostMapping("/settings")
-    public ResponseEntity<?> createNotificationSetting(@RequestBody NotificationSettingDto notificationSettingDto){
-        notificationService.createSettings(notificationSettingDto);
-        return ResponseEntity.ok(notificationSettingDto);
+    public ResponseEntity<NotificationSettingsDto> createNotificationSetting(
+            @RequestBody SettingsDto settingsDto, HttpServletRequest request){
+        return ResponseEntity.ok(notificationService.createSettings(settingsDto, request));
     }
 
 
-    @GetMapping
-    public NotificationResponse getNotification(HttpServletRequest httpServletRequest) throws Exception {
+    @GetMapping("/")
+    public ResponseEntity<NotificationSentDto> getNotification(HttpServletRequest request) {
 
-        return notificationService.getNotification(httpServletRequest);
+        return ResponseEntity.ok(notificationService.getNotifications(request));
     }
 
 
-    @PostMapping
-    public ResponseEntity<?> createNotification(@RequestBody NotificationCreateDto notificationCreateDto){
-        notificationService.createNotification(notificationCreateDto);
-        return ResponseEntity.ok(notificationCreateDto);
+    @PostMapping("/")
+    public ResponseEntity<NotificationDto> createNotification(
+            @RequestBody NotificationInputDto notificationInputDto,
+            HttpServletRequest request){
+        return ResponseEntity.ok(notificationService.createNotification(notificationInputDto, request));
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<NotificationCountRs> getNotificationCount(HttpServletRequest request) {
+        return ResponseEntity.ok(notificationService.getCount(request));
+    }
+
+    @PutMapping("/readed")
+    @ResponseStatus(HttpStatus.OK)
+    public void setReaded(HttpServletRequest request) {
+        notificationService.setReaded(request);
     }
 }

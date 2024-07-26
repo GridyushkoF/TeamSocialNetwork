@@ -1,22 +1,12 @@
-package ru.skillbox.notificationservice.util.settings;
+package ru.skillbox.notificationservice.model.dto;
 
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "notification_settings")
-public class NotificationSetting {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class SettingsDto {
     private Long Id;
     private Long userId;
     private boolean friendRequest;
@@ -27,6 +17,4 @@ public class NotificationSetting {
     private boolean message;
     private boolean sendPhoneMessage;
     private boolean sendEmailMessage;
-
-
 }

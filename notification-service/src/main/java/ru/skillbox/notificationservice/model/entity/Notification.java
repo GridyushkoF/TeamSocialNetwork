@@ -1,31 +1,38 @@
 package ru.skillbox.notificationservice.model.entity;
 
-
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.skillbox.commondto.account.AccountDto;
-
+import org.hibernate.annotations.CreationTimestamp;
+import ru.skillbox.notificationservice.model.enums.NotificationStatus;
+import ru.skillbox.notificationservice.model.enums.NotificationType;
 
 import java.time.LocalDateTime;
 
-
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "notifications")
 public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private AccountDto user;
+    @CreationTimestamp
+    private LocalDateTime time;
+    @Column(name = "author_id")
+    private Long authorId;
+    @Column(name = "user_id")
+    private Long userId;
     private String content;
+    @Column(name = "notification_type")
+    @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
-    private LocalDateTime sentTime;
-
+    @Column(name = "Notification_status")
+    @Enumerated(EnumType.STRING)
+    private NotificationStatus notificationStatus;
 }
