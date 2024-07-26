@@ -7,8 +7,8 @@ variables:
   MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
 
 stages:
-  # - build
-  # - test
+  - build
+  - test
   - sonarqube-check
   - deploy
 
@@ -31,9 +31,9 @@ unit-test-job:
 
 sonarqube-check-job:
   stage: sonarqube-check
-  # dependencies:
-  #   - build-job
-  #   - unit-test-job
+  dependencies:
+    - build-job
+    - unit-test-job
   cache:
     policy: pull
     key: "${CI_COMMIT_SHA}"
