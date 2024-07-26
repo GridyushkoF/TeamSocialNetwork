@@ -6,6 +6,7 @@ import ru.skillbox.dialogservice.model.entity.Message;
 
 import java.util.List;
 
+
 @Mapper(componentModel = "spring")
 public interface MessageMapper {
     MessageDto toDto(Message dialog);
