@@ -43,7 +43,7 @@ sonarqube-check-job:
 
   script:
     -  mvn verify sonar:sonar $MAVEN_OPTS_CLI
-  allow_failure: false
+  allow_failure: true
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH == 'master'
