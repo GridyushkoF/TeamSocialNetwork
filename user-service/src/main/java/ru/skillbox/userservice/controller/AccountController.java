@@ -16,10 +16,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.skillbox.commondto.PeriodRequestDto;
 import ru.skillbox.commondto.account.AccountByFilterDto;
 import ru.skillbox.commondto.account.AccountDto;
 import ru.skillbox.commondto.account.AccountRecoveryRq;
 import ru.skillbox.userservice.service.AccountService;
+import ru.skillbox.userservice.util.AdminAccessUtil;
+
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/account")
@@ -46,16 +51,6 @@ public class AccountController {
     @DeleteMapping("/me")
     public ResponseEntity<String> deleteUserAccount(HttpServletRequest request) {
         return ResponseEntity.ok(accountService.deleteUserAccount(Long.parseLong(request.getHeader("id"))));
-    }
-
-    @PutMapping("/block/{id}")
-    public ResponseEntity<String> blockAccountById(@PathVariable Integer id) {
-        return ResponseEntity.ok(accountService.blockAccount(true, id));
-    }
-
-    @DeleteMapping("/block/{id}")
-    public ResponseEntity<String> unblockAccountById(@PathVariable Integer id) {
-        return ResponseEntity.ok(accountService.blockAccount(false, id));
     }
 
     @GetMapping
@@ -91,5 +86,30 @@ public class AccountController {
     @GetMapping("/accountIds")
     public ResponseEntity<?> getAccountIds(@RequestParam Long[] ids, @RequestParam Pageable page) {
         return ResponseEntity.ok(accountService.getAccountIds(ids, page));
+    }
+    //----------------------------ADMIN-ACCESS---------------------------
+    @PostMapping("/admin-api/get-registered-users-amount")
+    public ResponseEntity<Map<String, Object>> getRegisteredUsersAmount(
+            @RequestBody PeriodRequestDto periodRequestDto,
+            HttpServletRequest request) {
+        AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);
+        int usersAmount = accountService.getRegisteredUsersAmount(periodRequestDto);
+        return ResponseEntity.ok(Map.of("users_amount",usersAmount));
+    }
+
+    @PutMapping("/admin-api/block/{id}")
+    public ResponseEntity<String> blockAccountById(
+            @PathVariable Integer id,
+            HttpServletRequest request) {
+        AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);
+        return ResponseEntity.ok(accountService.blockAccount(true, id));
+    }
+
+    @DeleteMapping("/admin-api/block/{id}")
+    public ResponseEntity<String> unblockAccountById(
+            @PathVariable Integer id,
+            HttpServletRequest request) {
+        AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);
+        return ResponseEntity.ok(accountService.blockAccount(false, id));
     }
 }

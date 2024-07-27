@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.skillbox.authentication.service.CaptchaService;
 
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

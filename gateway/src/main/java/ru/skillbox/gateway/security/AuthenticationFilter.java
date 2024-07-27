@@ -1,5 +1,6 @@
 package ru.skillbox.gateway.security;
 
+import io.jsonwebtoken.Claims;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -57,9 +58,12 @@ public class AuthenticationFilter implements GatewayFilter {
 
     private void populateRequestWithHeaders(ServerWebExchange exchange, String tokenString) {
         String jwtToken = tokenString.substring(7);
-        String userId = jwtUtil.getAllClaimsFromToken(jwtToken).get("id").toString();
+        Claims tokenClaims = jwtUtil.getAllClaimsFromToken(jwtToken);
+        String userId = tokenClaims.get("id").toString();
+        String authorities = tokenClaims.get("authorities").toString();
         exchange.getRequest().mutate()
                 .header("id", userId)
+                .header("authorities",authorities)
                 .build();
     }
 }

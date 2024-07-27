@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import ru.skillbox.postservice.exception.PostNotFoundException;
 import ru.skillbox.postservice.model.entity.Post;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -17,4 +18,5 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
     default Post getPostByIdOrThrowException(Long id) {
         return this.findById(id).orElseThrow(() -> new PostNotFoundException("Can`t find post with id " + id));
     }
+    int countByPublishDateBetween(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo);
 }

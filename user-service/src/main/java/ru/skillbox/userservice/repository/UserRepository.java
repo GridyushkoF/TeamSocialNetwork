@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.skillbox.userservice.model.entity.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,5 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByIsDeleted(Pageable page, boolean isDeleted);
 
     Optional<User> findByEmail(String email);
+    int countByRegDateBetween(LocalDateTime from,LocalDateTime to);
 
 }

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ru.skillbox.commondto.PeriodRequestDto;
 import ru.skillbox.postservice.mapper.PostMapper;
 import ru.skillbox.commondto.post.PhotoDto;
 import ru.skillbox.commondto.post.PostDto;
@@ -141,5 +142,9 @@ public class PostService {
             e.printStackTrace();
             throw new RuntimeException("error when saving file");
         }
+    }
+    //-------------------------ADMIN-ACCESS--------------------------
+    public int getPostsAmountByPeriod(PeriodRequestDto periodRequestDto) {
+        return postRepository.countByPublishDateBetween(periodRequestDto.getDateTimeFrom(),periodRequestDto.getDateTimeTo());
     }
 }

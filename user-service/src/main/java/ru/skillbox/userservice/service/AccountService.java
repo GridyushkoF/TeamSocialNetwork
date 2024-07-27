@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.skillbox.commondto.PeriodRequestDto;
 import ru.skillbox.commondto.account.AccountByFilterDto;
 import ru.skillbox.commondto.account.AccountDto;
 import ru.skillbox.commondto.account.AccountRecoveryRq;
@@ -122,5 +123,12 @@ public class AccountService {
         List<AccountDto> pageList = users.stream().map(user -> userMapper.userToResponse(authUserId, user)).toList();
 
         return new PageImpl<>(pageList, nextPage, users.size());
+    }
+
+    public int getRegisteredUsersAmount(PeriodRequestDto periodRequestDto) {
+        return userRepository.countByRegDateBetween(
+                periodRequestDto.getDateTimeFrom(),
+                periodRequestDto.getDateTimeTo()
+        );
     }
 }

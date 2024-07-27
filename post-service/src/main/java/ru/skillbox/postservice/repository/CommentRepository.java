@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import ru.skillbox.postservice.exception.CommentNotFoundException;
 import ru.skillbox.postservice.model.entity.Comment;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -18,4 +19,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     default Comment getByIdOrThrowException (Long id) {
         return findById(id).orElseThrow(() -> new CommentNotFoundException(id));
     }
+    int countByTimeBetween(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo);
 }

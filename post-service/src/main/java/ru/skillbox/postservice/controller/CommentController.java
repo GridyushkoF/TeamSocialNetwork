@@ -7,12 +7,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.skillbox.commondto.PeriodRequestDto;
 import ru.skillbox.commondto.post.CommentDto;
 import ru.skillbox.commondto.post.pages.PageCommentDto;
 import ru.skillbox.postservice.service.CommentService;
+import ru.skillbox.postservice.util.AdminAccessUtil;
 import ru.skillbox.postservice.util.SortCreatorUtil;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -80,5 +83,13 @@ public class CommentController {
         Pageable pageable = PageRequest.of(page, size, SortCreatorUtil.createSort(sort));
         return ResponseEntity.ok(commentService.getSubComments(postId, commentId, pageable,currentAuthUserId,isDeleted));
     }
-
+    //------------------------------ADMIN-ACCESS----------------------------------
+    @PostMapping("/admin-api/get-comments-amount")
+    public ResponseEntity<Map<String,Object>> getCommentsAmountByPeriod(
+            @RequestBody PeriodRequestDto periodRequestDto,
+            HttpServletRequest request) {
+        AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);
+        int commentsAmount = commentService.getCommentsAmountByPeriod(periodRequestDto);
+        return ResponseEntity.ok(Map.of("comments_amount",commentsAmount));
+    }
 }

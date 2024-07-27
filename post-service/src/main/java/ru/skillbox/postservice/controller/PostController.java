@@ -3,20 +3,22 @@ package ru.skillbox.postservice.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.skillbox.commondto.PeriodRequestDto;
 import ru.skillbox.commondto.post.PhotoDto;
 import ru.skillbox.commondto.post.PostDto;
 import ru.skillbox.commondto.post.PostSearchDto;
 import ru.skillbox.commondto.post.PostType;
 import ru.skillbox.commondto.post.pages.PagePostDto;
 import ru.skillbox.postservice.service.PostService;
+import ru.skillbox.postservice.util.AdminAccessUtil;
 import ru.skillbox.postservice.util.SortCreatorUtil;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -87,6 +89,15 @@ public class PostController {
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(postService.uploadImage(file));
+    }
+    //------------------------------ADMIN-ACCESS----------------------------------
+    @PostMapping("/admin-api/get-posts-amount")
+    public ResponseEntity<Map<String,Object>> getPostsAmountByPeriod(
+            @RequestBody PeriodRequestDto periodRequestDto,
+            HttpServletRequest request) {
+        AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);
+        return ResponseEntity.ok(Map.of("posts_amount",
+                postService.getPostsAmountByPeriod(periodRequestDto)));
     }
 }
 
