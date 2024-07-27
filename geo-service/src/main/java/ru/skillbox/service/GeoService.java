@@ -7,8 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ru.skillbox.mapper.CityMapper;
+import ru.skillbox.mapper.CountryMapper;
 import ru.skillbox.model.dto.CityDto;
-import ru.skillbox.model.dto.json.CountryDto;
+import ru.skillbox.model.dto.CountryResponse;
 import ru.skillbox.model.dto.json.DivisionDto;
 import ru.skillbox.util.HttpUtil;
 
@@ -20,6 +21,7 @@ public class GeoService {
     private final String prefixUrl = "https://api.hh.ru";
     private final ObjectMapper objectMapper;
     private final HttpUtil httpUtil;
+    private final CountryMapper countryMapper;
 
     @Cacheable(cacheNames = "cities")
     public List<CityDto> getCitiesByCountryId(int id) throws JsonProcessingException {
@@ -29,10 +31,10 @@ public class GeoService {
         return CityMapper.convertDivisionToCities(countryDto,countryDto.getId());
     }
     @Cacheable(cacheNames = "countries")
-    public List<CountryDto> getCountries() throws JsonProcessingException {
+    public List<CountryResponse> getCountries() throws JsonProcessingException {
         String url = prefixUrl + "/areas/countries";
-        return objectMapper.readValue(httpUtil.sendHttpAndGetTextResponse(url),
-                new TypeReference<>(){});
+        return countryMapper.dtoListToResponseList(objectMapper.readValue(httpUtil.sendHttpAndGetTextResponse(url),
+                new TypeReference<>(){}));
     }
 
 }

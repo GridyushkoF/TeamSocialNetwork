@@ -13,5 +13,5 @@ import java.io.Serializable;
 @Builder
 public class CityDto implements Serializable {
     private int id, countryId;
-    private String name;
+    private String title;
 }

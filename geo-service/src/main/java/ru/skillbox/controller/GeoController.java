@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.skillbox.model.dto.CityDto;
-import ru.skillbox.model.dto.json.CountryDto;
+import ru.skillbox.model.dto.CountryResponse;
 import ru.skillbox.service.GeoService;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class GeoController {
     private final GeoService geoService;
 
     @GetMapping("/country")
-    public ResponseEntity<List<CountryDto>> getCountries() throws JsonProcessingException {
+    public ResponseEntity<List<CountryResponse>> getCountries() throws JsonProcessingException {
         return ResponseEntity.ok(geoService.getCountries());
     }
 

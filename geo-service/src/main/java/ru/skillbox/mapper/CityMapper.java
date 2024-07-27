@@ -23,7 +23,7 @@ public class CityMapper {
     private static CityDto convertDivisionToCity(int countryId, DivisionDto division) {
         return CityDto.builder()
                 .countryId(countryId)
-                .name(division.getName())
+                .title(division.getName())
                 .id(division.getId())
                 .build();
     }
