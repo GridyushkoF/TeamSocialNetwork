@@ -65,7 +65,7 @@ public class AccountService {
 
     public String blockAccount(boolean block, long id) {
         if (block) {
-            // logic with DB
+
             return "blocked";
         } else {
             // logic with DB

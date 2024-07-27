@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.skillbox.commondto.PeriodRequestDto;
 import ru.skillbox.commondto.post.CommentDto;
 import ru.skillbox.commondto.post.pages.PageCommentDto;
+import ru.skillbox.commondto.statistics.AmountDto;
 import ru.skillbox.postservice.service.CommentService;
 import ru.skillbox.postservice.util.AdminAccessUtil;
 import ru.skillbox.postservice.util.SortCreatorUtil;
@@ -85,11 +86,11 @@ public class CommentController {
     }
     //------------------------------ADMIN-ACCESS----------------------------------
     @PostMapping("/admin-api/get-comments-amount")
-    public ResponseEntity<Map<String,Object>> getCommentsAmountByPeriod(
+    public ResponseEntity<AmountDto> getCommentsAmountByPeriod(
             @RequestBody PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
         AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);
         int commentsAmount = commentService.getCommentsAmountByPeriod(periodRequestDto);
-        return ResponseEntity.ok(Map.of("comments_amount",commentsAmount));
+        return ResponseEntity.ok(new AmountDto(commentsAmount));
     }
 }

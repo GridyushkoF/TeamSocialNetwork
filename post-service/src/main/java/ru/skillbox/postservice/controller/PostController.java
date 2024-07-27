@@ -13,6 +13,7 @@ import ru.skillbox.commondto.post.PostDto;
 import ru.skillbox.commondto.post.PostSearchDto;
 import ru.skillbox.commondto.post.PostType;
 import ru.skillbox.commondto.post.pages.PagePostDto;
+import ru.skillbox.commondto.statistics.AmountDto;
 import ru.skillbox.postservice.service.PostService;
 import ru.skillbox.postservice.util.AdminAccessUtil;
 import ru.skillbox.postservice.util.SortCreatorUtil;
@@ -92,12 +93,11 @@ public class PostController {
     }
     //------------------------------ADMIN-ACCESS----------------------------------
     @PostMapping("/admin-api/get-posts-amount")
-    public ResponseEntity<Map<String,Object>> getPostsAmountByPeriod(
+    public ResponseEntity<AmountDto> getPostsAmountByPeriod(
             @RequestBody PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
         AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);
-        return ResponseEntity.ok(Map.of("posts_amount",
-                postService.getPostsAmountByPeriod(periodRequestDto)));
+        return ResponseEntity.ok(new AmountDto(postService.getPostsAmountByPeriod(periodRequestDto)));
     }
 }
 

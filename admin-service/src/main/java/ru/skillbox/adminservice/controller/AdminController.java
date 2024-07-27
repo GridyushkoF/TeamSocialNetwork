@@ -3,10 +3,7 @@ package ru.skillbox.adminservice.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.skillbox.adminservice.service.AdminService;
 import ru.skillbox.commondto.PeriodRequestDto;
 
@@ -30,7 +27,7 @@ public class AdminController {
             @RequestBody PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
         return ResponseEntity.ok(Map.of("comments_amount",
-                adminService.getCommentsAmountByPeriod(periodRequestDto,request)))
+                adminService.getCommentsAmountByPeriod(periodRequestDto,request)));
     }
     @PostMapping("/get-registered-users-amount")
     public ResponseEntity<Map<Object, Object>> getRegisteredUsersAmountByPeriod
@@ -40,5 +37,18 @@ public class AdminController {
         return ResponseEntity.ok(Map.of("users_amount",
                 adminService.getUsersAmountByPeriod(periodRequestDto,request)));
     }
-
+    @PostMapping("/block-user/{userId}")
+    public ResponseEntity<Map<Object,Object>> blockUser(
+            @PathVariable Long userId,
+            HttpServletRequest request) {
+        adminService.blockOrUnblockUser(userId,true,request);
+        return ResponseEntity.ok(Map.of("message","user with id " + userId + " blocked successfully"));
+    }
+    @PostMapping("/unblock-user/{userId}")
+    public ResponseEntity<Map<Object,Object>> unblock (
+            @PathVariable Long userId,
+            HttpServletRequest request) {
+        adminService.blockOrUnblockUser(userId,false,request);
+        return ResponseEntity.ok(Map.of("message","user with id " + userId + " unblocked successfully"));
+    }
 }

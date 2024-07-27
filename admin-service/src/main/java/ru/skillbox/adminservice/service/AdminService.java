@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import ru.skillbox.commondto.PeriodRequestDto;
+import ru.skillbox.commondto.statistics.AmountDto;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -55,8 +58,8 @@ public class AdminService {
                 .body(BodyInserters.fromValue(periodRequestDto));
 
         spec = spec.header("Authorization", request.getHeader("Authorization"));
-        return spec.retrieve()
-                .bodyToMono(Integer.class)
-                .block();
+        return Objects.requireNonNull(spec.retrieve()
+                .bodyToMono(AmountDto.class)
+                .block()).getAmount();
     }
 }

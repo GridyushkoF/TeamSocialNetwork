@@ -20,6 +20,7 @@ import ru.skillbox.commondto.PeriodRequestDto;
 import ru.skillbox.commondto.account.AccountByFilterDto;
 import ru.skillbox.commondto.account.AccountDto;
 import ru.skillbox.commondto.account.AccountRecoveryRq;
+import ru.skillbox.commondto.statistics.AmountDto;
 import ru.skillbox.userservice.service.AccountService;
 import ru.skillbox.userservice.util.AdminAccessUtil;
 
@@ -89,12 +90,12 @@ public class AccountController {
     }
     //----------------------------ADMIN-ACCESS---------------------------
     @PostMapping("/admin-api/get-registered-users-amount")
-    public ResponseEntity<Map<String, Object>> getRegisteredUsersAmount(
+    public ResponseEntity<AmountDto> getRegisteredUsersAmount(
             @RequestBody PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
         AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);
         int usersAmount = accountService.getRegisteredUsersAmount(periodRequestDto);
-        return ResponseEntity.ok(Map.of("users_amount",usersAmount));
+        return ResponseEntity.ok(new AmountDto(usersAmount));
     }
 
     @PutMapping("/admin-api/block/{id}")
