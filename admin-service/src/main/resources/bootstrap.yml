@@ -1,6 +1,6 @@
 spring:
   application:
-    name: admin-service
+    name: admin-console
   profiles:
     active: local
   cloud:

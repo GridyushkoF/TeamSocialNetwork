@@ -85,7 +85,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ru.skillbox</groupId>
-			<artifactId>common-dto</artifactId>
+			<artifactId>common-lib</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 

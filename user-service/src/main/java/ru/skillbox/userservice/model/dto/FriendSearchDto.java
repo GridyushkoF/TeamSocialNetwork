@@ -3,7 +3,7 @@ package ru.skillbox.userservice.model.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import ru.skillbox.commondto.account.StatusCode;
+import ru.skillbox.commondto.dto.account.StatusCode;
 
 import java.time.LocalDateTime;
 import java.util.List;

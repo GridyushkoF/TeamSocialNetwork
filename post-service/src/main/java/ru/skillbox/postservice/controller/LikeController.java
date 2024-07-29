@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.commondto.post.LikeDto;
+import ru.skillbox.commondto.dto.post.LikeDto;
 import ru.skillbox.postservice.service.LikeService;
 
 @RestController

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.skillbox.authentication.service.security.Jwt.JwtService;
-import ru.skillbox.commondto.auth.JwtRequest;
+import ru.skillbox.commondto.dto.auth.JwtRequest;
 
 import java.util.Map;
 

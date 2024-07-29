@@ -16,16 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.skillbox.commondto.PeriodRequestDto;
-import ru.skillbox.commondto.account.AccountByFilterDto;
-import ru.skillbox.commondto.account.AccountDto;
-import ru.skillbox.commondto.account.AccountRecoveryRq;
-import ru.skillbox.commondto.statistics.AmountDto;
+import ru.skillbox.commondto.dto.statistics.PeriodRequestDto;
+import ru.skillbox.commondto.dto.account.AccountByFilterDto;
+import ru.skillbox.commondto.dto.account.AccountDto;
+import ru.skillbox.commondto.dto.account.AccountRecoveryRq;
+import ru.skillbox.commondto.dto.statistics.CountDto;
+import ru.skillbox.commondto.dto.statistics.UsersStatisticsDto;
+import ru.skillbox.commondto.util.admin.AdminAccessUtil;
 import ru.skillbox.userservice.service.AccountService;
-import ru.skillbox.userservice.util.AdminAccessUtil;
-
-import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/account")
@@ -89,13 +87,12 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getAccountIds(ids, page));
     }
     //----------------------------ADMIN-ACCESS---------------------------
-    @PostMapping("/admin-api/get-registered-users-amount")
-    public ResponseEntity<AmountDto> getRegisteredUsersAmount(
+    @PostMapping("/admin-api/get-registered-users-statistics")
+    public ResponseEntity<UsersStatisticsDto> getRegisteredUsersAmount(
             @RequestBody PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
         AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);
-        int usersAmount = accountService.getRegisteredUsersAmount(periodRequestDto);
-        return ResponseEntity.ok(new AmountDto(usersAmount));
+        return ResponseEntity.ok(accountService.getUsersStatistics(periodRequestDto));
     }
 
     @PutMapping("/admin-api/block/{id}")

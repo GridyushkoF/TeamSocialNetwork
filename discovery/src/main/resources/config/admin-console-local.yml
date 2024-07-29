@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: admin-console
+app:
+  apiPrefix: /api/v1
+  gatewayUrl: "http://localhost:9090"

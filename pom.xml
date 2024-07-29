@@ -36,7 +36,7 @@
     <modules>
         <module>discovery</module>
         <module>authentication</module>
-        <module>common-dto</module>
+        <module>common-lib</module>
         <module>user-service</module>
         <module>post-service</module>
         <module>dialog-service</module>

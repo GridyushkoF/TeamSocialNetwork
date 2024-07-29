@@ -8,11 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.skillbox.commondto.post.wrappers.TagWrapper;
+import ru.skillbox.commondto.dto.post.wrappers.TagWrapper;
 import ru.skillbox.postservice.TestDependenciesContainer;
-import ru.skillbox.commondto.post.PostDto;
-import ru.skillbox.commondto.post.PostSearchDto;
-import ru.skillbox.commondto.post.PostType;
+import ru.skillbox.commondto.dto.post.PostDto;
+import ru.skillbox.commondto.dto.post.PostSearchDto;
+import ru.skillbox.commondto.dto.post.PostType;
 import ru.skillbox.postservice.model.entity.Post;
 
 import java.util.List;

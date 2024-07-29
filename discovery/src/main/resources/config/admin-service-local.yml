@@ -1,6 +1,0 @@
-spring:
-  application:
-    name: admin-service
-app:
-  apiPrefix: /api/v1
-  gatewayUrl: "http://localhost:9090"

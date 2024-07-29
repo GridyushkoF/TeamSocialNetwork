@@ -6,8 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.commondto.account.AccountDto;
-import ru.skillbox.commondto.account.StatusCode;
+import ru.skillbox.commondto.dto.account.AccountDto;
+import ru.skillbox.commondto.dto.account.StatusCode;
 import ru.skillbox.userservice.model.dto.FriendDto;
 import ru.skillbox.userservice.service.FriendshipService;
 

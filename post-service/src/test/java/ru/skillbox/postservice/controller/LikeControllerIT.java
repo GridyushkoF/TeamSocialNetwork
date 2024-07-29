@@ -4,7 +4,7 @@ import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.skillbox.commondto.post.LikeReactionType;
+import ru.skillbox.commondto.dto.post.LikeReactionType;
 import ru.skillbox.postservice.TestDependenciesContainer;
 import ru.skillbox.postservice.model.entity.Comment;
 import ru.skillbox.postservice.model.entity.Like;

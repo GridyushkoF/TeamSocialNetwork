@@ -7,10 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.skillbox.commondto.PeriodRequestDto;
-import ru.skillbox.commondto.post.CommentDto;
-import ru.skillbox.commondto.post.CommentType;
-import ru.skillbox.commondto.post.pages.PageCommentDto;
+import ru.skillbox.commondto.dto.post.CommentDto;
+import ru.skillbox.commondto.dto.post.CommentType;
+import ru.skillbox.commondto.dto.post.pages.PageCommentDto;
 import ru.skillbox.postservice.mapper.CommentMapper;
 import ru.skillbox.postservice.model.entity.Comment;
 import ru.skillbox.postservice.model.entity.LikeEntityType;
@@ -136,9 +135,5 @@ public class CommentService {
         return buildPageCommentDto(subCommentsPage, userId, shouldSearchDeleted);
     }
 
-    public int getCommentsAmountByPeriod(PeriodRequestDto periodRequestDto) {
-        return commentRepository.countByTimeBetween(periodRequestDto.getDateTimeFrom(),
-                periodRequestDto.getDateTimeTo());
-    }
 
 }

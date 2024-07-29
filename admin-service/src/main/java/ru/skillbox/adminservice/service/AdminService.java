@@ -5,31 +5,35 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import ru.skillbox.commondto.PeriodRequestDto;
-import ru.skillbox.commondto.statistics.AmountDto;
-
-import java.util.Objects;
+import ru.skillbox.commondto.dto.statistics.PeriodRequestDto;
+import ru.skillbox.commondto.dto.statistics.CountDto;
+import ru.skillbox.commondto.dto.statistics.AdminStatisticsDto;
+import ru.skillbox.commondto.dto.statistics.UsersStatisticsDto;
 
 @Service
 @RequiredArgsConstructor
 public class AdminService {
     private final WebClient webClient;
 
-    public Integer getPostsAmountByPeriod(
+    public AdminStatisticsDto getPostsAmountByPeriod(
             PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
-        return getCountByPeriod(periodRequestDto, request, "/api/v1/post/admin-api/get-comments-amount");
+        return getStatisticsByPeriod(periodRequestDto, request, "/api/v1/post/admin-api/get-posts-statistics",AdminStatisticsDto.class);
     }
 
-    public Integer getCommentsAmountByPeriod(
+    public AdminStatisticsDto getCommentsAmountByPeriod(
             PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
-        return getCountByPeriod(periodRequestDto, request, "/api/v1/post/admin-api/get-posts-amount");
+        return getStatisticsByPeriod(periodRequestDto, request, "/api/v1/post/admin-api/get-comments-statistics",AdminStatisticsDto.class);
     }
 
-    public Integer getUsersAmountByPeriod(PeriodRequestDto periodRequestDto,
+    public UsersStatisticsDto getUsersAmountByPeriod(PeriodRequestDto periodRequestDto,
                                           HttpServletRequest request) {
-        return getCountByPeriod(periodRequestDto, request, "/api/v1/account/admin-api/get-registered-users-amount");
+        return getStatisticsByPeriod(periodRequestDto, request, "/api/v1/account/admin-api/get-registered-users-statistics", UsersStatisticsDto.class);
+    }
+    public AdminStatisticsDto getLikesAmountByPeriod(PeriodRequestDto periodRequestDto,
+                                           HttpServletRequest request) {
+        return getStatisticsByPeriod(periodRequestDto,request,"/api/v1/post/admin-api/get-likes-statistics",AdminStatisticsDto.class);
     }
 
     public void blockOrUnblockUser(
@@ -50,16 +54,17 @@ public class AdminService {
         query.retrieve();
     }
 
-    public Integer getCountByPeriod(PeriodRequestDto periodRequestDto,
-                                    HttpServletRequest request,
-                                    String relativePath) {
-        WebClient.RequestHeadersSpec<?> spec = webClient.post()
+    public <T> T getStatisticsByPeriod(PeriodRequestDto periodRequestDto,
+                                                    HttpServletRequest request,
+                                                    String relativePath,
+                                                    Class<T> resultDtoClass) {
+        WebClient.RequestHeadersSpec<?> query = webClient.post()
                 .uri(relativePath)
                 .body(BodyInserters.fromValue(periodRequestDto));
 
-        spec = spec.header("Authorization", request.getHeader("Authorization"));
-        return Objects.requireNonNull(spec.retrieve()
-                .bodyToMono(AmountDto.class)
-                .block()).getAmount();
+        query = query.header("Authorization", request.getHeader("Authorization"));
+        return query.retrieve()
+                .bodyToMono(resultDtoClass)
+                .block();
     }
 }

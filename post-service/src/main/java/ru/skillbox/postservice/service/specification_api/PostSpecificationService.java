@@ -3,7 +3,7 @@ package ru.skillbox.postservice.service.specification_api;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import ru.skillbox.commondto.post.PostSearchDto;
+import ru.skillbox.commondto.dto.post.PostSearchDto;
 import ru.skillbox.postservice.model.entity.Post;
 import ru.skillbox.postservice.model.entity.Tag;
 

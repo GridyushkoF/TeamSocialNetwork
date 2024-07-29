@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.skillbox.postservice.model.entity.Like;
 import ru.skillbox.postservice.model.entity.LikeEntityType;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,4 +17,5 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     List<Like> findAllByEntityTypeAndEntityId(LikeEntityType likeEntityType, Long entityId);
     Long countAllByEntityTypeAndEntityId(LikeEntityType likeEntityType, Long entityId);
     boolean existsByEntityTypeAndEntityIdAndUserId(LikeEntityType likeEntityType, Long entityId,Long userId);
+    int countByCreationDateTimeBetween(LocalDateTime from, LocalDateTime to);
 }

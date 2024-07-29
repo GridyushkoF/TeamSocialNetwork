@@ -7,16 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.commondto.PeriodRequestDto;
-import ru.skillbox.commondto.post.CommentDto;
-import ru.skillbox.commondto.post.pages.PageCommentDto;
-import ru.skillbox.commondto.statistics.AmountDto;
+import ru.skillbox.commondto.dto.post.CommentDto;
+import ru.skillbox.commondto.dto.post.pages.PageCommentDto;
 import ru.skillbox.postservice.service.CommentService;
-import ru.skillbox.postservice.util.AdminAccessUtil;
 import ru.skillbox.postservice.util.SortCreatorUtil;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,7 +28,7 @@ public class CommentController {
             HttpServletRequest request
     ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        commentService.updateComment(postId, commentDto,currentAuthUserId);
+        commentService.updateComment(postId, commentDto, currentAuthUserId);
     }
 
     @DeleteMapping("/{id}/comment/{commentId}")
@@ -43,7 +39,7 @@ public class CommentController {
             HttpServletRequest request
     ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        commentService.deleteComment(postId, commentId,currentAuthUserId);
+        commentService.deleteComment(postId, commentId, currentAuthUserId);
     }
 
     @GetMapping("/{id}/comment")
@@ -52,22 +48,21 @@ public class CommentController {
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam("sort") List<String> sort,
-            @RequestParam(value = "isDeleted",defaultValue = "false") boolean isDeleted,
+            @RequestParam(value = "isDeleted", defaultValue = "false") boolean isDeleted,
             HttpServletRequest request
-            )
-    {
+    ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        PageRequest pageRequest = PageRequest.of(page,size,SortCreatorUtil.createSort(sort));
-        return ResponseEntity.ok(commentService.getCommentsOnPost(postId, pageRequest,currentAuthUserId, isDeleted));
+        PageRequest pageRequest = PageRequest.of(page, size, SortCreatorUtil.createSort(sort));
+        return ResponseEntity.ok(commentService.getCommentsOnPost(postId, pageRequest, currentAuthUserId, isDeleted));
     }
 
     @PostMapping("/{id}/comment")
     @ResponseStatus(HttpStatus.CREATED)
     public void createComment(@PathVariable("id") Long postId,
-                                                @RequestBody CommentDto commentDto,
-                                                HttpServletRequest request) {
+                              @RequestBody CommentDto commentDto,
+                              HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        commentService.createNewComment(postId, commentDto,currentAuthUserId);
+        commentService.createNewComment(postId, commentDto, currentAuthUserId);
     }
 
     @GetMapping("/{id}/comment/{commentId}/subcomment")
@@ -82,15 +77,7 @@ public class CommentController {
     ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
         Pageable pageable = PageRequest.of(page, size, SortCreatorUtil.createSort(sort));
-        return ResponseEntity.ok(commentService.getSubComments(postId, commentId, pageable,currentAuthUserId,isDeleted));
+        return ResponseEntity.ok(commentService.getSubComments(postId, commentId, pageable, currentAuthUserId, isDeleted));
     }
-    //------------------------------ADMIN-ACCESS----------------------------------
-    @PostMapping("/admin-api/get-comments-amount")
-    public ResponseEntity<AmountDto> getCommentsAmountByPeriod(
-            @RequestBody PeriodRequestDto periodRequestDto,
-            HttpServletRequest request) {
-        AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);
-        int commentsAmount = commentService.getCommentsAmountByPeriod(periodRequestDto);
-        return ResponseEntity.ok(new AmountDto(commentsAmount));
-    }
+
 }
