@@ -20,8 +20,9 @@ spring:
 
 server:
   port: 0
+
 app:
-  apiPrefix: /api/v1
+  apiPrefix: /api/v1/notifications
 
 eureka:
   client:

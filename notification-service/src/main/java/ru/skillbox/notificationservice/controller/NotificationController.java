@@ -11,6 +11,7 @@ import ru.skillbox.notificationservice.service.NotificationService;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("${app.apiPrefix}")
 public class NotificationController {
 
     private final NotificationService notificationService;
@@ -35,14 +36,14 @@ public class NotificationController {
     }
 
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<NotificationSentDto> getNotification(HttpServletRequest request) {
 
         return ResponseEntity.ok(notificationService.getNotifications(request));
     }
 
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<NotificationDto> createNotification(
             @RequestBody NotificationInputDto notificationInputDto,
             HttpServletRequest request){
