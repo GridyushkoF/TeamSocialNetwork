@@ -11,6 +11,7 @@ import ru.skillbox.dialogservice.mapper.MessageMapper;
 import ru.skillbox.dialogservice.model.dto.*;
 import ru.skillbox.dialogservice.model.entity.Message;
 import ru.skillbox.dialogservice.model.enums.MessageStatus;
+import ru.skillbox.dialogservice.processor.DialogMessageProcessor;
 import ru.skillbox.dialogservice.repository.MessageRepository;
 
 import java.util.List;
@@ -21,8 +22,8 @@ import java.util.List;
 public class MessageService {
 
     private final MessageRepository messageRepository;
-
     private final MessageMapper messageMapper;
+    private final DialogMessageProcessor dialogMessageProcessor;
 
     @Autowired
     @Lazy
@@ -83,6 +84,8 @@ public class MessageService {
         );
         dialogService.incrementUnreadMessagesCount(messageDto.getDialogId());
         log.info("Save message {}", messageDto);
+
+        dialogMessageProcessor.process(messageDto.getAuthorId(), messageDto.getRecipientId(), messageDto.getMessageText());
     }
 
     public void updateDialogMessages(Long currentAuthUserId, Long dialogId) {

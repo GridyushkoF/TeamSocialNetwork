@@ -2,9 +2,9 @@ package ru.skillbox.notificationservice.mapper.V1;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
+import ru.skillbox.commondto.notification.NotificationStatus;
 import ru.skillbox.notificationservice.model.dto.*;
 import ru.skillbox.notificationservice.model.entity.Notification;
-import ru.skillbox.notificationservice.model.enums.NotificationStatus;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

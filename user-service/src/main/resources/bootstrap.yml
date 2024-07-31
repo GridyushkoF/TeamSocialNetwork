@@ -7,6 +7,17 @@ spring:
     config:
       uri: ${CONFIG_URI:http://localhost:8761}
       fail-fast: true
+    stream:
+      function:
+        definition: friendshipEventPublisher
+      bindings:
+        friendshipEventPublisher-out-0:
+          destination: notifications
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
+    topic: notifications
+
 
 eureka:
   client:
@@ -14,6 +25,11 @@ eureka:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
   instance:
     preferIpAddress: true
+
+custom:
+  rest:
+    basePath: /api/v1
+
 
 # could be used for debugging
 #logging:

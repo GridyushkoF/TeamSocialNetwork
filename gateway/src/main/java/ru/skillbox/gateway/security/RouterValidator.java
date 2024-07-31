@@ -10,7 +10,6 @@ public class RouterValidator {
 
     public static final List<Pattern> openEndpoints = List.of(
             Pattern.compile("/api/v1/auth/([-/0-9a-zA-Z]*)"),
-            Pattern.compile("/api/v1/dialogs/v3/api-docs.*"),
             Pattern.compile("/api/v1/streaming/ws")
     );
 
