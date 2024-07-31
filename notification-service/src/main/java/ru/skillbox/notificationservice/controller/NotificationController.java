@@ -45,9 +45,8 @@ public class NotificationController {
 
     @PostMapping
     public ResponseEntity<NotificationDto> createNotification(
-            @RequestBody NotificationInputDto notificationInputDto,
-            HttpServletRequest request){
-        return ResponseEntity.ok(notificationService.createNotification(notificationInputDto, request));
+            @RequestBody NotificationInputDto notificationInputDto){
+        return ResponseEntity.ok(notificationService.createNotification(notificationInputDto));
     }
 
     @GetMapping("/count")

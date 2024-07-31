@@ -1,7 +1,6 @@
 package ru.skillbox.commondto.post;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +8,8 @@ import lombok.NoArgsConstructor;
 import ru.skillbox.commondto.post.wrappers.TagWrapper;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -32,5 +31,5 @@ public class PostDto {
     private Long likeAmount;
     private boolean myLike;
     private String imagePath;
-    private LocalDateTime publishDate;
+    private ZonedDateTime publishDate;
 }

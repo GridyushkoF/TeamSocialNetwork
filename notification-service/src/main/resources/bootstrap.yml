@@ -7,6 +7,12 @@ spring:
     config:
       uri: ${CONFIG_URI:http://localhost:8761}
       fail-fast: true
+    stream:
+      function:
+        definition: notificationEventSubscriber
+      bindings:
+        notificationEventSubscriber-in-0:
+          destination: notifications
 
 eureka:
   client:

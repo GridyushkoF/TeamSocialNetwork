@@ -6,10 +6,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skillbox.commondto.account.AccountDto;
 import ru.skillbox.commondto.account.StatusCode;
+import ru.skillbox.commondto.notification.NotificationType;
 import ru.skillbox.userservice.exception.NoFriendshipFoundException;
 import ru.skillbox.userservice.exception.NoSuchAccountException;
 import ru.skillbox.userservice.mapper.V1.FriendMapperV1;
@@ -17,12 +19,15 @@ import ru.skillbox.userservice.mapper.V1.UserMapperV1;
 import ru.skillbox.userservice.model.dto.FriendDto;
 import ru.skillbox.userservice.model.entity.Friendship;
 import ru.skillbox.userservice.model.entity.User;
+import ru.skillbox.userservice.processor.FriendProcessor;
 import ru.skillbox.userservice.repository.FriendshipRepository;
 import ru.skillbox.userservice.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -33,6 +38,7 @@ public class FriendshipService {
     private final FriendshipRepository friendshipRepository;
     private final FriendMapperV1 friendMapper;
     private final UserMapperV1 userMapper;
+    private final FriendProcessor processor;
 
     @Transactional
     public void requestFriendship(Long currentAuthUserId, Long accountId) {
@@ -42,6 +48,9 @@ public class FriendshipService {
 
         setFriendship(currentAuthUserId, accountId, StatusCode.REQUEST_TO);
         setFriendship(accountId, currentAuthUserId, StatusCode.REQUEST_FROM);
+
+        processor.process(currentAuthUserId, accountId, NotificationType.FRIEND_REQUEST);
+
     }
 
     private void setFriendship(Long accountIdFrom, Long accountIdTo, StatusCode statusCode) {
@@ -154,4 +163,16 @@ public class FriendshipService {
 
         return new PageImpl<>(accounts, nextPage, accounts.size());
     }
+
+    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.DAYS)
+    public void notifyBirthdayUsersFriends() {
+        userRepository.findBirthdayUsers(LocalDateTime.now())
+                .forEach(user -> user.getFriends().stream()
+                        .map(friend -> userMapper.userToResponse(user.getId(), friend))
+                                .filter(accountDto -> accountDto.getStatusCode().equals(StatusCode.FRIEND))
+                        .forEach(accountDto -> {
+                            processor.process(user.getId(), accountDto.getId(), NotificationType.FRIEND_BIRTHDAY);
+                        }));
+    }
+
 }

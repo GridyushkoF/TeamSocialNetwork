@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.skillbox.notificationservice.model.enums.NotificationType;
+import ru.skillbox.commondto.notification.NotificationType;
 
 @Getter
 @Setter

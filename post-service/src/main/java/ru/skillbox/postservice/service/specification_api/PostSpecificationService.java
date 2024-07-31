@@ -4,6 +4,7 @@ import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.skillbox.commondto.post.PostSearchDto;
+import ru.skillbox.commondto.post.PostType;
 import ru.skillbox.postservice.model.entity.Post;
 import ru.skillbox.postservice.model.entity.Tag;
 
@@ -13,9 +14,11 @@ import java.util.List;
 
 @Service
 public class PostSpecificationService {
-    public Specification<Post> getSpecificationByDto(PostSearchDto postSearchDto) {
+    public Specification<Post> getSpecificationByDto(PostSearchDto postSearchDto, Long currenAuthUserID) {
         return (root, query, builder) -> {
             List<Predicate> predicates = new ArrayList<>();
+            predicates.add(builder.or(builder.equal(root.get("type"), PostType.POSTED),
+                    builder.equal(root.get("authorId"), currenAuthUserID)));
             addIdPredicate(postSearchDto, root, predicates);
             addAccountsPredicate(postSearchDto, root, predicates);
             addAuthorIdPredicate(postSearchDto, root, builder, predicates);

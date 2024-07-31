@@ -18,6 +18,10 @@ spring:
     enabled: true
     drop-first: false
 
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
+    topic: notifications
+
 server:
   port: 0
 
