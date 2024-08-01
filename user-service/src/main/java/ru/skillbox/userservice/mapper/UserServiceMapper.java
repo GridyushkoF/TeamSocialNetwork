@@ -2,7 +2,7 @@ package ru.skillbox.userservice.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
-import ru.skillbox.commondto.dto.account.AccountDto;
+import ru.skillbox.commonlib.dto.account.AccountDto;
 import ru.skillbox.userservice.model.entity.User;
 
 import java.util.List;

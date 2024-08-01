@@ -16,13 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.skillbox.commondto.dto.statistics.PeriodRequestDto;
-import ru.skillbox.commondto.dto.account.AccountByFilterDto;
-import ru.skillbox.commondto.dto.account.AccountDto;
-import ru.skillbox.commondto.dto.account.AccountRecoveryRq;
-import ru.skillbox.commondto.dto.statistics.CountDto;
-import ru.skillbox.commondto.dto.statistics.UsersStatisticsDto;
-import ru.skillbox.commondto.util.admin.AdminAccessUtil;
+import ru.skillbox.commonlib.dto.statistics.PeriodRequestDto;
+import ru.skillbox.commonlib.dto.account.AccountByFilterDto;
+import ru.skillbox.commonlib.dto.account.AccountDto;
+import ru.skillbox.commonlib.dto.account.AccountRecoveryRq;
+import ru.skillbox.commonlib.dto.statistics.UsersStatisticsDto;
+import ru.skillbox.commonlib.util.admin.AdminAccessUtil;
 import ru.skillbox.userservice.service.AccountService;
 
 @RestController

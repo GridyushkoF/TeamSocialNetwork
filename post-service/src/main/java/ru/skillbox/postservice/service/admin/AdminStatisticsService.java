@@ -2,10 +2,10 @@ package ru.skillbox.postservice.service.admin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.skillbox.commondto.dto.statistics.AdminStatisticsDto;
-import ru.skillbox.commondto.dto.statistics.DateCountPointDto;
-import ru.skillbox.commondto.dto.statistics.PeriodRequestDto;
-import ru.skillbox.commondto.util.admin.AdminStatisticsRepository;
+import ru.skillbox.commonlib.dto.statistics.AdminStatisticsDto;
+import ru.skillbox.commonlib.dto.statistics.DateCountPointDto;
+import ru.skillbox.commonlib.dto.statistics.PeriodRequestDto;
+import ru.skillbox.commonlib.util.admin.AdminStatisticsRepository;
 import ru.skillbox.postservice.repository.CommentRepository;
 import ru.skillbox.postservice.repository.LikeRepository;
 import ru.skillbox.postservice.repository.PostRepository;

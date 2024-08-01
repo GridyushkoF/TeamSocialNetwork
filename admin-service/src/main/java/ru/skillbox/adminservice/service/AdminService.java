@@ -5,10 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import ru.skillbox.commondto.dto.statistics.PeriodRequestDto;
-import ru.skillbox.commondto.dto.statistics.CountDto;
-import ru.skillbox.commondto.dto.statistics.AdminStatisticsDto;
-import ru.skillbox.commondto.dto.statistics.UsersStatisticsDto;
+import ru.skillbox.commonlib.dto.statistics.PeriodRequestDto;
+import ru.skillbox.commonlib.dto.statistics.AdminStatisticsDto;
+import ru.skillbox.commonlib.dto.statistics.UsersStatisticsDto;
 
 @Service
 @RequiredArgsConstructor

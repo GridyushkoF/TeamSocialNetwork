@@ -3,7 +3,7 @@ package ru.skillbox.postservice.mapper;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.skillbox.commondto.dto.post.PostDto;
+import ru.skillbox.commonlib.dto.post.PostDto;
 import ru.skillbox.postservice.model.entity.Post;
 
 @Mapper(componentModel = "spring")

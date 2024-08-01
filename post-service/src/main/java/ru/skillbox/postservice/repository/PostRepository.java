@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.skillbox.commondto.dto.statistics.DateCountPointDto;
+import ru.skillbox.commonlib.dto.statistics.DateCountPointDto;
 import ru.skillbox.postservice.exception.PostNotFoundException;
 import ru.skillbox.postservice.model.entity.Post;
 
@@ -22,7 +22,7 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
         return this.findById(id).orElseThrow(() -> new PostNotFoundException("Can`t find post with id " + id));
     }
     int countByPublishDateBetween(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo);
-    @Query("SELECT new ru.skillbox.commondto.dto.statistics.DateCountPointDto(" +
+    @Query("SELECT new ru.skillbox.commonlib.dto.statistics.DateCountPointDto(" +
             "DATE_TRUNC('MONTH', e.publishDate), COUNT(e)) " +
             "FROM Post e " +
             "WHERE e.publishDate BETWEEN :startDate AND :endDate " +
@@ -30,7 +30,7 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
     List<DateCountPointDto> countPostsPerMonth(@Param("startDate") LocalDateTime startDate,
                                                @Param("endDate") LocalDateTime endDate);
 
-    @Query("SELECT new ru.skillbox.commondto.dto.statistics.DateCountPointDto(" +
+    @Query("SELECT new ru.skillbox.commonlib.dto.statistics.DateCountPointDto(" +
             "DATE_TRUNC('HOUR', e.publishDate), COUNT(e)) " +
             "FROM Post e " +
             "WHERE e.publishDate BETWEEN :startDate AND :endDate " +

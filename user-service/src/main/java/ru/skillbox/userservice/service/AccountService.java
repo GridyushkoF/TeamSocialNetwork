@@ -8,15 +8,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.skillbox.commondto.dto.statistics.AgeCountDto;
-import ru.skillbox.commondto.dto.statistics.DateCountPointDto;
-import ru.skillbox.commondto.dto.statistics.PeriodRequestDto;
-import ru.skillbox.commondto.dto.account.AccountByFilterDto;
-import ru.skillbox.commondto.dto.account.AccountDto;
-import ru.skillbox.commondto.dto.account.AccountRecoveryRq;
-import ru.skillbox.commondto.dto.account.AccountSearchDto;
-import ru.skillbox.commondto.dto.statistics.UsersStatisticsDto;
-import ru.skillbox.commondto.util.admin.AdminStatisticsRepository;
+import ru.skillbox.commonlib.dto.statistics.AgeCountDto;
+import ru.skillbox.commonlib.dto.statistics.DateCountPointDto;
+import ru.skillbox.commonlib.dto.statistics.PeriodRequestDto;
+import ru.skillbox.commonlib.dto.account.AccountByFilterDto;
+import ru.skillbox.commonlib.dto.account.AccountDto;
+import ru.skillbox.commonlib.dto.account.AccountRecoveryRq;
+import ru.skillbox.commonlib.dto.account.AccountSearchDto;
+import ru.skillbox.commonlib.dto.statistics.UsersStatisticsDto;
+import ru.skillbox.commonlib.util.admin.AdminStatisticsRepository;
 import ru.skillbox.userservice.exception.AccountAlreadyExistsException;
 import ru.skillbox.userservice.exception.NoSuchAccountException;
 import ru.skillbox.userservice.exception.NotAuthException;
@@ -39,8 +39,9 @@ public class AccountService {
         return recoveryRequest.getEmail();
     }
 
-    public AccountDto getUserAccount(String userEmail) {
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new NoSuchAccountException("Can't find Account with email: " + userEmail));
+    public AccountDto getUserAccountByEmail(String userEmail) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() ->
+                new NoSuchAccountException("Can't find Account with email: " + userEmail));
         return userMapper.userToResponse(user.getId(), user);
     }
 

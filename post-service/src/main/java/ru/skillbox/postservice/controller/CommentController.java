@@ -7,8 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.commondto.dto.post.CommentDto;
-import ru.skillbox.commondto.dto.post.pages.PageCommentDto;
+import ru.skillbox.commonlib.dto.post.CommentDto;
+import ru.skillbox.commonlib.dto.post.pages.PageCommentDto;
 import ru.skillbox.postservice.service.CommentService;
 import ru.skillbox.postservice.util.SortCreatorUtil;
 

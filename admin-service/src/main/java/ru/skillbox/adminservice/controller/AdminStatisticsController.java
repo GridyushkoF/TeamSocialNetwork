@@ -5,10 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.adminservice.service.AdminService;
-import ru.skillbox.commondto.dto.statistics.AdminStatisticsDto;
-import ru.skillbox.commondto.dto.statistics.PeriodRequestDto;
-import ru.skillbox.commondto.dto.statistics.CountDto;
-import ru.skillbox.commondto.dto.statistics.UsersStatisticsDto;
+import ru.skillbox.commonlib.dto.statistics.AdminStatisticsDto;
+import ru.skillbox.commonlib.dto.statistics.PeriodRequestDto;
+import ru.skillbox.commonlib.dto.statistics.UsersStatisticsDto;
 
 @RestController
 @RequiredArgsConstructor

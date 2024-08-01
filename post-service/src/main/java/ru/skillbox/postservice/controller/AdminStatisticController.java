@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.skillbox.commondto.dto.statistics.AdminStatisticsDto;
-import ru.skillbox.commondto.dto.statistics.PeriodRequestDto;
-import ru.skillbox.commondto.util.admin.AdminAccessUtil;
+import ru.skillbox.commonlib.dto.statistics.AdminStatisticsDto;
+import ru.skillbox.commonlib.dto.statistics.PeriodRequestDto;
+import ru.skillbox.commonlib.util.admin.AdminAccessUtil;
 import ru.skillbox.postservice.service.admin.AdminStatisticsService;
 
 @RestController
