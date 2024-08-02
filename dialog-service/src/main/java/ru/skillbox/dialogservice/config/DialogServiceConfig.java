@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
-import ru.skillbox.commondto.notification.NotificationEvent;
+import ru.skillbox.commonlib.notification.NotificationEvent;
 
 import java.util.function.Supplier;
 

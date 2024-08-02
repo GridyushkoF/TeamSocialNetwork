@@ -18,8 +18,8 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostDto {
     private Long id;
-    private LocalDateTime time;
-    private LocalDateTime timeChanged;
+    private ZonedDateTime time;
+    private ZonedDateTime timeChanged;
     private Long authorId;
     private String title;
     private PostType type;

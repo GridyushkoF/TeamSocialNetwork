@@ -4,12 +4,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.skillbox.commonlib.notification.NotificationStatus;
 import ru.skillbox.notificationservice.mapper.V1.NotificationMapperV1;
 import ru.skillbox.notificationservice.mapper.V1.SettingsMapperV1;
 import ru.skillbox.notificationservice.model.dto.*;
 import ru.skillbox.notificationservice.model.entity.Notification;
 import ru.skillbox.notificationservice.model.entity.Settings;
-import ru.skillbox.commondto.notification.NotificationStatus;
 import ru.skillbox.notificationservice.repository.NotificationRepository;
 import ru.skillbox.notificationservice.repository.SettingsRepository;
 
@@ -33,11 +33,7 @@ public class NotificationService {
         Settings settings;
         Optional<Settings> settingsOptional =
                 settingsRepository.findByUserId(currentAuthUserId);
-        if (settingsOptional.isPresent()) {
-            settings = settingsOptional.get();
-        } else {
-            settings = createNewSettings(currentAuthUserId);
-        }
+        settings = settingsOptional.orElseGet(() -> createNewSettings(currentAuthUserId));
         return settingsMapper.toDto(settings);
         }
 

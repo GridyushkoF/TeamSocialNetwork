@@ -2,7 +2,7 @@ package ru.skillbox.notificationservice.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.skillbox.commondto.notification.NotificationStatus;
+import ru.skillbox.commonlib.notification.NotificationStatus;
 import ru.skillbox.notificationservice.model.entity.Notification;
 
 import java.util.List;

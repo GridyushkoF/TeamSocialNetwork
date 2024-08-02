@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @AllArgsConstructor
@@ -14,8 +15,8 @@ import java.time.LocalDateTime;
 public class CommentDto {
     private Long id;
     private CommentType commentType;
-    private LocalDateTime time;
-    private LocalDateTime timeChanged;
+    private ZonedDateTime time;
+    private ZonedDateTime timeChanged;
     private Long authorId;
     private Long parentId;
     private String commentText;

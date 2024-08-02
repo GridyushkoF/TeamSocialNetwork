@@ -30,11 +30,11 @@ public class Post {
     private Long id;
 
     @CreationTimestamp
-    private LocalDateTime time;
+    private ZonedDateTime time;
 
     @UpdateTimestamp
     @Column(name = "time_changed")
-    private LocalDateTime timeChanged;
+    private ZonedDateTime timeChanged;
 
     @Column(name = "author_id")
     private Long authorId;
