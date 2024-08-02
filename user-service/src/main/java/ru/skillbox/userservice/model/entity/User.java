@@ -8,7 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import ru.skillbox.commonlib.dto.account.Role;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -53,16 +53,16 @@ public class User {
 
     @CreationTimestamp
     @Column(name = "reg_date")
-    private LocalDateTime regDate;
+    private ZonedDateTime regDate;
 
     @Column(name = "birth_date")
-    private LocalDateTime birthDate;
+    private ZonedDateTime birthDate;
 
     @Column(name = "message_permission")
     private String messagePermission;
 
     @Column(name = "last_online_time")
-    private LocalDateTime lastOnlineTime;
+    private ZonedDateTime lastOnlineTime;
 
     @Column(name = "is_online")
     private boolean isOnline;
@@ -84,11 +84,11 @@ public class User {
     private Role role;
 
     @Column(name = "created_on")
-    private LocalDateTime createdOn;
+    private ZonedDateTime createdOn;
 
     @UpdateTimestamp
     @Column(name = "updated_on")
-    private LocalDateTime updatedOn;
+    private ZonedDateTime updatedOn;
 
     private String password;
 

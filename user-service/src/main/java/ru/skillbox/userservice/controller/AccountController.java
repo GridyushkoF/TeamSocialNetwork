@@ -86,8 +86,8 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getAccountIds(ids, page));
     }
     //----------------------------ADMIN-ACCESS---------------------------
-    @PostMapping("/admin-api/get-registered-users-statistics")
-    public ResponseEntity<UsersStatisticsDto> getRegisteredUsersAmount(
+    @PostMapping("/statistic")
+    public ResponseEntity<UsersStatisticsDto> getUsersStatistics(
             @RequestBody PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
         AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);

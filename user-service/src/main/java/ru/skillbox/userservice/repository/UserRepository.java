@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByIsDeleted(Pageable page, boolean isDeleted);
 
     Optional<User> findByEmail(String email);
-    int countByRegDateBetween(LocalDateTime from,LocalDateTime to);
+    int countByRegDateBetween(LocalDateTime from, LocalDateTime to);
     @Query("SELECT new ru.skillbox.commonlib.dto.statistics.AgeCountDto(" +
             "FLOOR(TIMESTAMPDIFF(YEAR, u.birthDate, CURRENT_DATE)), COUNT(u)) " +
             "FROM User u " +
@@ -28,4 +28,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "GROUP BY FLOOR(TIMESTAMPDIFF(YEAR, u.birthDate, CURRENT_DATE)) " +
             "ORDER BY FLOOR(TIMESTAMPDIFF(YEAR, u.birthDate, CURRENT_DATE))")
     List<AgeCountDto> findAgeCountStatistics();
+
+    @Query("from User u where day(u.birthDate) = day(CURRENT_DATE) and month(u.birthDate) = month(CURRENT_DATE)")
+    List<User> findBirthdayUsers(LocalDateTime CURRENT_DATE);
+
 }

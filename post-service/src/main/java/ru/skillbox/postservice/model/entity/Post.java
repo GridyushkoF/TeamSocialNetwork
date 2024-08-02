@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import ru.skillbox.commonlib.dto.post.PostType;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -66,7 +67,7 @@ public class Post {
     private String imagePath;
 
     @Column(name = "publish_date")
-    private LocalDateTime publishDate;
+    private ZonedDateTime publishDate;
 
     @OneToMany
     @JoinTable(

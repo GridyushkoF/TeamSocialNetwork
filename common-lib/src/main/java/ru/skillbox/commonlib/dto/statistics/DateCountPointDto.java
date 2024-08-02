@@ -6,13 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class DateCountPointDto {
-    private LocalDateTime date;
+    private ZonedDateTime date;
     private Long count;
 
 }

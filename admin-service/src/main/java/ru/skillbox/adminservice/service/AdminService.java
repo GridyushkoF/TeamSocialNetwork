@@ -17,22 +17,22 @@ public class AdminService {
     public AdminStatisticsDto getPostsAmountByPeriod(
             PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
-        return getStatisticsByPeriod(periodRequestDto, request, "/api/v1/post/admin-api/get-posts-statistics",AdminStatisticsDto.class);
+        return getStatisticsByPeriod(periodRequestDto, request, "/api/v1/post/statistic/post",AdminStatisticsDto.class);
     }
 
     public AdminStatisticsDto getCommentsAmountByPeriod(
             PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
-        return getStatisticsByPeriod(periodRequestDto, request, "/api/v1/post/admin-api/get-comments-statistics",AdminStatisticsDto.class);
+        return getStatisticsByPeriod(periodRequestDto, request, "/api/v1/post/statistic/comment",AdminStatisticsDto.class);
     }
 
     public UsersStatisticsDto getUsersAmountByPeriod(PeriodRequestDto periodRequestDto,
                                           HttpServletRequest request) {
-        return getStatisticsByPeriod(periodRequestDto, request, "/api/v1/account/admin-api/get-registered-users-statistics", UsersStatisticsDto.class);
+        return getStatisticsByPeriod(periodRequestDto, request, "/api/v1/account/statistic", UsersStatisticsDto.class);
     }
     public AdminStatisticsDto getLikesAmountByPeriod(PeriodRequestDto periodRequestDto,
                                            HttpServletRequest request) {
-        return getStatisticsByPeriod(periodRequestDto,request,"/api/v1/post/admin-api/get-likes-statistics",AdminStatisticsDto.class);
+        return getStatisticsByPeriod(periodRequestDto,request,"/api/v1/post/statistic/like",AdminStatisticsDto.class);
     }
 
     public void blockOrUnblockUser(

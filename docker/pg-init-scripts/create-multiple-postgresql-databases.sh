@@ -1,20 +1,20 @@
-
+#!/bin/bash
 set -e
 set -u
 
 function create_user_and_database() {
     local database=$1
-    echo "  Creating user and database '$database'"
+    echo "Creating user and database '$database'"
 
     # Check if the user already exists, and drop it if it does
     if psql -t -c "SELECT 1 FROM pg_roles WHERE rolname='$database'" | grep -q 1; then
-        echo "  User '$database' already exists. Dropping user."
+        echo "User '$database' already exists. Dropping user."
         psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" -c "DROP USER $database;"
     fi
 
     # Check if the database already exists, and drop it if it does
     if psql -t -c "SELECT 1 FROM pg_database WHERE datname='$database'" | grep -q 1; then
-        echo "  Database '$database' already exists. Dropping database."
+        echo "Database '$database' already exists. Dropping database."
         psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" -c "DROP DATABASE $database;"
     fi
 

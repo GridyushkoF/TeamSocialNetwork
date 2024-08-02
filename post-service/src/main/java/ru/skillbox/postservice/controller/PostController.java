@@ -71,13 +71,11 @@ public class PostController {
 
     ) {
         if(Objects.isNull(publishDateEpochMillis)) {
-            publishDateEpochMillis = System.currentTimeMillis();
             postDto.setType(PostType.POSTED);
         } else {
             postDto.setType(PostType.QUEUED);
         }
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        postService.createNewPost(postDto, publishDateEpochMillis,currentAuthUserId);
+        postService.createNewPost(postDto, request);
     }
 
     @PostMapping("/storagePostPhoto")

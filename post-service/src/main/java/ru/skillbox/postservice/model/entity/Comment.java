@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 @Entity
@@ -24,11 +25,11 @@ public class Comment {
     private CommentType commentType;
 
     @CreationTimestamp
-    private LocalDateTime time;
+    private ZonedDateTime time;
 
     @UpdateTimestamp
     @Column(name = "time_changed")
-    private LocalDateTime timeChanged;
+    private ZonedDateTime timeChanged;
 
     @Column(name = "author_id")
     private Long authorId;

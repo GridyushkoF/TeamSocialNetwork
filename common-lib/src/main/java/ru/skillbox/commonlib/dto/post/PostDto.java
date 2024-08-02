@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import ru.skillbox.commonlib.dto.post.wrappers.TagWrapper;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
@@ -30,5 +31,5 @@ public class PostDto {
     private Long likeAmount;
     private boolean myLike;
     private String imagePath;
-    private LocalDateTime publishDate;
+    private ZonedDateTime publishDate;
 }

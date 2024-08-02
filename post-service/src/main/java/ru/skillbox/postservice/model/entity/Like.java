@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import ru.skillbox.commonlib.dto.post.LikeReactionType;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Getter
@@ -35,6 +36,6 @@ public class Like {
     @Column(name = "reaction_type")
     private LikeReactionType reactionType;
     @CreationTimestamp
-    private LocalDateTime creationDateTime;
+    private ZonedDateTime creationDateTime;
 
 }

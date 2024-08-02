@@ -14,28 +14,28 @@ import ru.skillbox.postservice.service.admin.AdminStatisticsService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${app.apiPrefix}" + "/post" + "/admin-api")
+@RequestMapping("${app.apiPrefix}" + "/post")
 public class AdminStatisticController {
     private final AdminStatisticsService adminStatisticsService;
 
-    @PostMapping("/get-comments-statistics")
-    public ResponseEntity<AdminStatisticsDto> getCommentsAmountByPeriod(
+    @PostMapping("/statistic/comment")
+    public ResponseEntity<AdminStatisticsDto> getCommentStatistics(
             @RequestBody PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
         AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);
         return ResponseEntity.ok(adminStatisticsService.getCommentsStatistics(periodRequestDto));
     }
 
-    @PostMapping("/get-posts-statistics")
-    public ResponseEntity<AdminStatisticsDto> getPostsAmountByPeriod(
+    @PostMapping("/statistic/post")
+    public ResponseEntity<AdminStatisticsDto> getPostsStatistics(
             @RequestBody PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
         AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);
         return ResponseEntity.ok(adminStatisticsService.getPostsStatistics(periodRequestDto));
     }
 
-    @PostMapping("/get-likes-statistics")
-    public ResponseEntity<AdminStatisticsDto> getLikesAmountByPeriod(
+    @PostMapping("/statistic/like")
+    public ResponseEntity<AdminStatisticsDto> getLikesStatistics(
             @RequestBody PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
         AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);

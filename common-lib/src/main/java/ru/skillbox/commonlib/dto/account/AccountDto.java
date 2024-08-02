@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @Builder
@@ -19,17 +20,17 @@ public class AccountDto {
     private StatusCode statusCode;
     private String firstName;
     private String lastName;
-    private LocalDateTime regDate;
-    private LocalDateTime birthDate;
+    private ZonedDateTime regDate;
+    private ZonedDateTime birthDate;
     private String messagePermission;
-    private LocalDateTime lastOnlineTime;
+    private ZonedDateTime lastOnlineTime;
     private boolean isOnline;
     private boolean isBlocked;
     private boolean isDeleted;
     private String photoId;
     private String photoName;
     private Role role;
-    private LocalDateTime createdOn;
-    private LocalDateTime updatedOn;
+    private ZonedDateTime createdOn;
+    private ZonedDateTime updatedOn;
     private String password;
 }

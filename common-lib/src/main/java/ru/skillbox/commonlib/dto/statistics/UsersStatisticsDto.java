@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @Builder
 public class UsersStatisticsDto {
-    private int count;
+    private long count;
     private List<AgeCountDto> countPerAge;
     private List<DateCountPointDto> countPerMonth;
 }

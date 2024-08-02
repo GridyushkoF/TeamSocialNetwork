@@ -13,6 +13,7 @@ import ru.skillbox.commonlib.dto.post.pages.PageCommentDto;
 import ru.skillbox.postservice.mapper.CommentMapper;
 import ru.skillbox.postservice.model.entity.Comment;
 import ru.skillbox.postservice.model.entity.LikeEntityType;
+import ru.skillbox.postservice.processor.CommentProcessor;
 import ru.skillbox.postservice.repository.CommentRepository;
 import ru.skillbox.postservice.repository.LikeRepository;
 import ru.skillbox.postservice.util.ColumnsUtil;
@@ -32,6 +33,7 @@ public class CommentService {
     private final CommentValidatorUtil commentValidator;
     private final LikeRepository likeRepository;
     private final CommentMapper commentMapper;
+    private final CommentProcessor processor;
 
     private PageCommentDto buildPageCommentDto(Page<Comment> pageOfComments, Long userId, boolean shouldSearchDeleted) {
 
@@ -85,6 +87,8 @@ public class CommentService {
             BeanUtils.copyProperties(resultCommentDto, comment,
                     ColumnsUtil.getNullPropertyNames(resultCommentDto));
             commentRepository.save(comment);
+
+            processor.process(comment);
         }
         log.info("Comment with id " + commentId + " updated by commentDto: " + resultCommentDto);
     }
@@ -122,6 +126,8 @@ public class CommentService {
         Comment comment = commentMapper.commentDtoToComment(commentDto);
         commentRepository.save(comment);
         log.info("Comment created by dto:  " + commentDto);
+
+        processor.process(comment);
     }
 
     @Transactional

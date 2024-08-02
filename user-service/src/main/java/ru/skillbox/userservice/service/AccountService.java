@@ -131,20 +131,19 @@ public class AccountService {
         return new PageImpl<>(pageList, nextPage, users.size());
     }
 
-    public int getRegisteredUsersAmount(PeriodRequestDto periodRequestDto) {
-        return userRepository.countByRegDateBetween(
-                periodRequestDto.getFirstMonth().toLocalDateTime(),
-                periodRequestDto.getLastMonth().toLocalDateTime()
-        );
-    }
+
     public UsersStatisticsDto getUsersStatistics(PeriodRequestDto periodRequestDto) {
-        int usersAmount = getRegisteredUsersAmount(periodRequestDto);
+        long usersAmount = adminStatisticsRepository.countEntities(
+                "User",
+                "createdOn",
+                periodRequestDto.getFirstMonth(),
+                periodRequestDto.getLastMonth());
         List<DateCountPointDto> dateCountStatistics = adminStatisticsRepository.getDateCountStatistics(
                 "regDate",
                 "MONTH",
                 "User",
-                periodRequestDto.getFirstMonth().toLocalDateTime(),
-                periodRequestDto.getLastMonth().toLocalDateTime());
+                periodRequestDto.getFirstMonth(),
+                periodRequestDto.getLastMonth());
         List<AgeCountDto> ageDate = userRepository.findAgeCountStatistics();
         return new UsersStatisticsDto(usersAmount, ageDate, dateCountStatistics);
     }
