@@ -3,10 +3,12 @@ package ru.skillbox.notificationservice.mapper.V1;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.stereotype.Component;
 import ru.skillbox.notificationservice.model.dto.NotificationSettingsDto;
 import ru.skillbox.notificationservice.model.dto.SettingsDto;
 import ru.skillbox.notificationservice.model.entity.Settings;
 
+@Component
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface SettingsMapperV1 {
     @Mapping(source = "post", target = "enablePost")

@@ -4,9 +4,11 @@ import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.stereotype.Component;
 import ru.skillbox.commondto.account.AccountDto;
 import ru.skillbox.userservice.model.entity.User;
 
+@Component
 @DecoratedWith(UserMapperDelegate.class)
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapperV1 {
