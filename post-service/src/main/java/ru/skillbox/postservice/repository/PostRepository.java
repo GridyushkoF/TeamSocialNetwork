@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-import ru.skillbox.commondto.post.PostType;
+import ru.skillbox.commonlib.dto.post.PostType;
 import ru.skillbox.postservice.exception.PostNotFoundException;
 import ru.skillbox.postservice.model.entity.Post;
 

@@ -3,7 +3,7 @@ package ru.skillbox.userservice.model.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import ru.skillbox.commondto.account.StatusCode;
+import ru.skillbox.commonlib.dto.account.StatusCode;
 
 @Entity
 @Getter

@@ -11,12 +11,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skillbox.commondto.post.PostType;
+import ru.skillbox.commonlib.dto.post.PostType;
 import ru.skillbox.postservice.mapper.PostMapper;
-import ru.skillbox.commondto.post.PhotoDto;
-import ru.skillbox.commondto.post.PostDto;
-import ru.skillbox.commondto.post.PostSearchDto;
-import ru.skillbox.commondto.post.pages.PagePostDto;
+import ru.skillbox.commonlib.dto.post.PhotoDto;
+import ru.skillbox.commonlib.dto.post.PostDto;
+import ru.skillbox.commonlib.dto.post.PostSearchDto;
+import ru.skillbox.commonlib.dto.post.pages.PagePostDto;
 import ru.skillbox.postservice.mapper.PostMapperDecorator;
 import ru.skillbox.postservice.model.entity.LikeEntityType;
 import ru.skillbox.postservice.model.entity.Post;
@@ -166,4 +166,5 @@ public class PostService {
             throw new RuntimeException("error when saving file");
         }
     }
+
 }

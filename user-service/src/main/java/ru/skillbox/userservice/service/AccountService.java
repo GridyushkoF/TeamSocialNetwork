@@ -8,10 +8,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.skillbox.commondto.account.AccountByFilterDto;
-import ru.skillbox.commondto.account.AccountDto;
-import ru.skillbox.commondto.account.AccountRecoveryRq;
-import ru.skillbox.commondto.account.AccountSearchDto;
+import ru.skillbox.commonlib.dto.account.AccountByFilterDto;
+import ru.skillbox.commonlib.dto.account.AccountDto;
+import ru.skillbox.commonlib.dto.account.AccountRecoveryRq;
+import ru.skillbox.commonlib.dto.account.AccountSearchDto;
+import ru.skillbox.commonlib.dto.statistics.AgeCountDto;
+import ru.skillbox.commonlib.dto.statistics.DateCountPointDto;
+import ru.skillbox.commonlib.dto.statistics.PeriodRequestDto;
+import ru.skillbox.commonlib.dto.statistics.UsersStatisticsDto;
+import ru.skillbox.commonlib.util.admin.AdminStatisticsRepository;
 import ru.skillbox.userservice.controller.AccountPredicate;
 import ru.skillbox.userservice.exception.AccountAlreadyExistsException;
 import ru.skillbox.userservice.exception.NoSuchAccountException;
@@ -31,6 +36,7 @@ public class AccountService {
 
     private final UserRepository userRepository;
     private final UserMapperV1 userMapper;
+    private final AdminStatisticsRepository adminStatisticsRepository;
 
     public String recoveryUserAccount(AccountRecoveryRq recoveryRequest) {
         return recoveryRequest.getEmail();
@@ -123,4 +129,21 @@ public class AccountService {
         List<AccountDto> pageList = users.stream().map(user -> userMapper.userToResponse(authUserId, user)).toList();
         return new PageImpl<>(pageList, nextPage, users.size());
     }
+    public UsersStatisticsDto getUsersStatistics(PeriodRequestDto periodRequestDto) {
+        long usersAmount = adminStatisticsRepository.countEntities(
+                "User",
+                "regDate",
+                periodRequestDto.getFirstMonth(),
+                periodRequestDto.getLastMonth());
+        List<DateCountPointDto> dateCountStatistics = adminStatisticsRepository.getDateCountStatistics(
+                "regDate",
+                "MONTH",
+                "User",
+                periodRequestDto.getFirstMonth(),
+                periodRequestDto.getLastMonth());
+        List<AgeCountDto> ageDate = userRepository.findAgeCountStatistics();
+        return new UsersStatisticsDto(usersAmount, ageDate, dateCountStatistics);
+    }
+
 }
+

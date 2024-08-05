@@ -8,11 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.skillbox.commondto.post.wrappers.TagWrapper;
+import ru.skillbox.commonlib.dto.post.PostDto;
+import ru.skillbox.commonlib.dto.post.PostType;
+import ru.skillbox.commonlib.dto.post.wrappers.TagWrapper;
 import ru.skillbox.postservice.TestDependenciesContainer;
-import ru.skillbox.commondto.post.PostDto;
-import ru.skillbox.commondto.post.PostSearchDto;
-import ru.skillbox.commondto.post.PostType;
 import ru.skillbox.postservice.model.entity.Post;
 
 import java.util.List;
@@ -29,17 +28,17 @@ public class PostControllerIT extends TestDependenciesContainer {
     void initBeforeEach() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         clearAllRepositories();
-
     }
 
     @Test
     @DisplayName("test get post by id test")
     void getPostById_ReturnsValidPost() throws Exception {
-        savePostInDbAndGet(generateTestPostDto(),1L);
+        savePostInDbAndGet(generateTestPostDto(), 1L);
 
         mockMvc.perform(get(apiPrefix + "/post/" + postRepository
                         .findAll().get(0).getId()))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").exists())
                 .andReturn();
     }
 
@@ -49,11 +48,12 @@ public class PostControllerIT extends TestDependenciesContainer {
         Post newPost = saveAndGetTestPostToUpdate();
         PostDto updatedPostDto = getUpdatedPostDtoByPost(newPost);
         String updatedPostJson = objectMapper.writeValueAsString(updatedPostDto);
-        mockMvc.perform(put(apiPrefix + "/post/" + newPost.getId())
+        mockMvc.perform(put(apiPrefix + "/post")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updatedPostJson)
                         .header("id", 1L))
                 .andExpect(status().isCreated());
+
         Post post = postRepository.getPostByIdOrThrowException(newPost.getId());
         assertEquals(post.getPostText(), updatedPostDto.getPostText());
     }
@@ -64,12 +64,11 @@ public class PostControllerIT extends TestDependenciesContainer {
         Post newPost = saveAndGetTestPostToUpdate();
         PostDto updatedPostDto = getUpdatedPostDtoByPost(newPost);
         String updatedPostJson = objectMapper.writeValueAsString(updatedPostDto);
-        mockMvc.perform(put(apiPrefix + "/post/" + newPost.getId())
+        mockMvc.perform(put(apiPrefix + "/post")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updatedPostJson)
                         .header("id", 2L))
                 .andExpect(status().isForbidden());
-
     }
 
     @Test
@@ -77,7 +76,6 @@ public class PostControllerIT extends TestDependenciesContainer {
     void deletePostById_CorrectDelete() throws Exception {
         createAndDeletePost(1L)
                 .andExpect(status().isOk());
-
     }
 
     @Test
@@ -88,19 +86,24 @@ public class PostControllerIT extends TestDependenciesContainer {
     }
 
     @Test
-    @DisplayName("search posts without specification api test")
+    @DisplayName("search posts with specific criteria api test")
     void searchPosts() throws Exception {
-        savePostInDbAndGet(generateTestPostDto(),1L);
-        PostSearchDto searchDto = new PostSearchDto();
 
+        PostDto testPostDto = generateTestPostDto();
+        savePostInDbAndGet(testPostDto, 1L);
         mockMvc.perform(get(apiPrefix + "/post")
                         .param("page", String.valueOf(0))
                         .param("size", String.valueOf(10))
-                        .param("sorted","false")
-                        .param("unsorted","true")
-                        .param("empty","false")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(searchDto)))
+                        .param("sort", "id,asc")
+                        .param("ids", "1")
+                        .param("accountIds", "1")
+                        .param("author", testPostDto.getAuthorId().toString())
+                        .param("title", testPostDto.getTitle())
+                        .param("postText", testPostDto.getPostText())
+                        .param("withFriends", String.valueOf(false))
+                        .param("isDelete", String.valueOf(false))
+                        .header("id","1")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
@@ -122,7 +125,7 @@ public class PostControllerIT extends TestDependenciesContainer {
         MockMultipartFile multipartFile = new MockMultipartFile(
                 "file", "test_image.jpg", "image/jpeg", imageBytes);
 
-        mockMvc.perform(multipart("/api/v1/post/storagePostPhoto")
+        mockMvc.perform(multipart(apiPrefix + "/post/storagePostPhoto")
                         .file(multipartFile))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.imagePath").isNotEmpty());
@@ -132,13 +135,12 @@ public class PostControllerIT extends TestDependenciesContainer {
 
     private Post saveAndGetTestPostToUpdate() throws Exception {
         return savePostInDbAndGet(PostDto.builder()
-                        .title("Test Post to update")
-                        .postText("This is a test post to update")
-                        .authorId(1L)
-                        .type(PostType.POSTED)
-                        .tags(List.of(new TagWrapper("string")))
-                        .build(),1L);
-
+                .title("Test Post to update")
+                .postText("This is a test post to update")
+                .authorId(1L)
+                .type(PostType.POSTED)
+                .tags(List.of(new TagWrapper("string")))
+                .build(), 1L);
     }
 
     private PostDto getUpdatedPostDtoByPost(Post newPost) {
@@ -151,20 +153,17 @@ public class PostControllerIT extends TestDependenciesContainer {
 
     private Post saveAndGetTestPostToDelete() throws Exception {
         return savePostInDbAndGet(PostDto.builder()
-                        .title("Test Post to delete")
-                        .postText("This is a test post to delete")
-                        .authorId(1L)
-                        .type(PostType.POSTED)
-                        .tags(List.of(new TagWrapper("string")))
-                        .build(),1L);
+                .title("Test Post to delete")
+                .postText("This is a test post to delete")
+                .authorId(1L)
+                .type(PostType.POSTED)
+                .tags(List.of(new TagWrapper("string")))
+                .build(), 1L);
     }
 
     private ResultActions createAndDeletePost(Long userId) throws Exception {
         Post post = saveAndGetTestPostToDelete();
-        String jsonPost = objectMapper.writeValueAsString(post);
         return mockMvc.perform(delete(apiPrefix + "/post/" + post.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonPost)
                 .header("id", userId));
     }
 }

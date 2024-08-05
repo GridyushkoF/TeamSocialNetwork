@@ -1,7 +1,7 @@
 package ru.skillbox.postservice.mapper;
 
 import org.mapstruct.Mapper;
-import ru.skillbox.commondto.post.CommentDto;
+import ru.skillbox.commonlib.dto.post.CommentDto;
 import ru.skillbox.postservice.model.entity.Comment;
 
 @Mapper(componentModel = "spring")

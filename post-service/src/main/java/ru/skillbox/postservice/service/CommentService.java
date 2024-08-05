@@ -7,9 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.skillbox.commondto.post.CommentDto;
-import ru.skillbox.commondto.post.CommentType;
-import ru.skillbox.commondto.post.pages.PageCommentDto;
+import ru.skillbox.commonlib.dto.post.CommentDto;
+import ru.skillbox.commonlib.dto.post.CommentType;
+import ru.skillbox.commonlib.dto.post.pages.PageCommentDto;
 import ru.skillbox.postservice.mapper.CommentMapper;
 import ru.skillbox.postservice.model.entity.Comment;
 import ru.skillbox.postservice.model.entity.LikeEntityType;
@@ -140,4 +140,6 @@ public class CommentService {
         Page<Comment> subCommentsPage = commentRepository.findAllByParentId(commentId, page);
         return buildPageCommentDto(subCommentsPage, userId, shouldSearchDeleted);
     }
+
+
 }

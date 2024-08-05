@@ -1,8 +1,8 @@
 package ru.skillbox.userservice.mapper.V1;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.skillbox.commondto.account.AccountDto;
-import ru.skillbox.commondto.account.StatusCode;
+import ru.skillbox.commonlib.dto.account.AccountDto;
+import ru.skillbox.commonlib.dto.account.StatusCode;
 import ru.skillbox.userservice.model.entity.Friendship;
 import ru.skillbox.userservice.model.entity.User;
 import ru.skillbox.userservice.repository.FriendshipRepository;

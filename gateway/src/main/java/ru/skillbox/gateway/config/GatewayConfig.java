@@ -60,6 +60,11 @@ public class GatewayConfig {
                                 .filters(f -> f.filter(filter))
                                 .uri("lb://GEO-SERVICE")
                 )
+                .route(
+                        "admin_route", r -> r.path("/api/v1/admin-console/**")
+                                .filters(f -> f.filter(filter))
+                                .uri("lb://ADMIN-CONSOLE")
+                )
                 .build();
     }
 }

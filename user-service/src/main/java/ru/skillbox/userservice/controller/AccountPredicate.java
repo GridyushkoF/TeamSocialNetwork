@@ -3,6 +3,7 @@ package ru.skillbox.userservice.controller;
 import ru.skillbox.userservice.model.entity.User;
 
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoZonedDateTime;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -33,10 +34,10 @@ public class AccountPredicate {
         Predicate<User> before = u -> true;
         Predicate<User> after = u -> true;
         if (to != null) {
-            before = u -> u.getBirthDate().isBefore(to.plusSeconds(1));
+            before = u -> u.getBirthDate().isBefore(ChronoZonedDateTime.from(to.plusSeconds(1)));
         }
         if (from != null) {
-            after = u -> u.getBirthDate().isAfter(from.minusSeconds(1));
+            after = u -> u.getBirthDate().isAfter(ChronoZonedDateTime.from(from.minusSeconds(1)));
         }
         return before.and(after);
     }
@@ -45,10 +46,10 @@ public class AccountPredicate {
         Predicate<User> before = u -> true;
         Predicate<User> after = u -> true;
         if (to > 0) {
-            before = u -> u.getBirthDate().isBefore(LocalDateTime.now().plusYears(to));
+            before = u -> u.getBirthDate().isBefore(ChronoZonedDateTime.from(LocalDateTime.now().plusYears(to)));
         }
         if (from > 0) {
-            after = u -> u.getBirthDate().isAfter(LocalDateTime.now().plusYears(from));
+            after = u -> u.getBirthDate().isAfter(ChronoZonedDateTime.from(LocalDateTime.now().plusYears(from)));
         }
         return before.and(after);
     }

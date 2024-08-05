@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.skillbox.authentication.model.dto.JwtRequest;
 import ru.skillbox.authentication.service.security.Jwt.JwtService;
+import ru.skillbox.commonlib.dto.auth.JwtRequest;
 
 import java.util.Map;
 

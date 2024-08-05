@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import ru.skillbox.commondto.post.PostType;
+import ru.skillbox.commonlib.dto.post.PostType;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -30,11 +30,11 @@ public class Post {
     private Long id;
 
     @CreationTimestamp
-    private LocalDateTime time;
+    private ZonedDateTime time;
 
     @UpdateTimestamp
     @Column(name = "time_changed")
-    private LocalDateTime timeChanged;
+    private ZonedDateTime timeChanged;
 
     @Column(name = "author_id")
     private Long authorId;

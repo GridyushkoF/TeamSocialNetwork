@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.skillbox.commondto.post.LikeDto;
+import ru.skillbox.commonlib.dto.post.LikeDto;
 import ru.skillbox.postservice.exception.LikeException;
 import ru.skillbox.postservice.model.entity.Comment;
 import ru.skillbox.postservice.model.entity.Like;
@@ -42,7 +42,7 @@ public class LikeService {
         Optional<Like> likeOptional = getLikeIfPostValid(postId, userId);
         if (likeOptional.isEmpty()) {
             Post post = postRepository.getPostByIdOrThrowException(postId);
-            Like like = new Like(null, userId, LikeEntityType.POST, postId,likeDto.getReactionType());
+            Like like = new Like(null, userId, LikeEntityType.POST, postId,likeDto.getReactionType(),null);
             likeRepository.save(like);
             post.getLikes().add(like);
             postRepository.save(post);
@@ -69,7 +69,7 @@ public class LikeService {
         Optional<Like> likeOptional = getLikeOnCommentIfValid(postId,commentId, userId);
         if(likeOptional.isEmpty()) {
             Comment comment = commentRepository.getByIdOrThrowException(commentId);
-            Like like = new Like(null,userId,LikeEntityType.COMMENT,commentId,null);
+            Like like = new Like(null,userId,LikeEntityType.COMMENT,commentId,null,null);
             likeRepository.save(like);
             comment.getLikes().add(like);
             commentRepository.save(comment);
@@ -92,4 +92,6 @@ public class LikeService {
         }
         throw new LikeException("Can`t unlike because like not exists, postId  "  + postId + " commentId " + commentId + " userId " + userId );
     }
+    //-------------------------ADMIN-ACCESS--------------------------
+
 }

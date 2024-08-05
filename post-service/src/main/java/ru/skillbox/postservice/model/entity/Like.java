@@ -5,7 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.skillbox.commondto.post.LikeReactionType;
+import org.hibernate.annotations.CreationTimestamp;
+import ru.skillbox.commonlib.dto.post.LikeReactionType;
+
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Getter
@@ -31,5 +35,7 @@ public class Like {
     @Enumerated(EnumType.STRING)
     @Column(name = "reaction_type")
     private LikeReactionType reactionType;
+    @CreationTimestamp
+    private ZonedDateTime creationDateTime;
 
 }

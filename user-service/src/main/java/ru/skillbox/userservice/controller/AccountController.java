@@ -16,9 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.skillbox.commondto.account.AccountByFilterDto;
-import ru.skillbox.commondto.account.AccountDto;
-import ru.skillbox.commondto.account.AccountRecoveryRq;
+import ru.skillbox.commonlib.dto.statistics.PeriodRequestDto;
+import ru.skillbox.commonlib.dto.account.AccountByFilterDto;
+import ru.skillbox.commonlib.dto.account.AccountDto;
+import ru.skillbox.commonlib.dto.account.AccountRecoveryRq;
+import ru.skillbox.commonlib.dto.statistics.UsersStatisticsDto;
+import ru.skillbox.commonlib.util.admin.AdminAccessUtil;
 import ru.skillbox.userservice.service.AccountService;
 
 import java.util.List;
@@ -49,16 +52,6 @@ public class AccountController {
     @DeleteMapping("/me")
     public ResponseEntity<String> deleteUserAccount(HttpServletRequest request) {
         return ResponseEntity.ok(accountService.deleteUserAccount(Long.parseLong(request.getHeader("id"))));
-    }
-
-    @PutMapping("/block/{id}")
-    public ResponseEntity<String> blockAccountById(@PathVariable Integer id) {
-        return ResponseEntity.ok(accountService.blockAccount(true, id));
-    }
-
-    @DeleteMapping("/block/{id}")
-    public ResponseEntity<String> unblockAccountById(@PathVariable Integer id) {
-        return ResponseEntity.ok(accountService.blockAccount(false, id));
     }
 
     @GetMapping
@@ -94,5 +87,29 @@ public class AccountController {
     @GetMapping("/accountIds")
     public ResponseEntity<?> getAccountIds(@RequestParam Long[] ids, HttpServletRequest request) {
         return ResponseEntity.ok(accountService.getAccountIds(ids, Long.parseLong(request.getHeader("id"))));
+    }
+    //----------------------------ADMIN-ACCESS---------------------------
+    @PostMapping("/statistic")
+    public ResponseEntity<UsersStatisticsDto> getUsersStatistics(
+            @RequestBody PeriodRequestDto periodRequestDto,
+            HttpServletRequest request) {
+        AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);
+        return ResponseEntity.ok(accountService.getUsersStatistics(periodRequestDto));
+    }
+
+    @PutMapping("/admin-api/block/{id}")
+    public ResponseEntity<String> blockAccountById(
+            @PathVariable Integer id,
+            HttpServletRequest request) {
+        AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);
+        return ResponseEntity.ok(accountService.blockAccount(true, id));
+    }
+
+    @DeleteMapping("/admin-api/block/{id}")
+    public ResponseEntity<String> unblockAccountById(
+            @PathVariable Integer id,
+            HttpServletRequest request) {
+        AdminAccessUtil.throwExceptionIfTokenNotAdmin(request);
+        return ResponseEntity.ok(accountService.blockAccount(false, id));
     }
 }
