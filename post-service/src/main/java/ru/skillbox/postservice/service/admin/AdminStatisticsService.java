@@ -34,7 +34,7 @@ public class AdminStatisticsService {
     public AdminStatisticsDto getPostsStatistics(PeriodRequestDto periodRequestDto) {
         return getStatistics(periodRequestDto,
                 "Post",
-                "publishDate");
+                "time");
     }
     public AdminStatisticsDto getStatistics(PeriodRequestDto periodRequestDto,
                                             String entityName,
