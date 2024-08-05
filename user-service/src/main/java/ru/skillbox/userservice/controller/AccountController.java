@@ -37,7 +37,8 @@ public class AccountController {
 
     @GetMapping("/me")
     public ResponseEntity<AccountDto> getUserAccount(HttpServletRequest request) {
-        return ResponseEntity.ok(accountService.getAccountById(Long.parseLong(request.getHeader("id"))));
+        Long myId = Long.parseLong(request.getHeader("id"));
+        return ResponseEntity.ok(accountService.getAccountById(myId, myId));
     }
 
     @PutMapping("/me")
@@ -66,18 +67,18 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createAccount(@RequestBody AccountDto accountDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createAccount(accountDto));
+    public ResponseEntity<?> createAccount(@RequestBody AccountDto accountDto, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createAccount(accountDto, Long.parseLong(request.getHeader("id"))));
     }
 
     @PostMapping("/searchByFilter")
-    public ResponseEntity<List<AccountDto>> searchAccountByFilter(@RequestBody AccountByFilterDto filterDto) {
-        return ResponseEntity.ok(accountService.searchAccountByFilter(filterDto));
+    public ResponseEntity<List<AccountDto>> searchAccountByFilter(@RequestBody AccountByFilterDto filterDto, HttpServletRequest request) {
+        return ResponseEntity.ok(accountService.searchAccountByFilter(filterDto, Long.parseLong(request.getHeader("id"))));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AccountDto> getAccountById(@PathVariable Long id) {
-        return ResponseEntity.ok(accountService.getAccountById(id));
+    public ResponseEntity<AccountDto> getAccountById(@PathVariable Long id, HttpServletRequest request) {
+        return ResponseEntity.ok(accountService.getAccountById(id, Long.parseLong(request.getHeader("id"))));
     }
 
     @GetMapping("/search")
@@ -91,7 +92,7 @@ public class AccountController {
     }
 
     @GetMapping("/accountIds")
-    public ResponseEntity<?> getAccountIds(@RequestParam Long[] ids, @RequestParam Pageable page) {
-        return ResponseEntity.ok(accountService.getAccountIds(ids, page));
+    public ResponseEntity<?> getAccountIds(@RequestParam Long[] ids, HttpServletRequest request) {
+        return ResponseEntity.ok(accountService.getAccountIds(ids, Long.parseLong(request.getHeader("id"))));
     }
 }

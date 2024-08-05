@@ -36,21 +36,18 @@ public class AccountService {
         return recoveryRequest.getEmail();
     }
 
-    public AccountDto getUserAccount(String userEmail) {
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new NoSuchAccountException("Can't find Account with email: " + userEmail));
-        return userMapper.userToResponse(user.getId(), user);
-    }
-
     @Transactional
-    public AccountDto updateUserAccount(AccountDto accountDto, Long id) {
-        if (accountDto.getId() != null && !accountDto.getId().equals(id))
-            throw new NotAuthException("Can't update Account with id:" + id);
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchAccountException("Can't find Account with id:" + id));
-        AccountDto existedAccount = userMapper.userToResponse(id, user);
+    public AccountDto updateUserAccount(AccountDto accountDto, Long authUserId) {
+        if (accountDto.getId() != null && !accountDto.getId().equals(authUserId))
+            throw new NotAuthException("Can't update Account with id:" + authUserId);
+        User user = userRepository.findById(authUserId)
+                .orElseThrow(() -> new NoSuchAccountException("Can't find Account with id:" + authUserId));
+        AccountDto existedAccount = userMapper.userToResponse(authUserId, user);
         BeanUtil.copyNonNullProperties(accountDto, existedAccount);
 
-        return userMapper.userToResponse(id, userRepository.save(userMapper.requestToUser(id, existedAccount)));
+        return userMapper.userToResponse(
+                authUserId,
+                userRepository.save(userMapper.requestToUser(authUserId, existedAccount)));
     }
 
     @Transactional
@@ -75,22 +72,22 @@ public class AccountService {
         }
     }
 
-    public Page<AccountDto> getAllAccounts(Pageable page, Long id) {
+    public Page<AccountDto> getAllAccounts(Pageable page, Long authUserId) {
         List<User> users = userRepository.findAllByIsDeleted(page, false);
-        List<AccountDto> pageList = users.stream().map(user -> userMapper.userToResponse(id, user)).toList();
+        List<AccountDto> pageList = users.stream().map(user -> userMapper.userToResponse(authUserId, user)).toList();
         return new PageImpl<>(pageList, page, users.size());
     }
 
     @Transactional
-    public long createAccount(@Valid AccountDto accountDto) {
+    public long createAccount(@Valid AccountDto accountDto, Long authUserId) {
         if (userRepository.findByEmail(accountDto.getEmail()).isPresent()) {
             throw new AccountAlreadyExistsException("Account with such email already registered!");
         }
-        User user = userMapper.requestToUser(accountDto.getId(), accountDto);
+        User user = userMapper.requestToUser(authUserId, accountDto);
         return userRepository.save(user).getId();
     }
 
-    public List<AccountDto> searchAccountByFilter(AccountByFilterDto filterDto) {
+    public List<AccountDto> searchAccountByFilter(AccountByFilterDto filterDto, Long authUserId) {
         Stream<User> users = userRepository.findAll().stream();
         AccountSearchDto params = filterDto.getAccountSearchDto();
         users = users
@@ -99,24 +96,24 @@ public class AccountService {
                 .filter(AccountPredicate.checkFirstName(params.getLastName()))
                 .filter(AccountPredicate.birthdayBetween(params.getBirthDateFrom(), params.getBirthDateTo()))
                 .filter(AccountPredicate.checkAge(params.getAgeFrom(), params.getAgeTo()));
-        return users.map(user -> userMapper.userToResponse(user.getId(), user)).toList();
+        return users.map(user -> userMapper.userToResponse(authUserId, user)).toList();
     }
 
-    public AccountDto getAccountById(Long id) {
+    public AccountDto getAccountById(Long id, Long authUserId) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchAccountException("Can't find Account with id: " + id));
-        return userMapper.userToResponse(id, user);
+        return userMapper.userToResponse(authUserId, user);
     }
 
     public List<Long> getAllIds() {
         return userRepository.findAll().stream().map(User::getId).toList();
     }
 
-    public List<AccountDto> getAccountIds(Long[] ids, Pageable page) {
+    public List<AccountDto> getAccountIds(Long[] ids, Long authUserId) {
         List<User> users = userRepository.findAll();
         return users.stream()
                 .filter(user -> Arrays.asList(ids).contains(user.getId()))
-                .map(user -> userMapper.userToResponse(user.getId(), user))
+                .map(user -> userMapper.userToResponse(authUserId, user))
                 .toList();
     }
 
