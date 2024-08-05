@@ -14,24 +14,24 @@ import ru.skillbox.commonlib.dto.statistics.UsersStatisticsDto;
 public class AdminService {
     private final WebClient webClient;
 
-    public AdminStatisticsDto getPostsAmountByPeriod(
+    public AdminStatisticsDto getPostsStatistics(
             PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
         return getStatisticsByPeriod(periodRequestDto, request, "/api/v1/post/statistic/post",AdminStatisticsDto.class);
     }
 
-    public AdminStatisticsDto getCommentsAmountByPeriod(
+    public AdminStatisticsDto getCommentsStatistics(
             PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
         return getStatisticsByPeriod(periodRequestDto, request, "/api/v1/post/statistic/comment",AdminStatisticsDto.class);
     }
 
-    public UsersStatisticsDto getUsersAmountByPeriod(PeriodRequestDto periodRequestDto,
-                                          HttpServletRequest request) {
+    public UsersStatisticsDto getUsersStatistics(PeriodRequestDto periodRequestDto,
+                                                 HttpServletRequest request) {
         return getStatisticsByPeriod(periodRequestDto, request, "/api/v1/account/statistic", UsersStatisticsDto.class);
     }
-    public AdminStatisticsDto getLikesAmountByPeriod(PeriodRequestDto periodRequestDto,
-                                           HttpServletRequest request) {
+    public AdminStatisticsDto getLikesStatistics(PeriodRequestDto periodRequestDto,
+                                                 HttpServletRequest request) {
         return getStatisticsByPeriod(periodRequestDto,request,"/api/v1/post/statistic/like",AdminStatisticsDto.class);
     }
 
