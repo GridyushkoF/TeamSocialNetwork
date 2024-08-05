@@ -2,6 +2,7 @@ package ru.skillbox.notificationservice.mapper.V1;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.stereotype.Component;
 import ru.skillbox.commondto.notification.NotificationStatus;
 import ru.skillbox.notificationservice.model.dto.*;
 import ru.skillbox.notificationservice.model.entity.Notification;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface NotificationMapperV1 {
 

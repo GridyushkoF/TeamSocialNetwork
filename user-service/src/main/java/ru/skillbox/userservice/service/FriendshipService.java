@@ -1,5 +1,8 @@
 package ru.skillbox.userservice.service;
 
+
+import java.util.concurrent.TimeUnit;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,7 +30,8 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
+
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -54,10 +58,15 @@ public class FriendshipService {
     }
 
     private void setFriendship(Long accountIdFrom, Long accountIdTo, StatusCode statusCode) {
-        Friendship friendship = friendshipRepository.findByAccountIdFromAndAccountIdTo(accountIdFrom, accountIdTo)
-                .orElseThrow(() -> new NoFriendshipFoundException("Accounts id: " + accountIdFrom + " and id: " + accountIdTo + " have no relationships"));
-        friendship.setStatusCode(statusCode);
-        friendshipRepository.save(friendship);
+        Optional<Friendship> friendship = friendshipRepository.findByAccountIdFromAndAccountIdTo(accountIdFrom, accountIdTo);
+        if (friendship.isPresent()) {
+            friendship.get().setStatusCode(statusCode);
+            friendshipRepository.save(friendship.get());
+        } else {
+            // Create a new friendship if it doesn't exist
+            Friendship newFriendship = new Friendship(accountIdFrom, accountIdTo, statusCode);
+            friendshipRepository.save(newFriendship);
+        }
     }
 
     @Transactional
@@ -127,6 +136,7 @@ public class FriendshipService {
                 .filter(accountDto -> accountDto.getStatusCode().equals(StatusCode.REQUEST_TO))
                 .toList().size();
     }
+
 
     private void saveAccountFriends(Long currentAuthUserId, Long accountId) {
         User accountFrom = userRepository.findById(currentAuthUserId)
