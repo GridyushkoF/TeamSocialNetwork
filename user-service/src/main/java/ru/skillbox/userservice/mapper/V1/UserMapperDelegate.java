@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.skillbox.commonlib.dto.account.AccountDto;
 import ru.skillbox.commonlib.dto.account.StatusCode;
 import ru.skillbox.userservice.model.entity.Friendship;
+import ru.skillbox.userservice.model.entity.FriendshipId;
 import ru.skillbox.userservice.model.entity.User;
 import ru.skillbox.userservice.repository.FriendshipRepository;
 
@@ -39,8 +40,9 @@ public abstract class UserMapperDelegate implements UserMapperV1 {
 
     private StatusCode getStatusCode(Long authUserId, Long id) {
         try {
-            Friendship friendshipFrom = friendshipRepository.findByAccountIdFromAndAccountIdTo(authUserId, id)
-                    .orElseThrow();
+            FriendshipId friendshipId = new FriendshipId(authUserId, id);
+            Friendship friendshipFrom = friendshipRepository.findById(friendshipId)
+                    .orElse(new Friendship(friendshipId));
             return friendshipFrom.getStatusCode();
         } catch (Exception e) {
             return StatusCode.NONE;

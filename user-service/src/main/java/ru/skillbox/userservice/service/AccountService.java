@@ -51,9 +51,11 @@ public class AccountService {
         AccountDto existedAccount = userMapper.userToResponse(authUserId, user);
         BeanUtil.copyNonNullProperties(accountDto, existedAccount);
 
-        return userMapper.userToResponse(
-                authUserId,
-                userRepository.save(userMapper.requestToUser(authUserId, existedAccount)));
+        User newUser = userMapper.requestToUser(authUserId, existedAccount);
+        newUser.setFriendsFrom(user.getFriendsFrom());
+        newUser.setFriendsTo(user.getFriendsTo());
+
+        return userMapper.userToResponse(authUserId, userRepository.save(newUser));
     }
 
     @Transactional
@@ -79,7 +81,7 @@ public class AccountService {
     }
 
     public Page<AccountDto> getAllAccounts(Pageable page, Long authUserId) {
-        List<User> users = userRepository.findAllByIsDeleted(page, false);
+        List<User> users = userRepository.findAllByIsDeletedAndIdNot(page, false, authUserId);
         List<AccountDto> pageList = users.stream().map(user -> userMapper.userToResponse(authUserId, user)).toList();
         return new PageImpl<>(pageList, page, users.size());
     }
@@ -125,7 +127,7 @@ public class AccountService {
 
     public Page<AccountDto> searchAccount(boolean isDeleted, long authUserId) {
         Pageable nextPage = PageRequest.of(0, Integer.MAX_VALUE);
-        List<User> users = userRepository.findAllByIsDeleted(nextPage, isDeleted);
+        List<User> users = userRepository.findAllByIsDeletedAndIdNot(nextPage, isDeleted, authUserId);
         List<AccountDto> pageList = users.stream().map(user -> userMapper.userToResponse(authUserId, user)).toList();
         return new PageImpl<>(pageList, nextPage, users.size());
     }

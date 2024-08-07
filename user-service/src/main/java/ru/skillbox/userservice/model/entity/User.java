@@ -1,5 +1,6 @@
 package ru.skillbox.userservice.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import ru.skillbox.commonlib.dto.account.Role;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -93,21 +95,22 @@ public class User {
     private String password;
 
     @JsonIgnoreProperties("friendsFrom")
+    @JsonIgnore
     @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = "friendship",
-            joinColumns = @JoinColumn(name = "account_id_from",
-                    referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "account_id_to",
-                    referencedColumnName = "id"))
-    private List<User> friendsFrom;
+            joinColumns = @JoinColumn(name = "account_id_from"),
+            inverseJoinColumns = @JoinColumn(name = "account_id_to")
+    )
+    private List<User> friendsFrom = new ArrayList<>();
 
     @JsonIgnoreProperties("friendsTo")
+    @JsonIgnore
     @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = "friendship",
             joinColumns = @JoinColumn(name = "account_id_to"),
             inverseJoinColumns = @JoinColumn(name = "account_id_from")
     )
-    private List<User> friendsTo;
+    private List<User> friendsTo = new ArrayList<>();
 
     public Set<User> getFriends() {
         return Stream.concat(friendsFrom.stream(), friendsTo.stream())

@@ -2,22 +2,22 @@ package ru.skillbox.userservice.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.skillbox.commonlib.dto.account.StatusCode;
 
 @Entity
 @Getter
 @Setter
-@IdClass(FriendshipId.class)
+@NoArgsConstructor
 public class Friendship {
 
-    @Id
-    @Column(name = "account_id_from", columnDefinition = "BIGINT NOT NULL")
-    private Long accountIdFrom;
+    public Friendship(FriendshipId friendshipId) {
+        this.id = friendshipId;
+    }
 
-    @Id
-    @Column(name = "account_id_to", columnDefinition = "BIGINT NOT NULL")
-    private Long accountIdTo;
+    @EmbeddedId
+    private FriendshipId id;
 
     @Column(name = "status_code")
     @Enumerated(EnumType.STRING)

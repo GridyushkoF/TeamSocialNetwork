@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skillbox.commonlib.dto.account.AccountDto;
 import ru.skillbox.commonlib.dto.account.StatusCode;
-import ru.skillbox.userservice.exception.NoFriendshipFoundException;
 import ru.skillbox.userservice.exception.NoSuchAccountException;
 import ru.skillbox.userservice.mapper.V1.FriendMapperV1;
 import ru.skillbox.userservice.mapper.V1.UserMapperV1;
 import ru.skillbox.userservice.model.dto.FriendDto;
 import ru.skillbox.userservice.model.entity.Friendship;
+import ru.skillbox.userservice.model.entity.FriendshipId;
 import ru.skillbox.userservice.model.entity.User;
 import ru.skillbox.userservice.repository.FriendshipRepository;
 import ru.skillbox.userservice.repository.UserRepository;
@@ -34,7 +34,6 @@ public class FriendshipService {
     private final FriendMapperV1 friendMapper;
     private final UserMapperV1 userMapper;
 
-    @Transactional
     public void requestFriendship(Long currentAuthUserId, Long accountId) {
         log.info("Request friendship between accounts - id: {} and id: {}", currentAuthUserId, accountId);
 
@@ -45,22 +44,23 @@ public class FriendshipService {
     }
 
     private void setFriendship(Long accountIdFrom, Long accountIdTo, StatusCode statusCode) {
-        Friendship friendship = friendshipRepository.findByAccountIdFromAndAccountIdTo(accountIdFrom, accountIdTo)
-                .orElseThrow(() -> new NoFriendshipFoundException("Accounts id: " + accountIdFrom + " and id: " + accountIdTo + " have no relationships"));
-        friendship.setStatusCode(statusCode);
-        friendshipRepository.save(friendship);
+        FriendshipId friendshipId = new FriendshipId(accountIdFrom, accountIdTo);
+        Friendship friendshipFrom = friendshipRepository.findById(friendshipId)
+                .orElse(new Friendship(friendshipId));
+        friendshipFrom.setStatusCode(statusCode);
+        friendshipRepository.save(friendshipFrom);
     }
 
     @Transactional
     public void deleteFriendship(Long currentAuthUserId, Long accountId) {
         log.info("Delete friendship between accounts - id: {} and id: {}", currentAuthUserId, accountId);
-        Friendship friendshipFrom = friendshipRepository.findByAccountIdFromAndAccountIdTo(currentAuthUserId, accountId)
-                .orElseThrow(() ->
-                        new NoFriendshipFoundException("Accounts id: " + currentAuthUserId + " and id: " + accountId + " have no relationships"));
+        FriendshipId friendshipId = new FriendshipId(currentAuthUserId, accountId);
+        Friendship friendshipFrom = friendshipRepository.findById(friendshipId)
+                .orElse(new Friendship(friendshipId));
+
         friendshipRepository.delete(friendshipFrom);
-        Friendship friendshipTo = friendshipRepository.findByAccountIdFromAndAccountIdTo(accountId, currentAuthUserId)
-                .orElseThrow(() ->
-                        new NoFriendshipFoundException("Accounts id: " + accountId + " and id: " + currentAuthUserId + " have no relationships"));
+        Friendship friendshipTo = friendshipRepository.findById(new FriendshipId(accountId, currentAuthUserId))
+                .orElse(new Friendship(new FriendshipId(accountId, currentAuthUserId)));
         friendshipRepository.delete(friendshipTo);
     }
 
@@ -128,12 +128,9 @@ public class FriendshipService {
                 .orElseThrow(() ->
                         new NoSuchAccountException("Account with id: " + accountId + " does not exists")
                 );
-        if (!accountFrom.getFriendsFrom().contains(accountTo)) {
-            accountFrom.getFriendsFrom().add(accountTo);
-        }
-        if (!accountFrom.getFriendsTo().contains(accountTo)) {
-            accountFrom.getFriendsTo().add(accountTo);
-        }
+
+        accountFrom.getFriends().add(accountTo);
+
         userRepository.save(accountFrom);
     }
 

@@ -9,6 +9,7 @@ import ru.skillbox.commonlib.dto.statistics.AgeCountDto;
 import ru.skillbox.userservice.model.entity.User;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,10 +20,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Page<User> findAll(Pageable pageable);
 
-    List<User> findAllByIsDeleted(Pageable page, boolean isDeleted);
+    List<User> findAllByIsDeletedAndIdNot(Pageable page, boolean isDeleted, Long id);
 
     Optional<User> findByEmail(String email);
-    int countByRegDateBetween(LocalDateTime from, LocalDateTime to);
+    int countByRegDateBetween(ZonedDateTime from, ZonedDateTime to);
     @Query("SELECT new ru.skillbox.commonlib.dto.statistics.AgeCountDto(" +
             "FLOOR(TIMESTAMPDIFF(YEAR, u.birthDate, CURRENT_DATE)), COUNT(u)) " +
             "FROM User u " +
