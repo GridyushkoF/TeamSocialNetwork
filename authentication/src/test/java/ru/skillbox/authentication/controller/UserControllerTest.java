@@ -20,7 +20,7 @@
 //import ru.skillbox.authentication.service.AuthenticationService;
 //import ru.skillbox.authentication.service.CaptchaService;
 //import ru.skillbox.authentication.service.PasswordService;
-//import ru.skillbox.authentication.service.security.SecurityBeanConfig;
+//import ru.skillbox.authentication.config.SecurityBeanConfig;
 //
 //import java.util.Collections;
 //import java.util.List;

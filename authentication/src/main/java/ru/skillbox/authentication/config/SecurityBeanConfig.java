@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.service.security;
+package ru.skillbox.authentication.config;
 
 
 import io.swagger.v3.oas.models.Components;

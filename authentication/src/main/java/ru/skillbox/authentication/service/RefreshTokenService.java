@@ -19,7 +19,7 @@ import java.util.UUID;
 @Slf4j
 public class RefreshTokenService {
 
-    @Value("security.jwt.tokenExpiration")
+    @Value("${security.jwt.tokenExpiration}")
     private Duration tokenExpiration;
 
     private final RefreshTokenRepository refreshTokenRepository;
