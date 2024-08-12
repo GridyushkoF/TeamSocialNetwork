@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
+import ru.skillbox.commonlib.dto.post.CommentType;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
@@ -14,6 +13,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "comments")
+
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

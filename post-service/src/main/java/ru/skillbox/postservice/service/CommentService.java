@@ -77,7 +77,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateComment(Long postId, CommentDto resultCommentDto, Long authUserId) {
+    public Comment updateComment(Long postId, CommentDto resultCommentDto, Long authUserId) {
         resultCommentDto.setPostId(postId);
         Long commentId = resultCommentDto.getId();
         postValidator.throwExceptionIfPostNotValid(postId);
@@ -91,6 +91,7 @@ public class CommentService {
             processor.process(comment);
         }
         log.info("Comment with id " + commentId + " updated by commentDto: " + resultCommentDto);
+        return comment;
     }
 
     @Transactional
@@ -112,7 +113,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void createNewComment(Long postId, CommentDto commentDto, Long authUserId) {
+    public Comment createNewComment(Long postId, CommentDto commentDto, Long authUserId) {
         if (Objects.isNull(commentDto.getCommentType())) {
             commentDto.setCommentType(CommentType.POST);
         }
@@ -128,6 +129,7 @@ public class CommentService {
         log.info("Comment created by dto:  " + commentDto);
 
         processor.process(comment);
+        return comment;
     }
 
     @Transactional

@@ -13,7 +13,7 @@ public class PostValidatorUtil {
     private final PostRepository postRepository;
 
     public boolean isPostDenied(Post post) {
-        return !(post.isBlocked() || post.isDelete());
+        return post.isBlocked() || post.isDelete();
     }
 
     public boolean isPostDenied(Long postId) {
@@ -21,7 +21,7 @@ public class PostValidatorUtil {
     }
 
     public void throwExceptionIfPostNotValid(Long postId) {
-        if (!isPostDenied(postId)) {
+        if (isPostDenied(postId)) {
             throw new PostAccessException(postId);
         }
     }

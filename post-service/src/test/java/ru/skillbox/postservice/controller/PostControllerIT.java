@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 public class PostControllerIT extends TestDependenciesContainer {
-
     @BeforeEach
     void initBeforeEach() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();

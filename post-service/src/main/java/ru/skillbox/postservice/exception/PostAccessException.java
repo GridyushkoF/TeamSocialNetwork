@@ -3,7 +3,7 @@ package ru.skillbox.postservice.exception;
 import java.text.MessageFormat;
 
 public class PostAccessException extends RuntimeException {
-    private static final String DEFAULT_MESSAGE = "Post with id {0} is not allowed!";
+    public static final String DEFAULT_MESSAGE = "Post with id {0} is not allowed!";
     public PostAccessException(String message) {
         super(message);
     }

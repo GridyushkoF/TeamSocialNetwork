@@ -26,6 +26,11 @@ public class GatewayConfig {
                                 .uri("lb://POST-SERVICE")
                 )
                 .route(
+                        "post_route", r -> r.path("/api/v1/tag/**")
+                                .filters(f -> f.filter(filter))
+                                .uri("lb://POST-SERVICE")
+                )
+                .route(
                         "auth_route", r -> r.path("/api/v1/auth/**")
                                 .filters(f -> f.filter(filter))
                                 .uri("lb://AUTHENTICATION")
@@ -40,6 +45,13 @@ public class GatewayConfig {
                                 .filters(f -> f.filter(filter))
                                 .uri("lb://USER-SERVICE")
                 )
+                .route(
+                        "user_route", r -> r.path("/api/v1/storage/**")
+                                .filters(f -> f.filter(filter))
+                                .uri("lb://USER-SERVICE")
+                )
+                .route("img_route", r -> r.path("/api/v1/img/**")
+                        .uri("lb://USER-SERVICE"))
                 .route(
                         "dialog_route", r -> r.path("/api/v1/dialogs/**")
                                 .filters(f -> f.filter(filter))

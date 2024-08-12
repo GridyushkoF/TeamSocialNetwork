@@ -13,6 +13,7 @@ import ru.skillbox.commonlib.dto.post.PostType;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -68,12 +69,4 @@ public class Post {
 
     @Column(name = "publish_date")
     private ZonedDateTime publishDate;
-
-    @OneToMany
-    @JoinTable(
-            name = "posts_likes",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "like_id")
-    )
-    private Set<Like> likes;
 }

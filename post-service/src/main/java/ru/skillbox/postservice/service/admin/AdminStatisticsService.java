@@ -6,11 +6,7 @@ import ru.skillbox.commonlib.dto.statistics.AdminStatisticsDto;
 import ru.skillbox.commonlib.dto.statistics.DateCountPointDto;
 import ru.skillbox.commonlib.dto.statistics.PeriodRequestDto;
 import ru.skillbox.commonlib.util.admin.AdminStatisticsRepository;
-import ru.skillbox.postservice.repository.CommentRepository;
-import ru.skillbox.postservice.repository.LikeRepository;
-import ru.skillbox.postservice.repository.PostRepository;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -36,12 +32,13 @@ public class AdminStatisticsService {
                 "Post",
                 "time");
     }
+
     public AdminStatisticsDto getStatistics(PeriodRequestDto periodRequestDto,
                                             String entityName,
                                             String dateFieldName) {
         ZonedDateTime fromDate = periodRequestDto.getFirstMonth();
         ZonedDateTime toDate = periodRequestDto.getLastMonth();
-        Long postsAmountByPeriod = adminStatisticsRepository.countEntities(entityName,dateFieldName,fromDate,toDate);
+        Long postsAmountByPeriod = adminStatisticsRepository.countEntities(entityName, dateFieldName, fromDate, toDate);
         List<DateCountPointDto> monthlyPostsStatistics = adminStatisticsRepository.getDateCountStatistics(
                 dateFieldName, "MONTH", entityName, fromDate, toDate
         );

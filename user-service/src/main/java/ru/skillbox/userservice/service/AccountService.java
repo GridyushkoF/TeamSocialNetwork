@@ -17,7 +17,7 @@ import ru.skillbox.commonlib.dto.statistics.DateCountPointDto;
 import ru.skillbox.commonlib.dto.statistics.PeriodRequestDto;
 import ru.skillbox.commonlib.dto.statistics.UsersStatisticsDto;
 import ru.skillbox.commonlib.util.admin.AdminStatisticsRepository;
-import ru.skillbox.userservice.controller.AccountPredicate;
+import ru.skillbox.userservice.service.specifiaction_api.AccountPredicate;
 import ru.skillbox.userservice.exception.AccountAlreadyExistsException;
 import ru.skillbox.userservice.exception.NoSuchAccountException;
 import ru.skillbox.userservice.exception.NotAuthException;
@@ -132,11 +132,7 @@ public class AccountService {
         return new PageImpl<>(pageList, nextPage, users.size());
     }
     public UsersStatisticsDto getUsersStatistics(PeriodRequestDto periodRequestDto) {
-        long usersAmount = adminStatisticsRepository.countEntities(
-                "User",
-                "regDate",
-                periodRequestDto.getFirstMonth(),
-                periodRequestDto.getLastMonth());
+        long usersAmount = userRepository.count();
         List<DateCountPointDto> dateCountStatistics = adminStatisticsRepository.getDateCountStatistics(
                 "regDate",
                 "MONTH",

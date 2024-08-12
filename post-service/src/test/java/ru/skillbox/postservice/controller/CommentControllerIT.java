@@ -9,9 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.skillbox.postservice.TestDependenciesContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.skillbox.commonlib.dto.post.CommentDto;
-import ru.skillbox.commonlib.dto.post.pages.PageCommentDto;;
+import ru.skillbox.commonlib.dto.post.pages.PageCommentDto;
+import ru.skillbox.postservice.TestDependenciesContainer;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@Testcontainers
 public class CommentControllerIT extends TestDependenciesContainer {
 
     @BeforeEach
@@ -68,7 +70,7 @@ public class CommentControllerIT extends TestDependenciesContainer {
                         .param("size", String.valueOf(size))
                         .param("sort", String.join(",", sort))
                         .param("isDeleted", "false")
-                        .header("id","1")
+                        .header("id", "1")
                 )
                 .andExpect(status().isOk())
                 .andReturn();
@@ -103,7 +105,7 @@ public class CommentControllerIT extends TestDependenciesContainer {
                         .param("size", String.valueOf(size))
                         .param("sort", String.join(",", sort))
                         .param("isDeleted", "false")
-                        .header("id","1")
+                        .header("id", "1")
                 )
                 .andExpect(status().isOk())
                 .andReturn();

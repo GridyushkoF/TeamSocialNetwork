@@ -16,6 +16,7 @@ import ru.skillbox.postservice.repository.PostRepository;
 import ru.skillbox.postservice.util.CommentValidatorUtil;
 import ru.skillbox.postservice.util.PostValidatorUtil;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 @Service
@@ -41,23 +42,20 @@ public class LikeService {
     public void likePost(Long postId, LikeDto likeDto, Long userId) {
         Optional<Like> likeOptional = getLikeIfPostValid(postId, userId);
         if (likeOptional.isEmpty()) {
-            Post post = postRepository.getPostByIdOrThrowException(postId);
-            Like like = new Like(null, userId, LikeEntityType.POST, postId,likeDto.getReactionType(),null);
+            Like like = new Like(null, userId, LikeEntityType.POST, postId,likeDto.getReactionType(), null);
             likeRepository.save(like);
-            post.getLikes().add(like);
-            postRepository.save(post);
             log.info("Post with id " + postId + " was liked by user with id " + userId);
-            return;
+        } else {
+            Like like = likeOptional.get();
+            like.setReactionType(likeDto.getReactionType());
+            likeRepository.save(like);
+            log.info("Reaction on post with id " + postId + " was changed by user with id " + userId);
         }
-        throw new LikeException(postId, userId);
     }
     @Transactional
     public void unlikePost(Long postId, Long userId) {
         Optional<Like> likeOptional = getLikeIfPostValid(postId, userId);
         if (likeOptional.isPresent()) {
-            Post post = postRepository.getPostByIdOrThrowException(postId);
-            post.getLikes().remove(likeOptional.get());
-            postRepository.save(post);
             likeRepository.delete(likeOptional.get());
             log.info("Post with id " + postId + " was unliked by user with id " + userId);
             return;
@@ -68,12 +66,8 @@ public class LikeService {
     public void likeComment(Long postId, Long commentId, Long userId) {
         Optional<Like> likeOptional = getLikeOnCommentIfValid(postId,commentId, userId);
         if(likeOptional.isEmpty()) {
-            Comment comment = commentRepository.getByIdOrThrowException(commentId);
             Like like = new Like(null,userId,LikeEntityType.COMMENT,commentId,null,null);
             likeRepository.save(like);
-            comment.getLikes().add(like);
-            commentRepository.save(comment);
-
             log.info("Comment with id " + commentId + " was liked by user with id " + userId);
             return;
         }
@@ -83,15 +77,11 @@ public class LikeService {
     public void unlikeComment(Long postId, Long commentId, Long userId) {
         Optional<Like> likeOptional = getLikeOnCommentIfValid(postId,commentId, userId);
         if(likeOptional.isPresent()) {
-            Comment comment = commentRepository.getByIdOrThrowException(commentId);
-            comment.getLikes().remove(likeOptional.get());
-            commentRepository.save(comment);
             likeRepository.delete(likeOptional.get());
             log.info("Comment with id " + commentId + " was unliked by user with id " + userId);
             return;
         }
         throw new LikeException("Can`t unlike because like not exists, postId  "  + postId + " commentId " + commentId + " userId " + userId );
     }
-    //-------------------------ADMIN-ACCESS--------------------------
 
 }

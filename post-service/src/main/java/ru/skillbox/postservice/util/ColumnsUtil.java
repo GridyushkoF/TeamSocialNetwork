@@ -4,7 +4,9 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
 import java.beans.PropertyDescriptor;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ColumnsUtil {
@@ -12,12 +14,13 @@ public class ColumnsUtil {
         final BeanWrapper src = new BeanWrapperImpl(source);
         PropertyDescriptor[] propertyDescriptors = src.getPropertyDescriptors();
 
-        Set<String> emptyNames = new HashSet<>();
+        List<String> emptyNames = new ArrayList<>();
         for (PropertyDescriptor descriptor : propertyDescriptors) {
             Object srcValue = src.getPropertyValue(descriptor.getName());
-            if (srcValue == null) emptyNames.add(descriptor.getName());
+            if (srcValue == null) {
+                emptyNames.add(descriptor.getName());
+            }
         }
-        String[] result = new String[emptyNames.size()];
-        return emptyNames.toArray(result);
+        return emptyNames.toArray(new String[0]);
     }
 }

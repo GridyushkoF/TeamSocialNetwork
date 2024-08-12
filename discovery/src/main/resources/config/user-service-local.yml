@@ -21,7 +21,9 @@ spring:
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
     topic: notifications
-
+  web:
+    resources:
+      add-mappings: true
 eureka:
   client:
     serviceUrl:
@@ -29,5 +31,5 @@ eureka:
     enabled: true
 
 server:
-  port: 0
+  port: 9783
 
