@@ -1,10 +1,7 @@
-image: maven:3-eclipse-temurin-17
-
 variables:
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
   GIT_DEPTH: "0"
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-  MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository --batch-mode --fail-at-end --show-version"
 
 stages:
   - build
@@ -21,13 +18,13 @@ build-job:
   stage: build
   script:
     - echo "Compiling the code..."
-    - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
+    - mvn clean compile $MAVEN_OPTS -DskipTests
 
 unit-test-job:
   stage: test
   script:
     - echo "Running unit tests..."
-    - mvn test $MAVEN_OPTS_CLI
+    - mvn test $MAVEN_OPTS
 
 sonarqube-check-job:
   stage: sonarqube-check
@@ -35,23 +32,25 @@ sonarqube-check-job:
     - build-job
     - unit-test-job
   cache:
-    policy: pull
     key: "${CI_COMMIT_SHA}"
     paths:
       - sonar-scanner/
+    policy: pull
 
   script:
-    -  mvn verify sonar:sonar $MAVEN_OPTS_CLI
+    - echo "Running SonarQube analysis..."
+    - mvn verify sonar:sonar $MAVEN_OPTS
   allow_failure: true
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - if: $CI_COMMIT_BRANCH == 'master'
-    - if: $CI_COMMIT_BRANCH == 'main'
-    - if: $CI_COMMIT_BRANCH == 'develop'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "master"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+
 deploy-job:
   stage: deploy
   only:
     - master
   script:
     - echo "Deploying application..."
-    - mvn clean package $MAVEN_OPTS_CLI -DskipTests
+    - mvn clean package $MAVEN_OPTS -DskipTests
