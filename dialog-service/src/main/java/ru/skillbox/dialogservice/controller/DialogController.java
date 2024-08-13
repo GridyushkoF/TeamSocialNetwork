@@ -26,7 +26,7 @@ public class DialogController {
     @GetMapping
     public Page<DialogDto> getDialogs(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "time,asc") String sort,
+            @RequestParam(defaultValue = "unreadCount,desc") String sort,
             HttpServletRequest request
             ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
