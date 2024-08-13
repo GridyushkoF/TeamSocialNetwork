@@ -38,10 +38,7 @@ public class MessageService {
 
     private static Specification<Message> getAuthUserUnreadMessagesSpecification(Long authUserId) {
         return (root, cq, cb) -> cb.and(
-                cb.or(
-                        cb.equal(root.get("authorId"), authUserId),
-                        cb.equal(root.get("recipientId"), authUserId)
-                ),
+                cb.equal(root.get("recipientId"), authUserId),
                 cb.equal(root.get("status"), MessageStatus.SENT)
         );
     }
