@@ -29,6 +29,7 @@ push-job:       # This job runs in the push stage.
   stage: push
   script:
     - echo "Pushing the images to docker hub..."
+    - DOCKER_HOST=tcp://localhost:2375
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin
     - mvn clean push $MAVEN_OPTS_CLI -DskipTests
 
