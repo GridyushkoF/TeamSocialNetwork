@@ -31,5 +31,8 @@ eureka:
     enabled: true
 
 server:
-  port: 9783
-
+  port: 0
+yandex-cloud:
+  id-key: YCAJEbjmnRHm7TJgZkPR3RaHq
+  secret-key: YCPwGX7Y9t6l-Or0pEQtkoPRYkNPz3a9Pw1UxjPA
+  bucket-name: skillbox-social-network-media-bucket

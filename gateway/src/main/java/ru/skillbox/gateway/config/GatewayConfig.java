@@ -50,8 +50,6 @@ public class GatewayConfig {
                                 .filters(f -> f.filter(filter))
                                 .uri("lb://USER-SERVICE")
                 )
-                .route("img_route", r -> r.path("/api/v1/img/**")
-                        .uri("lb://USER-SERVICE"))
                 .route(
                         "dialog_route", r -> r.path("/api/v1/dialogs/**")
                                 .filters(f -> f.filter(filter))

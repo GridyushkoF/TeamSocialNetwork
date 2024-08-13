@@ -1,50 +1,63 @@
 package ru.skillbox.userservice.service;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import lombok.extern.log4j.Log4j2;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 @Service
 @Log4j2
+@RequiredArgsConstructor
 public class StorageService {
 
-    private String getProjectRoot() {
-        return System.getProperty("user.dir");
-    }
+    private final AmazonS3 amazonS3Client;
+    @Value("${yandex-cloud.bucket-name}")
+    private String bucketName;
 
-    private String getImagesDirectory() {
-        return getProjectRoot() + "/images";
-    }
-
-    public String loadImageToStorage(MultipartFile file) {
-        String fileId = UUID.randomUUID().toString();
-        String imagesPath = getImagesDirectory();
-        File imagesDirectory = new File(imagesPath);
-
-        if (!imagesDirectory.exists()) {
-            if (imagesDirectory.mkdirs()) {
-                log.info("Directory created: " + imagesPath);
-            } else {
-                log.error("Failed to create directory: " + imagesPath);
-                return null;
-            }
+    public String uploadFileAndGetLink(MultipartFile multipartFile) {
+        String fileUrl = "";
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            String originalFileName = multipartFile.getOriginalFilename();
+            String hashedFilename = hashFilename(originalFileName);
+            fileUrl = "https://storage.yandexcloud.net/" + bucketName + "/" + hashedFilename;
+            uploadFileToS3Bucket(hashedFilename, inputStream, multipartFile.getSize());
+        } catch (Exception e) {
+            log.error("Error uploading file: ", e);
         }
-        String fileName = fileId + getExtensionFromFilename(file.getOriginalFilename());
-        String filePath = imagesPath + "/" + fileName;
+        return fileUrl;
+    }
+
+    private String hashFilename(String filename) {
         try {
-            file.transferTo(new File(filePath));
-            log.info("File saved to: " + filePath);
-        } catch (IOException e) {
-            log.error("Error saving file: " + e.getMessage(), e);
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(filename.getBytes(StandardCharsets.UTF_8));
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(hash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error hashing filename", e);
         }
-        return "/api/v1/img/" + fileName;
     }
 
-    public String getExtensionFromFilename(String filename) {
-        return filename.substring(filename.lastIndexOf('.'));
+    private void uploadFileToS3Bucket(String fileName, InputStream inputStream, long size) {
+        try {
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(size);
+            amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, metadata));
+            log.info("File uploaded successfully: " + fileName);
+        } catch (AmazonServiceException e) {
+            log.error("AmazonServiceException: ", e);
+        } catch (Exception e) {
+            log.error("Exception while uploading file: ", e);
+        }
     }
 }
