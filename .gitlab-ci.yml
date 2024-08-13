@@ -18,13 +18,13 @@ build-job:
   stage: build
   script:
     - echo "Compiling the code..."
-    - mvn clean compile $MAVEN_OPTS -DskipTests
+    - mvn clean compile -DskipTests
 
 unit-test-job:
   stage: test
   script:
     - echo "Running unit tests..."
-    - mvn test $MAVEN_OPTS
+    - mvn test
 
 sonarqube-check-job:
   stage: sonarqube-check
@@ -39,7 +39,7 @@ sonarqube-check-job:
 
   script:
     - echo "Running SonarQube analysis..."
-    - mvn verify sonar:sonar $MAVEN_OPTS
+    - mvn verify sonar:sonar
   allow_failure: true
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
@@ -53,4 +53,4 @@ deploy-job:
     - master
   script:
     - echo "Deploying application..."
-    - mvn clean package $MAVEN_OPTS -DskipTests
+    - mvn clean package -DskipTests
