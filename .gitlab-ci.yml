@@ -53,7 +53,7 @@ sonarqube-check-job:
 sonarqube-vulnerability-report:
   stage: sonarqube-vulnerability-report
   script:
-    - 'curl -u "${SONAR_TOKEN}:" "${SONAR_HOST_URL}/api/issues/gitlab_sast_export?projectKey=javapro_team48_social_network_2115f87b-6fd2-41d5-ad1b-2f9b2d10f9cd&branch=${CI_COMMIT_BRANCH}&pullRequest=${CI_MERGE_REQUEST_IID}" -o gl-sast-sonar-report.json'
+    - 'curl -u "${SONAR_TOKEN}:" "${SONAR_HOST_URL}/api/issues/search?projectKeys=javapro_team48_social_network_2115f87b-6fd2-41d5-ad1b-2f9b2d10f9cd&branch=${CI_COMMIT_BRANCH}" -o gl-sast-sonar-report.json'
   allow_failure: true
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
@@ -64,7 +64,6 @@ sonarqube-vulnerability-report:
     expire_in: 1 day
     reports:
       sast: gl-sast-sonar-report.json
-
 deploy-job:
   stage: deploy
   only:
