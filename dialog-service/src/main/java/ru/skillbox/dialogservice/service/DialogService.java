@@ -107,7 +107,7 @@ public class DialogService {
         Dialog newDialog = new Dialog();
         newDialog.setMember1Id(authUserId);
         newDialog.setMember2Id(partnerId);
-        newDialog.setUnreadCount(0);
+        newDialog.setUnreadCount(1);
         return dialogRepository.save(newDialog);
     }
 }
