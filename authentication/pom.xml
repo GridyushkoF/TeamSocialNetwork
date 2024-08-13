@@ -183,7 +183,7 @@
 				<artifactId>dockerfile-maven-plugin</artifactId>
 				<version>1.4.13</version>
 				<configuration>
-					<repository>socialnetwork/authentication</repository>
+					<repository>skillboxgroup/authentication</repository>
 				</configuration>
 			</plugin>
 		</plugins>

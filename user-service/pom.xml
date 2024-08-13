@@ -145,7 +145,7 @@
 				<artifactId>dockerfile-maven-plugin</artifactId>
 				<version>1.4.13</version>
 				<configuration>
-					<repository>socialnetwork/user-service</repository>
+					<repository>skillboxgroup/user-service</repository>
 				</configuration>
 			</plugin>
 

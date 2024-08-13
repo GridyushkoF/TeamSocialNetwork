@@ -88,7 +88,7 @@
 				<artifactId>dockerfile-maven-plugin</artifactId>
 				<version>1.4.13</version>
 				<configuration>
-					<repository>socialnetwork/gateway</repository>
+					<repository>skillboxgroup/gateway</repository>
 				</configuration>
 			</plugin>
 		</plugins>

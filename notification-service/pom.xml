@@ -132,7 +132,7 @@
                 <artifactId>dockerfile-maven-plugin</artifactId>
                 <version>1.4.13</version>
                 <configuration>
-                    <repository>socialnetwork/notification-service</repository>
+                    <repository>skillboxgroup/notification-service</repository>
                 </configuration>
             </plugin>
         </plugins>

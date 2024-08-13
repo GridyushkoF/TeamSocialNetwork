@@ -1,13 +1,13 @@
 version: '3'
 services:
   discovery:
-    image: socialnetwork/discovery:0.0.1-SNAPSHOT
+    image: skillboxgroup/discovery:0.0.1-SNAPSHOT
     ports:
       - "8761:8761"
     restart: always
 
   authentication:
-    image: socialnetwork/authentication:0.0.1-SNAPSHOT
+    image: skillboxgroup/authentication:0.0.1-SNAPSHOT
 #    ports:
 #      - "8083:8083"
     environment:
@@ -21,7 +21,7 @@ services:
       - discovery
 
   dialog-service:
-    image: socialnetwork/dialog-service:0.0.1-SNAPSHOT
+    image: skillboxgroup/dialog-service:0.0.1-SNAPSHOT
 #    ports:
 #      - "8080:8080"
     environment:
@@ -35,7 +35,7 @@ services:
       - discovery
 
   notification-service:
-    image: socialnetwork/notification-service:0.0.1-SNAPSHOT
+    image: skillboxgroup/notification-service:0.0.1-SNAPSHOT
 #    ports:
 #      - "8081:8081"
     environment:
@@ -49,7 +49,7 @@ services:
       - discovery
 
   post-service:
-    image: socialnetwork/post-service:0.0.1-SNAPSHOT
+    image: skillboxgroup/post-service:0.0.1-SNAPSHOT
 #    ports:
 #      - "8082:8082"
     environment:
@@ -63,9 +63,9 @@ services:
       - discovery
 
   user-service:
-    image: socialnetwork/user-service:0.0.1-SNAPSHOT
-    ports:
-      - "8084:8084"
+    image: skillboxgroup/user-service:0.0.1-SNAPSHOT
+#    ports:
+#      - "8084:8084"
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -76,8 +76,30 @@ services:
     depends_on:
       - discovery
 
+  admin-service:
+    image: skillboxgroup/admin-service:0.0.1-SNAPSHOT
+#    ports:
+#      - "8085:8085"
+    environment:
+      - CONFIG_URI=http://discovery:8761
+      - EUREKA_URI=http://discovery:8761/eureka
+    restart: always
+    depends_on:
+      - discovery
+
+  geo-service:
+    image: skillboxgroup/admin-service:0.0.1-SNAPSHOT
+    #    ports:
+    #      - "8086:80856
+    environment:
+      - CONFIG_URI=http://discovery:8761
+      - EUREKA_URI=http://discovery:8761/eureka
+    restart: always
+    depends_on:
+      - discovery
+
   gateway:
-    image: socialnetwork/gateway:0.0.1-SNAPSHOT
+    image: skillboxgroup/gateway:0.0.1-SNAPSHOT
     ports:
       - "9090:9090"
     environment:
@@ -91,3 +113,5 @@ services:
       - notification-service
       - post-service
       - user-service
+      - admin-service
+      - geo-service

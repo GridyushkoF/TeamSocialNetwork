@@ -170,7 +170,7 @@
 				<artifactId>dockerfile-maven-plugin</artifactId>
 				<version>1.4.13</version>
 				<configuration>
-					<repository>socialnetwork/post-service</repository>
+					<repository>skillboxgroup/post-service</repository>
 				</configuration>
 			</plugin>
 
