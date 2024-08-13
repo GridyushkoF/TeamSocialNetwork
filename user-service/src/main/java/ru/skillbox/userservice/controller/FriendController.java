@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import ru.skillbox.commondto.account.AccountDto;
 import ru.skillbox.commondto.account.StatusCode;
 import ru.skillbox.userservice.model.dto.FriendDto;
+import ru.skillbox.userservice.model.dto.FriendSearchDto;
 import ru.skillbox.userservice.service.FriendshipService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/friends")
+@RequestMapping("${app.apiPrefix}")
 @RequiredArgsConstructor
 public class FriendController {
 
@@ -69,11 +70,21 @@ public class FriendController {
         return ResponseEntity.ok(friendshipService.getFriendsByStatus(statusCode, size, currentAuthUserId));
     }
 
+//    @GetMapping("/recommendations")
+//    public ResponseEntity<List<AccountDto>> getByRecommendation(HttpServletRequest request) {
+//        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+//        return ResponseEntity.ok(friendshipService.getFriendRecommendations(currentAuthUserId));
+//    }
+
+
     @GetMapping("/recommendations")
-    public ResponseEntity<List<AccountDto>> getByRecommendation(HttpServletRequest request) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        return ResponseEntity.ok(friendshipService.getFriendRecommendations(currentAuthUserId));
-    }
+    public ResponseEntity<List<AccountDto>> getByRecommendation(
+            @RequestHeader("id") Long currentAuthUserId,
+            @RequestBody(required = false) FriendSearchDto searchDto
+    ) {
+
+    return ResponseEntity.ok(friendshipService.getFriendRecommendations(searchDto, currentAuthUserId));
+}
 
     @GetMapping("/count")
     public ResponseEntity<Integer> requestCount(HttpServletRequest request) {

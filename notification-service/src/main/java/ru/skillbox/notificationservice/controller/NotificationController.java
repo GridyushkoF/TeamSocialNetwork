@@ -4,6 +4,7 @@ package ru.skillbox.notificationservice.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.notificationservice.model.dto.*;
@@ -23,18 +24,31 @@ public class NotificationController {
 
     }
 
+//    @PutMapping("/settings")
+//    public ResponseEntity<NotificationSettingsDto> updateNotificationSettings(
+//            @RequestBody SettingRq settingsData, HttpServletRequest request){
+//        return ResponseEntity.ok(notificationService.updateSettings(settingsData, request));
+//    }
+
     @PutMapping("/settings")
     public ResponseEntity<NotificationSettingsDto> updateNotificationSettings(
-            @RequestBody SettingRq settingsData, HttpServletRequest request){
-        return ResponseEntity.ok(notificationService.updateSettings(settingsData, request));
+            @RequestBody SettingRq settingsData, HttpServletRequest request) {
+        NotificationSettingsDto updatedSettings = notificationService.updateSettings(settingsData, request);
+        return ResponseEntity.ok(updatedSettings);
     }
+
+//    @PostMapping("/settings")
+//    public ResponseEntity<NotificationSettingsDto> createNotificationSetting(
+//            @RequestBody SettingsDto settingsDto, HttpServletRequest request){
+//        return ResponseEntity.ok(notificationService.createSettings(settingsDto, request));
+//    }
 
     @PostMapping("/settings")
     public ResponseEntity<NotificationSettingsDto> createNotificationSetting(
-            @RequestBody SettingsDto settingsDto, HttpServletRequest request){
-        return ResponseEntity.ok(notificationService.createSettings(settingsDto, request));
+            @RequestBody SettingsDto settingsDto, HttpServletRequest request) {
+        NotificationSettingsDto createdSettings = notificationService.createSettings(settingsDto, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdSettings);
     }
-
 
     @GetMapping
     public ResponseEntity<NotificationSentDto> getNotification(HttpServletRequest request) {
@@ -42,12 +56,17 @@ public class NotificationController {
         return ResponseEntity.ok(notificationService.getNotifications(request));
     }
 
+   // @PostMapping
+    //public ResponseEntity<NotificationDto> createNotification(
+           // @RequestBody NotificationInputDto notificationInputDto){
+        // return ResponseEntity.ok(notificationService.createNotification(notificationInputDto))
+   @PostMapping
+   public ResponseEntity<NotificationDto> createNotification(
+           @RequestBody NotificationInputDto notificationInputDto) {
+       NotificationDto createdNotification = notificationService.createNotification(notificationInputDto);
+       return new ResponseEntity<>(createdNotification, HttpStatus.CREATED);
+   }
 
-    @PostMapping
-    public ResponseEntity<NotificationDto> createNotification(
-            @RequestBody NotificationInputDto notificationInputDto){
-        return ResponseEntity.ok(notificationService.createNotification(notificationInputDto));
-    }
 
     @GetMapping("/count")
     public ResponseEntity<NotificationCountRs> getNotificationCount(HttpServletRequest request) {

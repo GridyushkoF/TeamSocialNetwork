@@ -47,6 +47,8 @@ public class NotificationService {
         return settingsRepository.saveAndFlush(newSettings);
     }
 
+
+
     @Transactional
     public NotificationSettingsDto createSettings(SettingsDto dto, HttpServletRequest request) {
 

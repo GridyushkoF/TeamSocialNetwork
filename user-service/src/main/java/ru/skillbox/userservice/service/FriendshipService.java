@@ -20,6 +20,7 @@ import ru.skillbox.userservice.exception.NoSuchAccountException;
 import ru.skillbox.userservice.mapper.V1.FriendMapperV1;
 import ru.skillbox.userservice.mapper.V1.UserMapperV1;
 import ru.skillbox.userservice.model.dto.FriendDto;
+import ru.skillbox.userservice.model.dto.FriendSearchDto;
 import ru.skillbox.userservice.model.entity.Friendship;
 import ru.skillbox.userservice.model.entity.User;
 import ru.skillbox.userservice.processor.FriendProcessor;
@@ -106,11 +107,9 @@ public class FriendshipService {
         setFriendship(currentAuthUserId, accountId, StatusCode.WATCHING);
     }
 
-    public List<AccountDto> getFriendRecommendations(Long currentAuthUserId) {
+    public List<AccountDto> getFriendRecommendations(FriendSearchDto searchDto, Long currentAuthUserId) {
         User currentUser = userRepository.findById(currentAuthUserId)
-                .orElseThrow(() ->
-                        new NoSuchAccountException("Account with id: " + currentAuthUserId + " does not exists")
-                );
+                .orElseThrow(() -> new NoSuchAccountException("Account with id: " + currentAuthUserId + " does not exists"));
         Set<User> currentFriends = currentUser.getFriends();
 
         List<User> allUsers = userRepository.findAll();
@@ -118,6 +117,8 @@ public class FriendshipService {
                 .filter(user -> !user.getId().equals(currentAuthUserId))
                 .filter(user -> !currentFriends.contains(user))
                 .filter(user -> !Collections.disjoint(currentFriends, user.getFriends()))
+                // Добавить фильтрацию по параметрам из searchDto
+                .filter(user -> searchDto.getFirstName() == null || user.getFirstName().equals(searchDto.getFirstName())) //  Пример фильтрации по имени
                 .map(user -> userMapper.userToResponse(currentAuthUserId, user))
                 .toList();
 

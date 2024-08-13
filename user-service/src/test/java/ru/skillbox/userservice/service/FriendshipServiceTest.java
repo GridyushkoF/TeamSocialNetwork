@@ -195,9 +195,6 @@ class FriendshipServiceTest {
         accountTo.setFriendsFrom(new ArrayList<>());
         accountTo.setFriendsTo(new ArrayList<>());
 
-        // Friendship existingFriendshipFrom = new Friendship(currentAuthUserId, accountId);
-        // Friendship existingFriendshipTo = new Friendship(accountId, currentAuthUserId);
-
         when(userRepository.findById(currentAuthUserId)).thenReturn(Optional.of(accountFrom));
         when(userRepository.findById(accountId)).thenReturn(Optional.of(accountTo));
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
@@ -212,21 +209,5 @@ class FriendshipServiceTest {
 
         assertTrue(accountFrom.getFriendsFrom().contains(accountTo));
         assertTrue(accountFrom.getFriendsTo().contains(accountTo));
-    }
-
-    @Test
-    void getFriendRecommendations() {
-    }
-
-    @Test
-    void getFriendRequestCount() {
-    }
-
-    @Test
-    void getFriendsByStatus() {
-    }
-
-    @Test
-    void notifyBirthdayUsersFriends() {
     }
 }

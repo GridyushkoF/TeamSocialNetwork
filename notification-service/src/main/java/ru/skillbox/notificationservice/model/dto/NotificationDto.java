@@ -1,5 +1,6 @@
 package ru.skillbox.notificationservice.model.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import ru.skillbox.commondto.notification.NotificationType;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonSerialize
 public class NotificationDto {
     private Long id;
     private LocalDateTime time;
