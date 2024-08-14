@@ -1,7 +1,7 @@
 stages:          # List of stages for jobs, and their order of execution
 #  - build
 #  - test
-  - push
+  - package
   - deploy
 
 cache:
@@ -25,13 +25,13 @@ variables:
 #     - echo "Running unit tests..."
 #     - mvn test $MAVEN_OPTS_CLI
 
-push-job:       # This job runs in the push stage.
-  stage: push
+package-job:       # This job runs in the package stage.
+  stage: package
   script:
     - echo "Pushing the images to docker hub..."
     - DOCKER_HOST=tcp://localhost:2375
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin
-    - mvn clean push $MAVEN_OPTS_CLI -DskipTests
+    - mvn clean package $MAVEN_OPTS_CLI -DskipTests
 
 #lint-test-job:   # This job also runs in the test stage.
 #  stage: test    # It can run at the same time as unit-test-job (in parallel).
