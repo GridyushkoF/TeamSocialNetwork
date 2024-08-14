@@ -18,6 +18,7 @@
 		<java.version>17</java.version>
 		<mapscruct.version>1.5.5.Final</mapscruct.version>
 		<lombock-mapsctruct-bind.version>0.2.0</lombock-mapsctruct-bind.version>
+		<sonar.projectKey>javapro_team48_social_network_2115f87b-6fd2-41d5-ad1b-2f9b2d10f9cd-${project.groupId}:${project.artifactId}</sonar.projectKey>
 	</properties>
 
 	<dependencies>

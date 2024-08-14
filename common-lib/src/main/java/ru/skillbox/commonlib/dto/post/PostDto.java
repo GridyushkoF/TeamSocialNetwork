@@ -23,8 +23,8 @@ public class PostDto {
     private String title;
     private PostType type;
     private String postText;
-    private boolean isBlocked = false;
-    private boolean isDelete = false;
+    private boolean isBlocked;
+    private boolean isDelete;
     private Long commentsCount;
     private List<TagWrapper> tags;
     private List<ReactionDto> reactions;
