@@ -29,10 +29,8 @@ package-job:       # This job runs in the package stage.
   stage: package
   script:
     - echo "Pushing the images to docker hub..."
-    - export DOCKER_HOST=unix:///var/run/docker.sock
-    - sudo service docker restart
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin
-    - mvn clean package $MAVEN_OPTS_CLI -DskipTests
+    - mvn dockerfile:push
 
 #lint-test-job:   # This job also runs in the test stage.
 #  stage: test    # It can run at the same time as unit-test-job (in parallel).
