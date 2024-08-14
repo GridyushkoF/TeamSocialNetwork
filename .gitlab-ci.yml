@@ -29,7 +29,8 @@ package-job:       # This job runs in the package stage.
   stage: package
   script:
     - echo "Pushing the images to docker hub..."
-    - DOCKER_HOST=tcp://localhost:2375
+    - export DOCKER_HOST=unix:///var/run/docker.sock
+    - sudo service docker restart
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin
     - mvn clean package $MAVEN_OPTS_CLI -DskipTests
 
