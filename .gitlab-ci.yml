@@ -27,7 +27,7 @@ unit-test-job:
   stage: test
   script:
     - echo "Running unit tests..."
-    - mvn test jacoco:report $MAVEN_OPTS_CLI
+    - mvn test $MAVEN_OPTS_CLI
 
 sonarqube-check-job:
   stage: sonarqube-check
