@@ -13,7 +13,9 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>gateway</name>
 	<description>Spring Cloud Gateway Server</description>
-
+	<properties>
+		<sonar.projectKey>javapro_team48_social_network_2115f87b-6fd2-41d5-ad1b-2f9b2d10f9cd-${project.groupId}:${project.artifactId}</sonar.projectKey>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
