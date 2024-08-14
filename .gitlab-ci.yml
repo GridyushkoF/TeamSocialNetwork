@@ -1,5 +1,5 @@
 stages:          # List of stages for jobs, and their order of execution
-  - build
+  # - build
 #  - test
   - package
   - deploy
@@ -13,11 +13,11 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
 
-build-job:       # This job runs in the build stage, which runs first.
-  stage: build
-  script:
-    - echo "Compiling the code..."
-    - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
+# build-job:       # This job runs in the build stage, which runs first.
+#   stage: build
+#   script:
+#     - echo "Compiling the code..."
+#     - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
 
 # unit-test-job:   # This job runs in the test stage.
 #   stage: test    # It only starts when the job in the build stage completes successfully.
@@ -28,6 +28,7 @@ build-job:       # This job runs in the build stage, which runs first.
 package-job:       # This job runs in the package stage.
   stage: package
   script:
+    - mvn clean package $MAVEN_OPTS_CLI -DskipTests
     - echo "Pushing the images to docker hub..."
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin
     - docker push "skillboxgroup/discovery" --all-tags
