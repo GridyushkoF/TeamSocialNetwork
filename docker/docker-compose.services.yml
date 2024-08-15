@@ -1,12 +1,12 @@
 services:
   discovery:
-    image: skillboxgroup/discovery
+    image: skillboxgroup/discovery:0.0.1-SNAPSHOT
     ports:
       - "8761:8761"
     restart: always
 
   authentication:
-    image: skillboxgroup/authentication
+    image: skillboxgroup/authentication:0.0.1-SNAPSHOT
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -19,7 +19,7 @@ services:
       - discovery
 
   dialog-service:
-    image: skillboxgroup/dialog-service
+    image: skillboxgroup/dialog-service:0.0.1-SNAPSHOT
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -32,7 +32,7 @@ services:
       - discovery
 
   notification-service:
-    image: skillboxgroup/notification-service
+    image: skillboxgroup/notification-service:0.0.1-SNAPSHOT
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -45,7 +45,7 @@ services:
       - discovery
 
   post-service:
-    image: skillboxgroup/post-service
+    image: skillboxgroup/post-service:0.0.1-SNAPSHOT
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -58,7 +58,7 @@ services:
       - discovery
 
   user-service:
-    image: skillboxgroup/user-service
+    image: skillboxgroup/user-service:0.0.1-SNAPSHOT
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -71,7 +71,7 @@ services:
       - discovery
 
   admin-service:
-    image: skillboxgroup/admin-service
+    image: skillboxgroup/admin-service:0.0.1-SNAPSHOT
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -80,7 +80,7 @@ services:
       - discovery
 
   geo-service:
-    image: skillboxgroup/geo-service
+    image: skillboxgroup/geo-service:0.0.1-SNAPSHOT
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -89,7 +89,7 @@ services:
       - discovery
 
   gateway:
-    image: skillboxgroup/gateway
+    image: skillboxgroup/gateway:0.0.1-SNAPSHOT
     ports:
       - "9090:9090"
     environment:
