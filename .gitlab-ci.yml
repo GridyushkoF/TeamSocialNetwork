@@ -4,7 +4,7 @@ variables:
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
   GIT_DEPTH: "0"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-  MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
+  MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version -e -x"
 
 stages:
   - build
