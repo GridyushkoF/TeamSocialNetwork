@@ -6,6 +6,8 @@ services:
     restart: always
 
   authentication:
+    build:
+      no_cache: true
     image: skillboxgroup/authentication:0.0.1-SNAPSHOT
 #    ports:
 #      - "8083:8083"
@@ -15,11 +17,14 @@ services:
       - DATABASE_URL=jdbc:postgresql://postgres:5432/user_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
+      - POSTRESQL=postgres
     restart: always
     depends_on:
       - discovery
 
   dialog-service:
+    build:
+      no_cache: true
     image: skillboxgroup/dialog-service:0.0.1-SNAPSHOT
 #    ports:
 #      - "8080:8080"
@@ -29,11 +34,14 @@ services:
       - DATABASE_URL=jdbc:postgresql://postgres:5432/dialog_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
+      - POSTRESQL=postgres
     restart: always
     depends_on:
       - discovery
 
   notification-service:
+    build:
+      no_cache: true
     image: skillboxgroup/notification-service:0.0.1-SNAPSHOT
 #    ports:
 #      - "8081:8081"
@@ -43,11 +51,14 @@ services:
       - DATABASE_URL=jdbc:postgresql://postgres:5432/notification_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
+      - POSTRESQL=postgres
     restart: always
     depends_on:
       - discovery
 
   post-service:
+    build:
+      no_cache: true
     image: skillboxgroup/post-service:0.0.1-SNAPSHOT
 #    ports:
 #      - "8082:8082"
@@ -57,11 +68,14 @@ services:
       - DATABASE_URL=jdbc:postgresql://postgres:5432/post_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
+      - POSTRESQL=postgres
     restart: always
     depends_on:
       - discovery
 
   user-service:
+    build:
+      no_cache: true
     image: skillboxgroup/user-service:0.0.1-SNAPSHOT
 #    ports:
 #      - "8084:8084"
@@ -71,6 +85,7 @@ services:
       - DATABASE_URL=jdbc:postgresql://postgres:5432/user_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
+      - POSTRESQL=postgres
     restart: always
     depends_on:
       - discovery

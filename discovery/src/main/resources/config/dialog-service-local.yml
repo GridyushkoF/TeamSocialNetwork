@@ -3,7 +3,7 @@ spring:
     name: dialog-service
 
   datasource:
-    url: jdbc:postgresql://postgres:5432/dialog_db
+    url: jdbc:postgresql://${POSTGRESQL:localhost}:5432/dialog_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
