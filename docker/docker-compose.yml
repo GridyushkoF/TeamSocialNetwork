@@ -12,18 +12,6 @@ services:
       - ./pg-init-scripts:/docker-entrypoint-initdb.d
       - database-data:/var/lib/postgresql/data/
 
-  frontend:
-    build:
-      context: ../frontend/
-      no_cache: true
-    image: skillgroup35/frontend
-    ports:
-      - "8099:80"
-    tty: true
-    restart: always
-    volumes:
-      - ./nginx-config:/etc/nginx/conf.d
-
   redis:
     image: redis:latest
     restart: always

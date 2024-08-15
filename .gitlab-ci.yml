@@ -1,7 +1,8 @@
 stages:          # List of stages for jobs, and their order of execution
-  - build
-  - test
-  - deploy
+#  - build
+#  - test
+  - deploy_docker_frontend
+#  - deploy_docker_services
 
 cache:
   paths:
@@ -12,17 +13,17 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
 
-build-job:       # This job runs in the build stage, which runs first.
- stage: build
- script:
-   - echo "Compiling the code..."
-   - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
+#build-job:       # This job runs in the build stage, which runs first.
+# stage: build
+# script:
+#   - echo "Compiling the code..."
+#   - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
 
-unit-test-job:   # This job runs in the test stage.
- stage: test    # It only starts when the job in the build stage completes successfully.
- script:
-   - echo "Running unit tests..."
-   - mvn test $MAVEN_OPTS_CLI
+#unit-test-job:   # This job runs in the test stage.
+# stage: test    # It only starts when the job in the build stage completes successfully.
+# script:
+#   - echo "Running unit tests..."
+#   - mvn test $MAVEN_OPTS_CLI
 
 #lint-test-job:   # This job also runs in the test stage.
 #  stage: test    # It can run at the same time as unit-test-job (in parallel).
@@ -31,21 +32,32 @@ unit-test-job:   # This job runs in the test stage.
 #    - mvn checkstyle:checkstyle $MAVEN_OPTS_CLI -Dcheckstyle.output.format=xml
 ##    - cat target/checkstyle-result.xml
 
-deploy-job:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-#  only:
-#  - develop
+deploy_docker_frontend-job:      # This job runs in the deploy_docker_frontend stage.
+  stage: deploy_docker_frontend  # It only runs when *both* jobs in the test stage complete successfully.
+  #  only:
+  #  - develop
   script:
-    - echo "Deploying application..."
-    - mvn clean package $MAVEN_OPTS_CLI -DskipTests
-    - echo "Pushing the images to docker hub..."
+    - echo "Deploying frontend..."
+    - docker build -f Dockerfile -t "skillboxgroup/frontend" ./frontend
+    - echo "Pushing frontend image to docker hub..."
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin
-    - docker push "skillboxgroup/discovery" --all-tags
-    - docker push "skillboxgroup/authentication" --all-tags
-    - docker push "skillboxgroup/user-service" --all-tags
-    - docker push "skillboxgroup/post-service" --all-tags
-    - docker push "skillboxgroup/dialog-service" --all-tags
-    - docker push "skillboxgroup/notification-service" --all-tags
-    - docker push "skillboxgroup/gateway" --all-tags
-    - docker push "skillboxgroup/admin-service" --all-tags
-    - docker push "skillboxgroup/geo-service" --all-tags
+    - docker push "skillboxgroup/frontend" --all-tags
+
+#deploy_docker_services-job:      # This job runs in the deploy_docker_services stage.
+#  stage: deploy_docker_services  # It only runs when *both* jobs in the test stage complete successfully.
+##  only:
+##  - develop
+#  script:
+#    - echo "Deploying application..."
+#    - mvn clean package $MAVEN_OPTS_CLI -DskipTests
+#    - echo "Pushing service images to docker hub..."
+#    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin
+#    - docker push "skillboxgroup/discovery" --all-tags
+#    - docker push "skillboxgroup/authentication" --all-tags
+#    - docker push "skillboxgroup/user-service" --all-tags
+#    - docker push "skillboxgroup/post-service" --all-tags
+#    - docker push "skillboxgroup/dialog-service" --all-tags
+#    - docker push "skillboxgroup/notification-service" --all-tags
+#    - docker push "skillboxgroup/gateway" --all-tags
+#    - docker push "skillboxgroup/admin-service" --all-tags
+#    - docker push "skillboxgroup/geo-service" --all-tags

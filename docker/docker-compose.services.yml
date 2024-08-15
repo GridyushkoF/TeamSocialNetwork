@@ -115,3 +115,12 @@ services:
       - user-service
       - admin-service
       - geo-service
+
+  frontend:
+    image: skillboxgroup/frontend
+    ports:
+      - "80:80"
+    tty: true
+    restart: always
+    volumes:
+      - ./nginx-config:/etc/nginx/conf.d
