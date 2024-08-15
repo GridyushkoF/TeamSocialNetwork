@@ -1,77 +1,77 @@
 services:
   discovery:
-    image: skillboxgroup/discovery:latest
+    image: skillboxgroup/discovery
     ports:
       - "8761:8761"
     restart: always
 
   authentication:
-    image: skillboxgroup/authentication:latest
+    image: skillboxgroup/authentication
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
       - DATABASE_URL=jdbc:postgresql://postgres:5432/user_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
-      - POSTRESQL=postgres
+      - POSTGRESQL=postgres
     restart: always
     depends_on:
       - discovery
 
   dialog-service:
-    image: skillboxgroup/dialog-service:latest
+    image: skillboxgroup/dialog-service
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
       - DATABASE_URL=jdbc:postgresql://postgres:5432/dialog_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
-      - POSTRESQL=postgres
+      - POSTGRESQL=postgres
     restart: always
     depends_on:
       - discovery
 
   notification-service:
-    image: skillboxgroup/notification-service:latest
+    image: skillboxgroup/notification-service
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
       - DATABASE_URL=jdbc:postgresql://postgres:5432/notification_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
-      - POSTRESQL=postgres
+      - POSTGRESQL=postgres
     restart: always
     depends_on:
       - discovery
 
   post-service:
-    image: skillboxgroup/post-service:latest
+    image: skillboxgroup/post-service
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
       - DATABASE_URL=jdbc:postgresql://postgres:5432/post_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
-      - POSTRESQL=postgres
+      - POSTGRESQL=postgres
     restart: always
     depends_on:
       - discovery
 
   user-service:
-    image: skillboxgroup/user-service:latest
+    image: skillboxgroup/user-service
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
       - DATABASE_URL=jdbc:postgresql://postgres:5432/user_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
-      - POSTRESQL=postgres
+      - POSTGRESQL=postgres
     restart: always
     depends_on:
       - discovery
 
   admin-service:
-    image: skillboxgroup/admin-service:latest
+    image: skillboxgroup/admin-service
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -80,7 +80,7 @@ services:
       - discovery
 
   geo-service:
-    image: skillboxgroup/geo-service:latest
+    image: skillboxgroup/geo-service
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -89,7 +89,7 @@ services:
       - discovery
 
   gateway:
-    image: skillboxgroup/gateway:latest
+    image: skillboxgroup/gateway
     ports:
       - "9090:9090"
     environment:
@@ -107,7 +107,7 @@ services:
       - geo-service
 
   frontend:
-    image: skillboxgroup/frontend:latest
+    image: skillboxgroup/frontend
     ports:
       - "80:80"
     tty: true
