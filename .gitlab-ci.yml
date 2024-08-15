@@ -77,5 +77,5 @@ deploy_prod-job:      # This job runs in the deploy_prod stage.
     - chmod 644 ~/.ssh/known_hosts
   script:
     - scp -r ./docker $PROD_USER@$PROD_HOST:~
-    - ssh $PROD_USER@$PROD_HOST "docker-compose -f docker-compose.yml -f docker-compose.services.yml down"
-    - ssh $PROD_USER@$PROD_HOST "docker-compose -f docker-compose.yml -f docker-compose.services.yml up -d"
+    - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose.services.yml down"
+    - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose.services.yml up -d"
