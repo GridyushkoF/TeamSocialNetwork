@@ -53,7 +53,7 @@
         <module>notification-service</module>
         <module>gateway</module>
         <module>admin-service</module>
-        <module>jacoco-agregator</module>
+        <module>jacoco-aggregator</module>
     </modules>
 
     <build>
