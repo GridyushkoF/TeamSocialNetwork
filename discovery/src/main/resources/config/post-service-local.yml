@@ -2,7 +2,7 @@ spring:
   application:
     name: post-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/post_db
+    url: jdbc:postgresql://postgres:5432/post_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
