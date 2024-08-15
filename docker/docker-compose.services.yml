@@ -1,16 +1,12 @@
 services:
   discovery:
-    image: skillboxgroup/discovery:0.0.1-SNAPSHOT
+    image: skillboxgroup/discovery:latest
     ports:
       - "8761:8761"
     restart: always
 
   authentication:
-    build:
-      no_cache: true
-    image: skillboxgroup/authentication:0.0.1-SNAPSHOT
-#    ports:
-#      - "8083:8083"
+    image: skillboxgroup/authentication:latest
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -23,11 +19,7 @@ services:
       - discovery
 
   dialog-service:
-    build:
-      no_cache: true
-    image: skillboxgroup/dialog-service:0.0.1-SNAPSHOT
-#    ports:
-#      - "8080:8080"
+    image: skillboxgroup/dialog-service:latest
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -40,11 +32,7 @@ services:
       - discovery
 
   notification-service:
-    build:
-      no_cache: true
-    image: skillboxgroup/notification-service:0.0.1-SNAPSHOT
-#    ports:
-#      - "8081:8081"
+    image: skillboxgroup/notification-service:latest
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -57,11 +45,7 @@ services:
       - discovery
 
   post-service:
-    build:
-      no_cache: true
-    image: skillboxgroup/post-service:0.0.1-SNAPSHOT
-#    ports:
-#      - "8082:8082"
+    image: skillboxgroup/post-service:latest
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -74,11 +58,7 @@ services:
       - discovery
 
   user-service:
-    build:
-      no_cache: true
-    image: skillboxgroup/user-service:0.0.1-SNAPSHOT
-#    ports:
-#      - "8084:8084"
+    image: skillboxgroup/user-service:latest
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -91,9 +71,7 @@ services:
       - discovery
 
   admin-service:
-    image: skillboxgroup/admin-service:0.0.1-SNAPSHOT
-#    ports:
-#      - "8085:8085"
+    image: skillboxgroup/admin-service:latest
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -102,9 +80,7 @@ services:
       - discovery
 
   geo-service:
-    image: skillboxgroup/admin-service:0.0.1-SNAPSHOT
-    #    ports:
-    #      - "8086:80856
+    image: skillboxgroup/geo-service:latest
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
@@ -113,7 +89,7 @@ services:
       - discovery
 
   gateway:
-    image: skillboxgroup/gateway:0.0.1-SNAPSHOT
+    image: skillboxgroup/gateway:latest
     ports:
       - "9090:9090"
     environment:
@@ -131,7 +107,7 @@ services:
       - geo-service
 
   frontend:
-    image: skillboxgroup/frontend
+    image: skillboxgroup/frontend:latest
     ports:
       - "80:80"
     tty: true
