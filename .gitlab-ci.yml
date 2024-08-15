@@ -38,7 +38,7 @@ deploy_docker_frontend-job:      # This job runs in the deploy_docker_frontend s
   #  - develop
   script:
     - echo "Deploying frontend..."
-    - docker build -f ./frontend/Dockerfile -t "skillboxgroup/frontend" .
+    - docker build -f ./frontend/Dockerfile -t "skillboxgroup/frontend" ./frontend
     - echo "Pushing frontend image to docker hub..."
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin
     - docker push "skillboxgroup/frontend" --all-tags
