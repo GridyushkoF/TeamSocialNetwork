@@ -22,7 +22,9 @@
         <sonar.projectName>social_network</sonar.projectName>
         <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
         <sonar.token>sqp_ed79a661a6e2e97f3553993bcae570759a42090b</sonar.token>
-        <sonar.coverage.exclusions>**/test/**</sonar.coverage.exclusions>
+        <sonar.coverage.exclusions>
+            **/test/**
+        </sonar.coverage.exclusions>
         <jacoco.version>0.8.12</jacoco.version>
         <sonar.coverage.jacoco.xmlReportPaths>
             jacoco-agregator/target/site/jacoco-aggregate/jacoco.xml
