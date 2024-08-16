@@ -42,6 +42,7 @@ sonarqube-check-job:
 
   script:
     -  mvn verify sonar:sonar $MAVEN_OPTS_CLI
+    -  ls -la jacoco-agregator/target/site/jacoco-aggregate/
   allow_failure: true
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
