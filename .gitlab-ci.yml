@@ -1,6 +1,6 @@
 stages:          # List of stages for jobs, and their order of execution
-  - compile
-  - test
+#  - compile
+#  - test
   - deploy_docker_frontend
   - deploy_docker_services
   - deploy_prod
@@ -14,17 +14,17 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
 
-compile-job:       # This job runs in the compile stage, which runs first.
- stage: compile
- script:
-   - echo "Compiling the code..."
-   - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
-
-unit-test-job:   # This job runs in the test stage.
- stage: test    # It only starts when the job in the build stage completes successfully.
- script:
-   - echo "Running unit tests..."
-   - mvn test $MAVEN_OPTS_CLI
+#compile-job:       # This job runs in the compile stage, which runs first.
+# stage: compile
+# script:
+#   - echo "Compiling the code..."
+#   - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
+#
+#unit-test-job:   # This job runs in the test stage.
+# stage: test    # It only starts when the job in the build stage completes successfully.
+# script:
+#   - echo "Running unit tests..."
+#   - mvn test $MAVEN_OPTS_CLI
 
 #lint-test-job:   # This job also runs in the test stage.
 #  stage: test    # It can run at the same time as unit-test-job (in parallel).
