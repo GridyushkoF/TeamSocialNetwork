@@ -3,7 +3,7 @@ services:
     image: skillboxgroup/discovery:0.0.1-SNAPSHOT
     ports:
       - "8761:8761"
-    restart: always
+    restart: on-failure
 
   authentication:
     image: skillboxgroup/authentication:0.0.1-SNAPSHOT
@@ -14,7 +14,7 @@ services:
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
       - POSTGRESQL=postgres
-    restart: always
+    restart: on-failure
     depends_on:
       - discovery
 
@@ -28,7 +28,7 @@ services:
       - DATABASE_PASSWORD=postgres
       - POSTGRESQL=postgres
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    restart: always
+    restart: on-failure
     depends_on:
       - discovery
 
@@ -42,7 +42,7 @@ services:
       - DATABASE_PASSWORD=postgres
       - POSTGRESQL=postgres
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    restart: always
+    restart: on-failure
     depends_on:
       - discovery
 
@@ -56,7 +56,7 @@ services:
       - DATABASE_PASSWORD=postgres
       - POSTGRESQL=postgres
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    restart: always
+    restart: on-failure
     depends_on:
       - discovery
 
@@ -70,16 +70,16 @@ services:
       - DATABASE_PASSWORD=postgres
       - POSTGRESQL=postgres
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    restart: always
+    restart: on-failure
     depends_on:
-      - discovery
+      - authentication
 
   admin-service:
     image: skillboxgroup/admin-service:0.0.1-SNAPSHOT
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
-    restart: always
+    restart: on-failure
     depends_on:
       - discovery
 
@@ -88,7 +88,9 @@ services:
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
-    restart: always
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    restart: on-failure
     depends_on:
       - discovery
 
@@ -99,7 +101,7 @@ services:
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
-    restart: always
+    restart: on-failure
     depends_on:
       - discovery
       - authentication
@@ -115,6 +117,6 @@ services:
     ports:
       - "80:80"
     tty: true
-    restart: always
+    restart: on-failure
     volumes:
       - ./nginx-config:/etc/nginx/conf.d
