@@ -1,5 +1,5 @@
 stages:          # List of stages for jobs, and their order of execution
-  - build
+  - compile
   - test
   - deploy_docker_frontend
   - deploy_docker_services
@@ -14,8 +14,8 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
 
-build-job:       # This job runs in the build stage, which runs first.
- stage: build
+compile-job:       # This job runs in the compile stage, which runs first.
+ stage: compile
  script:
    - echo "Compiling the code..."
    - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
