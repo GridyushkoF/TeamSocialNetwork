@@ -28,10 +28,10 @@ services:
       - DATABASE_PASSWORD=postgres
       - POSTGRESQL=postgres
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - GATEWAY_URI:http://gateway:9090
+      - GATEWAY_URI=http://gateway:9090
     restart: on-failure
     depends_on:
-      - discovery
+      - post-service
 
   notification-service:
     image: skillboxgroup/notification-service:0.0.1-SNAPSHOT
@@ -45,7 +45,7 @@ services:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     restart: on-failure
     depends_on:
-      - discovery
+      - dialog-service
 
   post-service:
     image: skillboxgroup/post-service:0.0.1-SNAPSHOT
@@ -59,7 +59,7 @@ services:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     restart: on-failure
     depends_on:
-      - discovery
+      - user-service
 
   user-service:
     image: skillboxgroup/user-service:0.0.1-SNAPSHOT
@@ -80,10 +80,10 @@ services:
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
-      - GATEWAY_URI:http://gateway:9090
+      - GATEWAY_URI=http://gateway:9090
     restart: on-failure
     depends_on:
-      - discovery
+      - notification-service
 
   geo-service:
     image: skillboxgroup/geo-service:0.0.1-SNAPSHOT
@@ -94,7 +94,7 @@ services:
       - REDIS_PORT=6379
     restart: on-failure
     depends_on:
-      - discovery
+      - admin-service
 
   gateway:
     image: skillboxgroup/gateway:0.0.1-SNAPSHOT

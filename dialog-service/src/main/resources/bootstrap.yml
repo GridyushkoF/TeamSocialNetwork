@@ -21,9 +21,6 @@ eureka:
   instance:
     preferIpAddress: true
 
-app:
-  feignClient:
-    url: ${GATEWAY_URI:http://localhost:9090}/api/v1
 
 # could be used for debugging
 #logging:
