@@ -40,7 +40,7 @@ deploy_docker_frontend-job:      # This job runs in the deploy_docker_frontend s
   script:
     - echo "Deploying frontend..."
     - docker image rm skillboxgroup/frontend:latest
-    - docker build -f ./frontend/Dockerfile -t "skillboxgroup/frontend" ./frontend
+    - docker build --no-cache -f ./frontend/Dockerfile -t "skillboxgroup/frontend" ./frontend
     - echo "Pushing frontend image to docker hub..."
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin
     - docker push "skillboxgroup/frontend" --all-tags
@@ -97,4 +97,4 @@ deploy_prod-job:      # This job runs in the deploy_prod stage.
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/admin-service:0.0.1-SNAPSHOT"
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/geo-service:0.0.1-SNAPSHOT"
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/gateway:0.0.1-SNAPSHOT"
-    - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose.services.yml up"
+    - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose.services.yml up -d"
