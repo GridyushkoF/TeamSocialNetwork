@@ -75,8 +75,8 @@ deploy_docker_services-job:      # This job runs in the deploy_docker_services s
 
 deploy_prod-job:      # This job runs in the deploy_prod stage.
   stage: deploy_prod  # It only runs when *both* jobs in the test stage complete successfully.
-  only:
-    - develop
+#  only:
+#    - develop
   before_script:
     - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
     - eval $(ssh-agent -s)
