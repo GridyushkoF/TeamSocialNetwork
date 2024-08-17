@@ -75,8 +75,8 @@ deploy_docker_services-job:      # This job runs in the deploy_docker_services s
 
 deploy_prod-job:      # This job runs in the deploy_prod stage.
   stage: deploy_prod  # It only runs when *both* jobs in the test stage complete successfully.
-  #  only:
-  #  - develop
+  only:
+    - develop
   before_script:
     - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
     - eval $(ssh-agent -s)
@@ -97,4 +97,5 @@ deploy_prod-job:      # This job runs in the deploy_prod stage.
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/admin-service:0.0.1-SNAPSHOT"
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/geo-service:0.0.1-SNAPSHOT"
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/gateway:0.0.1-SNAPSHOT"
+    - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/frontend:latest"
     - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose.services.yml up -d"
