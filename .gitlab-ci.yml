@@ -1,6 +1,7 @@
-stages:          # List of stages for jobs, and their order of execution
+stages:
   - compile
   - test
+  - sonarqube-check
   - deploy_docker_frontend
   - deploy_docker_services
   - deploy_prod
@@ -14,20 +15,41 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
 
-compile-job:       # This job runs in the compile stage, which runs first.
+compile-job:
  stage: compile
  script:
    - echo "Compiling the code..."
    - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
 
-unit-test-job:   # This job runs in the test stage.
- stage: test    # It only starts when the job in the build stage completes successfully.
+unit-test-job:
+ stage: test
  script:
    - echo "Running unit tests..."
    - mvn test $MAVEN_OPTS_CLI
 
-deploy_docker_frontend-job:      # This job runs in the deploy_docker_frontend stage.
-  stage: deploy_docker_frontend  # It only runs when *both* jobs in the test stage complete successfully.
+sonarqube-check-job:
+  stage: sonarqube-check
+  dependencies:
+    - compile-job
+    - unit-test-job
+  cache:
+    policy: pull
+    key: "${CI_COMMIT_SHA}"
+    paths:
+      - sonar-scanner/
+
+  script:
+    -  mvn verify sonar:sonar $MAVEN_OPTS_CLI
+    -  ls -la jacoco-aggregator/target/site/jacoco-aggregate/
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'main'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+
+deploy_docker_frontend-job:
+  stage: deploy_docker_frontend
   only:
   - develop
   script:
@@ -38,8 +60,8 @@ deploy_docker_frontend-job:      # This job runs in the deploy_docker_frontend s
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin
     - docker push "skillboxgroup/frontend" --all-tags
 
-deploy_docker_services-job:      # This job runs in the deploy_docker_services stage.
-  stage: deploy_docker_services  # It only runs when *both* jobs in the test stage complete successfully.
+deploy_docker_services-job:
+  stage: deploy_docker_services
   only:
     - develop
   script:
@@ -66,8 +88,8 @@ deploy_docker_services-job:      # This job runs in the deploy_docker_services s
     - docker push "skillboxgroup/admin-service" --all-tags
     - docker push "skillboxgroup/geo-service" --all-tags
 
-deploy_prod-job:      # This job runs in the deploy_prod stage.
-  stage: deploy_prod  # It only runs when *both* jobs in the test stage complete successfully.
+deploy_prod-job:
+  stage: deploy_prod
   only:
     - develop
   before_script:

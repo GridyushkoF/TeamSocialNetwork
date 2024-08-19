@@ -18,7 +18,17 @@
         <java.version>17</java.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <checkstyle-maven-plugin.version>3.0.0</checkstyle-maven-plugin.version>
+        <sonar.projectKey>javapro_team48_social_network_2115f87b-6fd2-41d5-ad1b-2f9b2d10f9cd</sonar.projectKey>
+        <sonar.projectName>social_network</sonar.projectName>
+        <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
+        <sonar.token>sqp_ed79a661a6e2e97f3553993bcae570759a42090b</sonar.token>
+        <sonar.coverage.exclusions>
+            **/test/**
+        </sonar.coverage.exclusions>
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+        <sonar.coverage.jacoco.xmlReportPaths>
+            jacoco-aggregator/target/site/jacoco-aggregate/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <dependencyManagement>
@@ -44,6 +54,7 @@
         <module>gateway</module>
         <module>admin-service</module>
         <module>geo-service</module>
+        <module>jacoco-aggregator</module>
     </modules>
 
     <build>
@@ -73,39 +84,24 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${checkstyle-maven-plugin.version}</version>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.9.1.2184</version>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>check</goal>
+                            <goal>prepare-agent</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.0.0</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>checkstyle</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-                <configuration>
-                    <linkXRef>false</linkXRef>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
 
     <repositories>
         <repository>
@@ -116,4 +112,3 @@
     </repositories>
 
 </project>
-
