@@ -18,7 +18,7 @@
         <java.version>17</java.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-<!--        <sonar.projectKey>javapro_team48_social_network_04fc16b3-1166-4596-b3fe-f0040477ecf6</sonar.projectKey>-->
+        <sonar.projectKey>javapro_team48_social_network_04fc16b3-1166-4596-b3fe-f0040477ecf6</sonar.projectKey>
         <sonar.projectName>social_network</sonar.projectName>
         <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
         <sonar.coverage.exclusions>
