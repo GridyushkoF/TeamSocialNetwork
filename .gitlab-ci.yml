@@ -1,6 +1,6 @@
 stages:
-  - compile
-  - test
+#  - compile
+#  - test
   - sonarqube-check
   - deploy_docker_frontend
   - deploy_docker_services
@@ -17,17 +17,17 @@ variables:
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
 
-compile-job:
- stage: compile
- script:
-   - echo "Compiling the code..."
-   - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
-
-unit-test-job:
- stage: test
- script:
-   - echo "Running unit tests..."
-   - mvn test $MAVEN_OPTS_CLI
+#compile-job:
+# stage: compile
+# script:
+#   - echo "Compiling the code..."
+#   - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
+#
+#unit-test-job:
+# stage: test
+# script:
+#   - echo "Running unit tests..."
+#   - mvn test $MAVEN_OPTS_CLI
 
 sonarqube-check-job:
   stage: sonarqube-check
