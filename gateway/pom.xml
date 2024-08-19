@@ -14,6 +14,10 @@
 	<name>gateway</name>
 	<description>Spring Cloud Gateway Server</description>
 
+	<properties>
+		<sonar.projectKey>javapro_team48_social_network_04fc16b3-1166-4596-b3fe-f0040477ecf6-${project.groupId}:${project.artifactId}</sonar.projectKey>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
