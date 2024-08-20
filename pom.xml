@@ -21,9 +21,9 @@
         <sonar.projectKey>javapro_team48_social_network_04fc16b3-1166-4596-b3fe-f0040477ecf6</sonar.projectKey>
         <sonar.projectName>social_network</sonar.projectName>
         <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
-<!--        <sonar.coverage.exclusions>-->
-<!--            **/test/**-->
-<!--        </sonar.coverage.exclusions>-->
+        <sonar.coverage.exclusions>
+            **/test/**
+        </sonar.coverage.exclusions>
         <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
         <sonar.coverage.jacoco.xmlReportPaths>
             jacoco-aggregator/target/site/jacoco-aggregate/jacoco.xml
