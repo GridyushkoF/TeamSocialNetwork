@@ -19,6 +19,7 @@
 		<mapscruct.version>1.5.5.Final</mapscruct.version>
 		<lombock-mapsctruct-bind.version>0.2.0</lombock-mapsctruct-bind.version>
 		<sonar.projectKey>javapro_team48_social_network_04fc16b3-1166-4596-b3fe-f0040477ecf6-${project.groupId}:${project.artifactId}</sonar.projectKey>
+		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../jacoco-aggregator/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 
 	<dependencies>
