@@ -1,6 +1,9 @@
 package ru.skillbox.gateway.security;
 
 import io.jsonwebtoken.Claims;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -16,9 +19,17 @@ import reactor.core.publisher.Mono;
 public class AuthenticationFilter implements GatewayFilter {
 
     private final JwtUtil jwtUtil;
-
-    public AuthenticationFilter(JwtUtil jwtUtil) {
+    private final Counter invalidAuthCounter;
+    private final MeterRegistry meterRegistry;
+    @Autowired
+    public AuthenticationFilter(JwtUtil jwtUtil, MeterRegistry meterRegistry) {
         this.jwtUtil = jwtUtil;
+        this.meterRegistry = meterRegistry;
+        this.invalidAuthCounter = Counter
+                .builder("invalid.auth.counter")
+                .tag("auth_status","invalid")
+                .description("count amount of invalid auth by user by every reason")
+                .register(meterRegistry);
     }
 
 
@@ -43,6 +54,7 @@ public class AuthenticationFilter implements GatewayFilter {
     }
 
     private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) {
+        invalidAuthCounter.increment();
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
         return response.setComplete();
