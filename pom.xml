@@ -21,14 +21,10 @@
         <sonar.projectKey>javapro_team48_social_network_04fc16b3-1166-4596-b3fe-f0040477ecf6</sonar.projectKey>
         <sonar.projectName>social_network</sonar.projectName>
         <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
-        <sonar.coverage.exclusions>
-            **/test/**
-        </sonar.coverage.exclusions>
-        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/jacoco-aggregator/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-        <sonar.jacoco.reportPath>${project.basedir}/jacoco-aggregator/target/target/jacoco.exec</sonar.jacoco.reportPath>
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -105,6 +101,18 @@
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/config/**</exclude>
+                                <exclude>**/dto/**</exclude>
+                                <exclude>**/exception/**</exclude>
+                                <exclude>**/handler/**</exclude>
+                                <exclude>**/mapper/**</exclude>
+                                <exclude>**/model/**</exclude>
+                                <exclude>**/processor/**</exclude>
+                                <exclude>**/repository/**</exclude>
+                            </excludes>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>post-test</id>
@@ -114,18 +122,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <excludes>
-                        <exclude>**/config/**</exclude>
-                        <exclude>**/dto/**</exclude>
-                        <exclude>**/exception/**</exclude>
-                        <exclude>**/handler/**</exclude>
-                        <exclude>**/mapper/**</exclude>
-                        <exclude>**/model/**</exclude>
-                        <exclude>**/processor/**</exclude>
-                        <exclude>**/repository/**</exclude>
-                    </excludes>
-                </configuration>
             </plugin>
         </plugins>
     </build>
