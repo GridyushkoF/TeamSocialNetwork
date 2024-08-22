@@ -21,6 +21,7 @@
 		<jackson-jsr310.version>2.17.1</jackson-jsr310.version>
 		<sonar.projectKey>javapro_team48_social_network_04fc16b3-1166-4596-b3fe-f0040477ecf6-${project.groupId}:${project.artifactId}</sonar.projectKey>
 		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../jacoco-aggregator/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -185,13 +186,31 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>${maven-failsafe-plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<includes>
+						<include>**/*IT.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<configuration>
 					<!-- The destination file for the code coverage report has to be set to the same value
 						 in the parent pom and in each module pom. Then JaCoCo will add up information in
 						 the same report, so that, it will give the cross-module code coverage. -->
-					<destFile>${project.basedir}/../jacoco-aggregator/target/jacoco-it.exec</destFile>
+					<destFile>${project.basedir}/../jacoco-aggregator/target/jacoco.exec</destFile>
 				</configuration>
 				<executions>
 					<execution>
