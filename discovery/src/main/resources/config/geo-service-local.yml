@@ -3,6 +3,10 @@ spring:
     name: geo-service
   codec:
     max-in-memory-size: 1048576
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 server:
   port: 0
 eureka:
@@ -10,3 +14,35 @@ eureka:
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka/}
     enabled: true
+management:
+  endpoints:
+    web:
+      base-path: /api/v1/geo/actuator
+      exposure:
+        include: "*"
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+      distribution:
+        percentiles-histogram:
+          http:
+            server:
+              requests:
+                true
+        percentiles:
+          http:
+            server:
+              requests:
+                - 0.5
+                - 0.9
+                - 0.99
+server:
+  port: 0

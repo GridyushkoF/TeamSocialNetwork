@@ -2,7 +2,7 @@ spring:
   application:
     name: user-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/user_db
+    url: jdbc:postgresql://${POSTGRESQL:localhost}:5432/user_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -30,6 +30,39 @@ eureka:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka/}
     enabled: true
 
+yandex-cloud:
+  id-key: YCAJEbjmnRHm7TJgZkPR3RaHq
+  secret-key: YCPwGX7Y9t6l-Or0pEQtkoPRYkNPz3a9Pw1UxjPA
+  bucket-name: skillbox-social-network-media-bucket
+management:
+  endpoints:
+    web:
+      base-path: /api/v1/account/actuator
+      exposure:
+        include: "*"
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+      distribution:
+        percentiles-histogram:
+          http:
+            server:
+              requests:
+                true
+        percentiles:
+          http:
+            server:
+              requests:
+                - 0.5
+                - 0.9
+                - 0.99
 server:
-  port: 9783
-
+  port: 0

@@ -18,6 +18,8 @@
 		<java.version>17</java.version>
 		<mapscruct.version>1.5.5.Final</mapscruct.version>
 		<lombock-mapsctruct-bind.version>0.2.0</lombock-mapsctruct-bind.version>
+		<sonar.projectKey>javapro_team48_social_network_04fc16b3-1166-4596-b3fe-f0040477ecf6-${project.groupId}:${project.artifactId}</sonar.projectKey>
+		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../jacoco-aggregator/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 
 	<dependencies>
@@ -91,9 +93,28 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>1.12.767</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.9</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -145,7 +166,7 @@
 				<artifactId>dockerfile-maven-plugin</artifactId>
 				<version>1.4.13</version>
 				<configuration>
-					<repository>socialnetwork/user-service</repository>
+					<repository>skillboxgroup/user-service</repository>
 				</configuration>
 			</plugin>
 
