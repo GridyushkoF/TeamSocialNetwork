@@ -2,6 +2,7 @@ package ru.skillbox.postservice.util;
 
 import lombok.Data;
 import org.junit.jupiter.api.Test;
+import ru.skillbox.commonlib.util.ColumnsUtil;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 

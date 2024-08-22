@@ -16,7 +16,7 @@ import ru.skillbox.postservice.model.entity.LikeEntityType;
 import ru.skillbox.postservice.processor.CommentProcessor;
 import ru.skillbox.postservice.repository.CommentRepository;
 import ru.skillbox.postservice.repository.LikeRepository;
-import ru.skillbox.postservice.util.ColumnsUtil;
+import ru.skillbox.commonlib.util.ColumnsUtil;
 import ru.skillbox.postservice.util.CommentValidatorUtil;
 import ru.skillbox.postservice.util.PostValidatorUtil;
 

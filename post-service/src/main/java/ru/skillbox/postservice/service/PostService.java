@@ -25,7 +25,7 @@ import ru.skillbox.postservice.repository.CommentRepository;
 import ru.skillbox.postservice.repository.LikeRepository;
 import ru.skillbox.postservice.repository.PostRepository;
 import ru.skillbox.postservice.service.specification_api.PostSpecificationService;
-import ru.skillbox.postservice.util.ColumnsUtil;
+import ru.skillbox.commonlib.util.ColumnsUtil;
 import ru.skillbox.postservice.util.PostValidatorUtil;
 
 import java.time.ZonedDateTime;
