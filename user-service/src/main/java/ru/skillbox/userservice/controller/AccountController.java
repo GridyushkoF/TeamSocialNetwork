@@ -60,7 +60,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createAccount(@RequestBody AccountDto accountDto, HttpServletRequest request) {
+    public ResponseEntity<Long> createAccount(@RequestBody AccountDto accountDto, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createAccount(accountDto, Long.parseLong(request.getHeader("id"))));
     }
 
@@ -80,12 +80,12 @@ public class AccountController {
     }
 
     @GetMapping("/ids")
-    public ResponseEntity<?> getAllIds() {
+    public ResponseEntity<List<Long>> getAllIds() {
         return ResponseEntity.ok(accountService.getAllIds());
     }
 
     @GetMapping("/accountIds")
-    public ResponseEntity<?> getAccountIds(@RequestParam Long[] ids, HttpServletRequest request) {
+    public ResponseEntity<List<AccountDto>> getAccountIds(@RequestParam Long[] ids, HttpServletRequest request) {
         return ResponseEntity.ok(accountService.getAccountIds(ids, Long.parseLong(request.getHeader("id"))));
     }
     //----------------------------ADMIN-ACCESS---------------------------

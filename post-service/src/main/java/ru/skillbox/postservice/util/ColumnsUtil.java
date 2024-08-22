@@ -5,9 +5,7 @@ import org.springframework.beans.BeanWrapperImpl;
 
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ColumnsUtil {
     public static String[] getNullPropertyNames(Object source) {
@@ -22,5 +20,8 @@ public class ColumnsUtil {
             }
         }
         return emptyNames.toArray(new String[0]);
+    }
+    private ColumnsUtil() {
+
     }
 }

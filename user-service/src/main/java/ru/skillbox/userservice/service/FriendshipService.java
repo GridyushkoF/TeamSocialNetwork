@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.skillbox.commonlib.dto.account.AccountDto;
 import ru.skillbox.commonlib.dto.account.StatusCode;
 import ru.skillbox.userservice.exception.NoSuchAccountException;
-import ru.skillbox.userservice.mapper.V1.FriendMapperV1;
-import ru.skillbox.userservice.mapper.V1.UserMapperV1;
+import ru.skillbox.userservice.mapper.v1.FriendMapperV1;
+import ru.skillbox.userservice.mapper.v1.UserMapperV1;
 import ru.skillbox.userservice.model.dto.FriendDto;
 import ru.skillbox.userservice.model.entity.Friendship;
 import ru.skillbox.userservice.model.entity.FriendshipId;
@@ -33,6 +33,8 @@ public class FriendshipService {
     private final FriendshipRepository friendshipRepository;
     private final FriendMapperV1 friendMapper;
     private final UserMapperV1 userMapper;
+    private static final String ACCOUNT_WITH_ID = "Account with id: ";
+    private static final String DOES_NOT_EXISTS = " does not exists";
 
     public void requestFriendship(Long currentAuthUserId, Long accountId) {
         log.info("Request friendship between accounts - id: {} and id: {}", currentAuthUserId, accountId);
@@ -91,7 +93,7 @@ public class FriendshipService {
     public List<AccountDto> getFriendRecommendations(Long currentAuthUserId) {
         User currentUser = userRepository.findById(currentAuthUserId)
                 .orElseThrow(() ->
-                        new NoSuchAccountException("Account with id: " + currentAuthUserId + " does not exists")
+                        new NoSuchAccountException(ACCOUNT_WITH_ID + currentAuthUserId + DOES_NOT_EXISTS)
                 );
         Set<User> currentFriends = currentUser.getFriends();
 
@@ -111,7 +113,7 @@ public class FriendshipService {
     public int getFriendRequestCount(Long currentAuthUserId) {
         User currentUser = userRepository.findById(currentAuthUserId)
                 .orElseThrow(() ->
-                        new NoSuchAccountException("Account with id: " + currentAuthUserId + " does not exists")
+                        new NoSuchAccountException(ACCOUNT_WITH_ID + currentAuthUserId + DOES_NOT_EXISTS)
                 );
         return currentUser.getFriends().stream()
                 .map(user -> userMapper.userToResponse(currentAuthUserId, user))
@@ -122,11 +124,11 @@ public class FriendshipService {
     private void saveAccountFriends(Long currentAuthUserId, Long accountId) {
         User accountFrom = userRepository.findById(currentAuthUserId)
                 .orElseThrow(() ->
-                        new NoSuchAccountException("Account with id: " + currentAuthUserId + " does not exists")
+                        new NoSuchAccountException(ACCOUNT_WITH_ID + currentAuthUserId + DOES_NOT_EXISTS)
                 );
         User accountTo = userRepository.findById(accountId)
                 .orElseThrow(() ->
-                        new NoSuchAccountException("Account with id: " + accountId + " does not exists")
+                        new NoSuchAccountException(ACCOUNT_WITH_ID + accountId + DOES_NOT_EXISTS)
                 );
 
         accountFrom.getFriends().add(accountTo);

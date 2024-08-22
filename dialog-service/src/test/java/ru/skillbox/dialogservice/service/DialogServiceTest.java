@@ -40,7 +40,7 @@ class DialogServiceTest {
         assertNotNull(dialogs);
         assertEquals(1, dialogs.getTotalElements());
         assertEquals(1, dialogs.getContent().get(0).getId());
-        assertThrows(IndexOutOfBoundsException.class, ()-> dialogs.getContent().get(1));
+        assertThrows(IndexOutOfBoundsException.class, () -> dialogs.getContent().get(1));
     }
 
     @Test

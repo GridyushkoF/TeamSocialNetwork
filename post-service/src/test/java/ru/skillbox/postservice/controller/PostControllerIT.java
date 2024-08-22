@@ -5,8 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.skillbox.commonlib.dto.post.PostDto;
@@ -117,19 +115,6 @@ public class PostControllerIT extends TestDependenciesContainer {
                         .header("id", 1L))
                 .andExpect(status().isCreated());
     }
-
-//    @Test
-//    @DisplayName("image uploading test")
-//    void uploadPhotoToStorage() throws Exception {
-//        byte[] imageBytes = "Test image content".getBytes();
-//        MockMultipartFile multipartFile = new MockMultipartFile(
-//                "file", "test_image.jpg", "image/jpeg", imageBytes);
-//
-//        mockMvc.perform(multipart(apiPrefix + "/post/storagePostPhoto")
-//                        .file(multipartFile))
-//                .andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.imagePath").isNotEmpty());
-//    }
 
     //-------------------------UTIL-METHODS------------------------------
 

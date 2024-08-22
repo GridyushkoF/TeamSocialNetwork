@@ -5,7 +5,6 @@ import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import ru.skillbox.commonlib.dto.statistics.DateCountPointDto;
 
-
 import java.time.ZonedDateTime;
 import java.util.List;
 

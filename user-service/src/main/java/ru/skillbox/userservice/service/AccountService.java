@@ -24,7 +24,7 @@ import ru.skillbox.userservice.service.specifiaction_api.AccountPredicate;
 import ru.skillbox.userservice.exception.AccountAlreadyExistsException;
 import ru.skillbox.userservice.exception.NoSuchAccountException;
 import ru.skillbox.userservice.exception.NotAuthException;
-import ru.skillbox.userservice.mapper.V1.UserMapperV1;
+import ru.skillbox.userservice.mapper.v1.UserMapperV1;
 import ru.skillbox.userservice.model.entity.User;
 import ru.skillbox.userservice.repository.UserRepository;
 import ru.skillbox.userservice.util.BeanUtil;

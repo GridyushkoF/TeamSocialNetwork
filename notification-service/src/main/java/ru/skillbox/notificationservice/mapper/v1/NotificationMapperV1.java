@@ -1,4 +1,4 @@
-package ru.skillbox.notificationservice.mapper.V1;
+package ru.skillbox.notificationservice.mapper.v1;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;

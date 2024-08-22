@@ -10,4 +10,7 @@ public class SortCreatorUtil {
     public static Sort createSort(List<String> sort) {
         return Sort.by(Sort.Direction.fromString(sort.get(DIRECTION_SLOT)), sort.get(COLUMN_SLOT));
     }
+    private SortCreatorUtil() {
+
+    }
 }

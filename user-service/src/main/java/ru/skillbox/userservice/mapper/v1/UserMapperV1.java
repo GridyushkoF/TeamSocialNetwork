@@ -1,4 +1,4 @@
-package ru.skillbox.userservice.mapper.V1;
+package ru.skillbox.userservice.mapper.v1;
 
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;

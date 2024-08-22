@@ -3,9 +3,9 @@ package ru.skillbox.postservice.util;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-public class ColumnsUtilTest {
+class ColumnsUtilTest {
 
     @Test
     void getNullPropertyNames() {
