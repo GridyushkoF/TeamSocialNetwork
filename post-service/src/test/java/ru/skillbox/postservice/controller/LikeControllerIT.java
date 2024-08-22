@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-public class LikeControllerIT extends TestDependenciesContainer {
+class LikeControllerIT extends TestDependenciesContainer {
 
     @BeforeEach
     public void doBeforeEach() {
@@ -41,7 +41,7 @@ public class LikeControllerIT extends TestDependenciesContainer {
         ).andExpect(status().isCreated());
 
         Like like = likeRepository.findAll().get(0);
-        assertEquals(like.getEntityType(), LikeEntityType.POST);
+        assertEquals(LikeEntityType.POST,like.getEntityType());
         assertEquals(like.getEntityId(), post.getId());
         assertEquals(like.getUserId(), userId);
     }

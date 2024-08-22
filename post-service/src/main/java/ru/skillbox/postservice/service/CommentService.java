@@ -63,7 +63,7 @@ public class CommentService {
                     }
                     return commentDto.isBlocked();
                 })
-                .peek(commentDto -> {
+                .map(commentDto -> {
                     Long likesAmount = likeRepository.countAllByEntityTypeAndEntityId(LikeEntityType.COMMENT, commentDto.getId());
                     commentDto.setLikeAmount(likesAmount);
                     boolean myLike = likeRepository.existsByEntityTypeAndEntityIdAndUserId(
@@ -72,6 +72,7 @@ public class CommentService {
                             userId
                     );
                     commentDto.setMyLike(myLike);
+                    return commentDto;
                 })
                 .toList();
     }

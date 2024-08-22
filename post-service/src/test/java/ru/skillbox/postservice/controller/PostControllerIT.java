@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-public class PostControllerIT extends TestDependenciesContainer {
+class PostControllerIT extends TestDependenciesContainer {
     @BeforeEach
     void initBeforeEach() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
@@ -100,7 +100,7 @@ public class PostControllerIT extends TestDependenciesContainer {
                         .param("postText", testPostDto.getPostText())
                         .param("withFriends", String.valueOf(false))
                         .param("isDelete", String.valueOf(false))
-                        .header("id","1")
+                        .header("id", "1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -118,7 +118,7 @@ public class PostControllerIT extends TestDependenciesContainer {
 
     //-------------------------UTIL-METHODS------------------------------
 
-    private Post saveAndGetTestPostToUpdate() throws Exception {
+    private Post saveAndGetTestPostToUpdate() {
         return savePostInDbAndGet(PostDto.builder()
                 .title("Test Post to update")
                 .postText("This is a test post to update")
@@ -136,7 +136,7 @@ public class PostControllerIT extends TestDependenciesContainer {
         return updatedPostDto;
     }
 
-    private Post saveAndGetTestPostToDelete() throws Exception {
+    private Post saveAndGetTestPostToDelete() {
         return savePostInDbAndGet(PostDto.builder()
                 .title("Test Post to delete")
                 .postText("This is a test post to delete")

@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Testcontainers
 @EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" })
-public class CommentControllerIT extends TestDependenciesContainer {
+class CommentControllerIT extends TestDependenciesContainer {
 
     @BeforeEach
     void initBeforeEach() {
