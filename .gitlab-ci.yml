@@ -41,7 +41,17 @@ sonarqube-check-job:
       - sonar-scanner/
 
   script:
-    -  mvn verify sonar:sonar $MAVEN_OPTS_CLI
+    - echo "Removing service images..."
+    - docker image rm skillboxgroup/discovery:0.0.1-SNAPSHOT
+    - docker image rm skillboxgroup/authentication:0.0.1-SNAPSHOT
+    - docker image rm skillboxgroup/user-service:0.0.1-SNAPSHOT
+    - docker image rm skillboxgroup/post-service:0.0.1-SNAPSHOT
+    - docker image rm skillboxgroup/dialog-service:0.0.1-SNAPSHOT
+    - docker image rm skillboxgroup/notification-service:0.0.1-SNAPSHOT
+    - docker image rm skillboxgroup/admin-service:0.0.1-SNAPSHOT
+    - docker image rm skillboxgroup/geo-service:0.0.1-SNAPSHOT
+    - docker image rm skillboxgroup/gateway:0.0.1-SNAPSHOT
+    - mvn verify sonar:sonar $MAVEN_OPTS_CLI
   allow_failure: true
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
@@ -66,16 +76,6 @@ deploy_docker_services-job:
   only:
     - develop
   script:
-    - echo "Deploying application..."
-    - docker image rm skillboxgroup/discovery:0.0.1-SNAPSHOT
-    - docker image rm skillboxgroup/authentication:0.0.1-SNAPSHOT
-    - docker image rm skillboxgroup/user-service:0.0.1-SNAPSHOT
-    - docker image rm skillboxgroup/post-service:0.0.1-SNAPSHOT
-    - docker image rm skillboxgroup/dialog-service:0.0.1-SNAPSHOT
-    - docker image rm skillboxgroup/notification-service:0.0.1-SNAPSHOT
-    - docker image rm skillboxgroup/admin-service:0.0.1-SNAPSHOT
-    - docker image rm skillboxgroup/geo-service:0.0.1-SNAPSHOT
-    - docker image rm skillboxgroup/gateway:0.0.1-SNAPSHOT
     - echo "Pushing service images to docker hub..."
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin
     - docker push "skillboxgroup/discovery" --all-tags
