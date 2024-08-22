@@ -28,7 +28,7 @@
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/jacoco-aggregator/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-        <sonar.jacoco.itReportPath>${project.basedir}/jacoco-aggregator/target/target/jacoco-it.exec</sonar.jacoco.itReportPath>
+        <sonar.jacoco.reportPath>${project.basedir}/jacoco-aggregator/target/target/jacoco-it.exec</sonar.jacoco.reportPath>
     </properties>
 
     <dependencyManagement>
