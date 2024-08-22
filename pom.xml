@@ -25,7 +25,10 @@
             **/test/**
         </sonar.coverage.exclusions>
         <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/jacoco-aggregator/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.jacoco.itReportPath>${project.basedir}/jacoco-aggregator/target/target/jacoco-it.exec</sonar.jacoco.itReportPath>
     </properties>
 
     <dependencyManagement>
@@ -65,8 +68,8 @@
                         <execution>
                             <id>default</id>
                             <goals>
-                                <goal>build</goal>
-                                <goal>push</goal>
+<!--                                <goal>build</goal>-->
+<!--                                <goal>push</goal>-->
                             </goals>
                         </execution>
                     </executions>
@@ -81,6 +84,11 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                 </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco-maven-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -92,11 +100,17 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
                             <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>post-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -105,9 +119,10 @@
                         <exclude>**/config/**</exclude>
                         <exclude>**/dto/**</exclude>
                         <exclude>**/exception/**</exclude>
+                        <exclude>**/handler/**</exclude>
                         <exclude>**/mapper/**</exclude>
-                        <exclude>**/*MapperImpl.*</exclude>
                         <exclude>**/model/**</exclude>
+                        <exclude>**/processor/**</exclude>
                         <exclude>**/repository/**</exclude>
                     </excludes>
                 </configuration>
