@@ -17,14 +17,19 @@ import java.util.stream.Collectors;
 
 @Component
 public class PostMapperDecorator implements PostMapper {
-    private final PostMapper delegate;
-    private final TagRepository tagRepository;
 
+    private PostMapper delegate;
     @Autowired
-    public PostMapperDecorator(@Qualifier("delegate") PostMapper delegate, TagRepository tagRepository) {
+    public void setDelegate(@Qualifier("delegate") PostMapper delegate) {
         this.delegate = delegate;
+    }
+    @Autowired
+    public void setTagRepository(TagRepository tagRepository) {
         this.tagRepository = tagRepository;
     }
+
+    private TagRepository tagRepository;
+
 
     @Override
     public Post postDtoToPost(PostDto postDto) {
