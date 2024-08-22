@@ -45,17 +45,42 @@ services:
       - kafka:/data
     restart: on-failure
 
-#  # Convenient UI for Apache Kafka https://github.com/provectus/kafka-ui
-#  kafka-ui:
-#    image: provectuslabs/kafka-ui
-#    container_name: kafka-ui
-#    ports:
-#      - "9999:8080"
-#    restart: always
-#    environment:
-#      - KAFKA_CLUSTERS_0_NAME=local
-#      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
-
+  # Convenient UI for Apache Kafka https://github.com/provectus/kafka-ui
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "9999:8080"
+    restart: always
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+  grafana:
+    build: './config/grafana'
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      monitoring:
+        aliases:
+          - grafana
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 3001:9090
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus:/prometheus
+    networks:
+      monitoring:
+        aliases:
+          - prometheus
 volumes:
   kafka:
   database-data:
+networks:
+  monitoring:
