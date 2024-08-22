@@ -14,6 +14,11 @@
 	<name>gateway</name>
 	<description>Spring Cloud Gateway Server</description>
 
+	<properties>
+		<sonar.projectKey>javapro_team48_social_network_04fc16b3-1166-4596-b3fe-f0040477ecf6-${project.groupId}:${project.artifactId}</sonar.projectKey>
+		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../jacoco-aggregator/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -89,7 +94,7 @@
 				<artifactId>dockerfile-maven-plugin</artifactId>
 				<version>1.4.13</version>
 				<configuration>
-					<repository>socialnetwork/gateway</repository>
+					<repository>skillboxgroup/gateway</repository>
 				</configuration>
 			</plugin>
 		</plugins>

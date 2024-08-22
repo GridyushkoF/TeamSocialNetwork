@@ -19,6 +19,9 @@
 		<mapscruct.version>1.5.5.Final</mapscruct.version>
 		<lombock-mapsctruct-bind.version>0.2.0</lombock-mapsctruct-bind.version>
 		<jackson-jsr310.version>2.17.1</jackson-jsr310.version>
+		<sonar.projectKey>javapro_team48_social_network_04fc16b3-1166-4596-b3fe-f0040477ecf6-${project.groupId}:${project.artifactId}</sonar.projectKey>
+		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../jacoco-aggregator/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -179,10 +182,27 @@
 				<artifactId>dockerfile-maven-plugin</artifactId>
 				<version>1.4.13</version>
 				<configuration>
-					<repository>socialnetwork/post-service</repository>
+					<repository>skillboxgroup/post-service</repository>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>${maven-failsafe-plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<includes>
+						<include>**/*IT.java</include>
+					</includes>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

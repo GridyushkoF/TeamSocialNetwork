@@ -3,7 +3,7 @@ spring:
     name: admin-console
 app:
   apiPrefix: /api/v1
-  gatewayUrl: "http://localhost:9090"
+  gatewayUrl: ${GATEWAY_URI:http://localhost:9090}
 eureka:
   client:
     serviceUrl:

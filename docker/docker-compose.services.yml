@@ -1,89 +1,109 @@
-version: '3'
 services:
   discovery:
-    image: socialnetwork/discovery:0.0.1-SNAPSHOT
+    image: skillboxgroup/discovery:0.0.1-SNAPSHOT
     ports:
       - "8761:8761"
-    restart: always
+    restart: on-failure
 
   authentication:
-    image: socialnetwork/authentication:0.0.1-SNAPSHOT
-#    ports:
-#      - "8083:8083"
+    image: skillboxgroup/authentication:0.0.1-SNAPSHOT
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
       - DATABASE_URL=jdbc:postgresql://postgres:5432/user_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
-    restart: always
+      - POSTGRESQL=postgres
+    restart: on-failure
     depends_on:
       - discovery
 
   dialog-service:
-    image: socialnetwork/dialog-service:0.0.1-SNAPSHOT
-#    ports:
-#      - "8080:8080"
+    image: skillboxgroup/dialog-service:0.0.1-SNAPSHOT
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
       - DATABASE_URL=jdbc:postgresql://postgres:5432/dialog_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
-    restart: always
+      - POSTGRESQL=postgres
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - GATEWAY_URI=http://gateway:9090
+    restart: on-failure
     depends_on:
-      - discovery
+      - post-service
 
   notification-service:
-    image: socialnetwork/notification-service:0.0.1-SNAPSHOT
-#    ports:
-#      - "8081:8081"
+    image: skillboxgroup/notification-service:0.0.1-SNAPSHOT
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
       - DATABASE_URL=jdbc:postgresql://postgres:5432/notification_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
-    restart: always
+      - POSTGRESQL=postgres
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    restart: on-failure
     depends_on:
-      - discovery
+      - dialog-service
 
   post-service:
-    image: socialnetwork/post-service:0.0.1-SNAPSHOT
-#    ports:
-#      - "8082:8082"
+    image: skillboxgroup/post-service:0.0.1-SNAPSHOT
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
       - DATABASE_URL=jdbc:postgresql://postgres:5432/post_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
-    restart: always
+      - POSTGRESQL=postgres
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    restart: on-failure
     depends_on:
-      - discovery
+      - user-service
 
   user-service:
-    image: socialnetwork/user-service:0.0.1-SNAPSHOT
-    ports:
-      - "8084:8084"
+    image: skillboxgroup/user-service:0.0.1-SNAPSHOT
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
       - DATABASE_URL=jdbc:postgresql://postgres:5432/user_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
-    restart: always
+      - POSTGRESQL=postgres
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    restart: on-failure
     depends_on:
-      - discovery
+      - authentication
+
+  admin-service:
+    image: skillboxgroup/admin-service:0.0.1-SNAPSHOT
+    environment:
+      - CONFIG_URI=http://discovery:8761
+      - EUREKA_URI=http://discovery:8761/eureka
+      - GATEWAY_URI=http://gateway:9090
+    restart: on-failure
+    depends_on:
+      - notification-service
+
+  geo-service:
+    image: skillboxgroup/geo-service:0.0.1-SNAPSHOT
+    environment:
+      - CONFIG_URI=http://discovery:8761
+      - EUREKA_URI=http://discovery:8761/eureka
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    restart: on-failure
+    depends_on:
+      - admin-service
 
   gateway:
-    image: socialnetwork/gateway:0.0.1-SNAPSHOT
+    image: skillboxgroup/gateway:0.0.1-SNAPSHOT
     ports:
       - "9090:9090"
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
-    restart: always
+    restart: on-failure
     depends_on:
       - discovery
       - authentication
@@ -91,3 +111,14 @@ services:
       - notification-service
       - post-service
       - user-service
+      - admin-service
+      - geo-service
+
+  frontend:
+    image: skillboxgroup/frontend
+    ports:
+      - "80:80"
+    tty: true
+    restart: on-failure
+    volumes:
+      - ./nginx-config:/etc/nginx/conf.d

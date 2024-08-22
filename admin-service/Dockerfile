@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk
+FROM openjdk:17-jdk-alpine3.14
 
 ARG JAR_FILE
 
