@@ -3,44 +3,44 @@ scrape_configs:
     scrape_interval: 15s
     metrics_path: '/api/v1/auth/actuator/prometheus'
     static_configs:
-      - targets: [ 'host.docker.internal:9090' ]
+      - targets: [ '95.174.93.240' ]
   - job_name: 'post-service_monitoring'
     scrape_interval: 15s
     metrics_path: '/api/v1/post/actuator/prometheus'
     static_configs:
-      - targets: [ 'host.docker.internal:9090' ]
+      - targets: [ '95.174.93.240' ]
   - job_name: 'admin-console_monitoring'
     scrape_interval: 15s
     metrics_path: '/api/v1/admin/actuator/prometheus'
     static_configs:
-      - targets: [ 'host.docker.internal:9090' ]
+      - targets: [ '95.174.93.240' ]
   - job_name: 'geo-service_monitoring'
     scrape_interval: 15s
     metrics_path: '/api/v1/geo/actuator/prometheus'
     static_configs:
-      - targets: [ 'host.docker.internal:9090' ]
+      - targets: [ '95.174.93.240' ]
   - job_name: 'notification_monitoring'
     scrape_interval: 15s
     metrics_path: '/api/v1/notifications/actuator/prometheus'
     static_configs:
-      - targets: [ 'host.docker.internal:9090' ]
+      - targets: [ '95.174.93.240' ]
   - job_name: 'dialog-service_monitoring'
     scrape_interval: 15s
     metrics_path: '/api/v1/dialogs/actuator/prometheus'
     static_configs:
-      - targets: [ 'host.docker.internal:9090' ]
+      - targets: [ '95.174.93.240' ]
   - job_name: 'user-service_monitoring'
     scrape_interval: 15s
     metrics_path: '/api/v1/account/actuator/prometheus'
     static_configs:
-      - targets: [ 'host.docker.internal:9090' ]
+      - targets: [ '95.174.93.240' ]
   - job_name: 'friend-service_monitoring'
     scrape_interval: 15s
     metrics_path: '/api/v1/friends/actuator/prometheus'
     static_configs:
-      - targets: [ 'host.docker.internal:9090' ]
+      - targets: [ '95.174.93.240' ]
   - job_name: 'gateway_monitoring'
     scrape_interval: 15s
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'host.docker.internal:9090' ]
+      - targets: [ '95.174.93.240' ]

@@ -3554,8 +3554,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "host.docker.internal:9090",
-          "value": "host.docker.internal:9090"
+          "text": "gateway:9090",
+          "value": "gateway:9090"
         },
         "datasource": "Prometheus",
         "definition": "",
