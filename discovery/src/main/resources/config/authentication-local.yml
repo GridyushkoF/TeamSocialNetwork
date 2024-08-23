@@ -43,7 +43,7 @@ security:
 management:
   endpoints:
     web:
-      base-path: /api/v1/auth/actuator
+      base-path: /actuator
       exposure:
         include: "*"
   metrics:
