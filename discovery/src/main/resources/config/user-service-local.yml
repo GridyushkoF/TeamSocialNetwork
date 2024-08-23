@@ -37,7 +37,7 @@ yandex-cloud:
 management:
   endpoints:
     web:
-      base-path: /api/v1/account/actuator; /api/v1/friends/actuator
+      base-path: /api/v1/actuator
       exposure:
         include: "*"
   metrics:
