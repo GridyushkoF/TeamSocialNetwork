@@ -11,7 +11,7 @@ import ru.skillbox.commonlib.dto.post.PostSearchDto;
 import ru.skillbox.commonlib.dto.post.PostType;
 import ru.skillbox.commonlib.dto.post.pages.PagePostDto;
 import ru.skillbox.postservice.service.PostService;
-import ru.skillbox.postservice.util.SortCreatorUtil;
+import ru.skillbox.commonlib.util.SortCreatorUtil;
 
 import java.util.List;
 import java.util.Objects;

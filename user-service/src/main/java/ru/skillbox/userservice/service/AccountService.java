@@ -1,9 +1,11 @@
 package ru.skillbox.userservice.service;
 
 
+import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -13,22 +15,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skillbox.commonlib.dto.account.AccountByFilterDto;
 import ru.skillbox.commonlib.dto.account.AccountDto;
-import ru.skillbox.commonlib.dto.account.AccountRecoveryRq;
+import ru.skillbox.commonlib.dto.account.AccountRecoveryRequest;
 import ru.skillbox.commonlib.dto.account.AccountSearchDto;
 import ru.skillbox.commonlib.dto.statistics.AgeCountDto;
 import ru.skillbox.commonlib.dto.statistics.DateCountPointDto;
 import ru.skillbox.commonlib.dto.statistics.PeriodRequestDto;
 import ru.skillbox.commonlib.dto.statistics.UsersStatisticsDto;
+import ru.skillbox.commonlib.util.ColumnsUtil;
 import ru.skillbox.commonlib.util.admin.AdminStatisticsRepository;
-import ru.skillbox.userservice.service.specifiaction_api.AccountPredicate;
 import ru.skillbox.userservice.exception.AccountAlreadyExistsException;
 import ru.skillbox.userservice.exception.NoSuchAccountException;
 import ru.skillbox.userservice.exception.NotAuthException;
 import ru.skillbox.userservice.mapper.v1.UserMapperV1;
 import ru.skillbox.userservice.model.entity.User;
 import ru.skillbox.userservice.repository.UserRepository;
-import ru.skillbox.userservice.util.BeanUtil;
-import io.micrometer.core.instrument.MeterRegistry;
+import ru.skillbox.userservice.service.specifiaction_api.AccountPredicate;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -42,6 +44,7 @@ public class AccountService {
     private final UserMapperV1 userMapper;
     private final AdminStatisticsRepository adminStatisticsRepository;
     private final MeterRegistry meterRegistry;
+
     @Scheduled(fixedRate = 5000)
     public void updateBlockedUsersAmountMetrics() {
         Long blockedUsersAmount = userRepository.countByIsBlocked(true);
@@ -49,7 +52,7 @@ public class AccountService {
         meterRegistry.gauge("users.blocked", blockedUsersAmount);
     }
 
-    public String recoveryUserAccount(AccountRecoveryRq recoveryRequest) {
+    public String recoveryUserAccount(AccountRecoveryRequest recoveryRequest) {
         return recoveryRequest.getEmail();
     }
 
@@ -60,7 +63,7 @@ public class AccountService {
         User user = userRepository.findById(authUserId)
                 .orElseThrow(() -> new NoSuchAccountException("Can't find Account with id:" + authUserId));
         AccountDto existedAccount = userMapper.userToResponse(authUserId, user);
-        BeanUtil.copyNonNullProperties(accountDto, existedAccount);
+        BeanUtils.copyProperties(accountDto, existedAccount, ColumnsUtil.getNullPropertyNames(existedAccount));
 
         User newUser = userMapper.requestToUser(authUserId, existedAccount);
         newUser.setFriendsFrom(user.getFriendsFrom());
@@ -124,13 +127,12 @@ public class AccountService {
     }
 
     public List<Long> getAllIds() {
-        return userRepository.findAll().stream().map(User::getId).toList();
+        return userRepository.findAllIds();
     }
 
     public List<AccountDto> getAccountIds(Long[] ids, Long authUserId) {
-        List<User> users = userRepository.findAll();
+        List<User> users = userRepository.findAllByIdIn(Arrays.asList(ids));
         return users.stream()
-                .filter(user -> Arrays.asList(ids).contains(user.getId()))
                 .map(user -> userMapper.userToResponse(authUserId, user))
                 .toList();
     }
@@ -141,6 +143,7 @@ public class AccountService {
         List<AccountDto> pageList = users.stream().map(user -> userMapper.userToResponse(authUserId, user)).toList();
         return new PageImpl<>(pageList, nextPage, users.size());
     }
+
     public UsersStatisticsDto getUsersStatistics(PeriodRequestDto periodRequestDto) {
         long usersAmount = userRepository.count();
         List<DateCountPointDto> dateCountStatistics = adminStatisticsRepository.getDateCountStatistics(

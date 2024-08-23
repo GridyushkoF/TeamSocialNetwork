@@ -1,4 +1,4 @@
-package ru.skillbox.postservice.util;
+package ru.skillbox.commonlib.util;
 
 import org.springframework.data.domain.Sort;
 

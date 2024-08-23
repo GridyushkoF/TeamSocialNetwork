@@ -1,22 +1,19 @@
-package ru.skillbox.postservice.config.json;
+package ru.skillbox.userservice.testconfiguration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Pageable;
-import ru.skillbox.commonlib.dto.post.LikeReactionType;
 import ru.skillbox.commonlib.json.deserializer.DateTimeDeserializer;
-import ru.skillbox.commonlib.json.deserializer.LikeReactionTypeDeserializer;
 import ru.skillbox.commonlib.json.deserializer.PageableDeserializer;
 import ru.skillbox.commonlib.json.serializer.DateTimeSerializer;
-import ru.skillbox.commonlib.json.serializer.LikeReactionTypeSerializer;
 import ru.skillbox.commonlib.json.serializer.PageableSerializer;
 
 import java.time.ZonedDateTime;
 
-@Configuration
+@TestConfiguration
 public class JsonConfig {
     @Bean
     public ObjectMapper objectMapper() {
@@ -26,9 +23,7 @@ public class JsonConfig {
                 .addDeserializer(ZonedDateTime.class, new DateTimeDeserializer()));
         objectMapper.registerModule(new SimpleModule()
                 .addSerializer(Pageable.class, new PageableSerializer())
-                .addDeserializer(Pageable.class, new PageableDeserializer())
-                .addDeserializer(LikeReactionType.class,new LikeReactionTypeDeserializer())
-                .addSerializer(LikeReactionType.class,new LikeReactionTypeSerializer()));
+                .addDeserializer(Pageable.class, new PageableDeserializer()));
         return objectMapper;
     }
 }
