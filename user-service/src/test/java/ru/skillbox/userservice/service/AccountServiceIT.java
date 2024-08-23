@@ -2,6 +2,7 @@ package ru.skillbox.userservice.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,7 +52,8 @@ class AccountServiceIT {
     }
 
     @Test
-    void testRecoveryUserAccount() {
+    @DisplayName("test recovery of user account")
+    void testRecoveryUserAccount_correct_success() {
         AccountRecoveryRequest recoveryRequest = new AccountRecoveryRequest();
         recoveryRequest.setEmail("test@example.com");
         String email = accountService.recoveryUserAccount(recoveryRequest);
@@ -59,7 +61,8 @@ class AccountServiceIT {
     }
 
     @Test
-    void testUpdateUserAccount() {
+    @DisplayName("test update of user account")
+    void testUpdateUserAccount_correct_success() {
         User user = createTestUser();
         AccountDto accountDto = AccountDto.builder().build();
         accountDto.setId(user.getId());
@@ -72,6 +75,7 @@ class AccountServiceIT {
     }
 
     @Test
+    @DisplayName("test update of user account, not auth, exception")
     void testUpdateUserAccount_notAuthUser_throwException() {
         User user = createTestUser();
         AccountDto accountDto = AccountDto.builder().build();
@@ -81,7 +85,8 @@ class AccountServiceIT {
     }
 
     @Test
-    void testDeleteUserAccount() {
+    @DisplayName("test delete of user account, correct, success")
+    void testDeleteUserAccount_correct_success() {
         User user = createTestUser();
         String result = accountService.deleteUserAccount(user.getId());
         User deletedUser = userRepository.findById(user.getId()).orElseThrow(
@@ -91,12 +96,14 @@ class AccountServiceIT {
     }
 
     @Test
+    @DisplayName("test delete of user account, no auth, exception")
     void testDeleteUserAccount_noUserId_throwException() {
         assertThrows(NotAuthException.class, () -> accountService.deleteUserAccount(null));
     }
 
     @Test
-    void testBlockAccount() {
+    @DisplayName("test block of user account, correct, success")
+    void testBlockAccount_correct_success() {
         User user = createTestUser();
         String result = accountService.blockAccount(true, user.getId());
 
@@ -107,7 +114,8 @@ class AccountServiceIT {
     }
 
     @Test
-    void testGetAllAccounts() {
+    @DisplayName("test get all accounts, correct, success")
+    void testGetAllAccounts_correct_success() {
         createTestUser();
         Pageable page = PageRequest.of(0, 10);
         Page<AccountDto> accountsPage = accountService.getAllAccounts(page, 1L);
@@ -116,7 +124,8 @@ class AccountServiceIT {
     }
 
     @Test
-    void testCreateAccount() {
+    @DisplayName("test create account, correct, success")
+    void testCreateAccount_correct_success() {
         AccountDto accountDto = AccountDto.builder().build();
         accountDto.setEmail("test@example.com");
         accountDto.setFirstName("John");
@@ -129,6 +138,7 @@ class AccountServiceIT {
     }
 
     @Test
+    @DisplayName("test create account, email already exists, exception")
     void testCreateAccount_emailAlreadyExists_throwException() {
         AccountDto accountDto = AccountDto.builder().build();
         accountDto.setEmail("test@example.com");
@@ -137,7 +147,8 @@ class AccountServiceIT {
     }
 
     @Test
-    void testSearchAccountByFilter() {
+    @DisplayName("test create account, correct, success")
+    void testSearchAccountByFilter_correct_success() {
         createTestUser();
         AccountSearchDto accountSearchDto = AccountSearchDto.builder()
                 .firstName("John")
@@ -153,7 +164,8 @@ class AccountServiceIT {
     }
 
     @Test
-    void testGetAccountById() {
+    @DisplayName("test get account by id, correct, success")
+    void testGetAccountById_correct_success() {
         User user = createTestUser();
         AccountDto account = accountService.getAccountById(user.getId(), 1L);
         assertNotNull(account);
@@ -161,13 +173,15 @@ class AccountServiceIT {
     }
 
     @Test
+    @DisplayName("test get account by id, no such account, exception")
     void testGetAccountById_noSuchAccount_throwException() {
         assertThrows(NoSuchAccountException.class, () ->
                 accountService.getAccountById(1L, 1L));
     }
 
     @Test
-    void testGetUsersStatistics() {
+    @DisplayName("test get users statistics by , correct, success")
+    void testGetUsersStatistics_correct_success() {
         createTestUser();
         PeriodRequestDto periodRequestDto = PeriodRequestDto.builder()
                 .firstMonth(ZonedDateTime.now().with(TemporalAdjusters.firstDayOfMonth()))

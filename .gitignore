@@ -30,3 +30,27 @@ build/
 
 ### VS Code ###
 .vscode/
+/docker/prometheus/01J5THGDZ72CR8SWX06HXWGY7Y/index
+/docker/prometheus/01J5TQ7DHK21WSN78QFYWBTPHC/index
+/docker/prometheus/01J5TY35JWFZP7BPTJYYCD6DCF/index
+/docker/prometheus/01J5V2QHZ8QJ2HD77N8YWWN61Q/index
+/docker/prometheus/01J5V4YWFGW4ZA9SFF0T5QDSV0/index
+/docker/prometheus/01J5THGDZ72CR8SWX06HXWGY7Y/meta.json
+/docker/prometheus/01J5TQ7DHK21WSN78QFYWBTPHC/meta.json
+/docker/prometheus/01J5TY35JWFZP7BPTJYYCD6DCF/meta.json
+/docker/prometheus/01J5V2QHZ8QJ2HD77N8YWWN61Q/meta.json
+/docker/prometheus/01J5V4YWFGW4ZA9SFF0T5QDSV0/meta.json
+/docker/prometheus/01J5THGDZ72CR8SWX06HXWGY7Y/tombstones
+/docker/prometheus/01J5TQ7DHK21WSN78QFYWBTPHC/tombstones
+/docker/prometheus/01J5TY35JWFZP7BPTJYYCD6DCF/tombstones
+/docker/prometheus/01J5V2QHZ8QJ2HD77N8YWWN61Q/tombstones
+/docker/prometheus/01J5V4YWFGW4ZA9SFF0T5QDSV0/tombstones
+/docker/prometheus/wal/checkpoint.00000023/00000000
+/docker/prometheus/01J5THGDZ72CR8SWX06HXWGY7Y/chunks/000001
+/docker/prometheus/01J5TQ7DHK21WSN78QFYWBTPHC/chunks/000001
+/docker/prometheus/01J5TY35JWFZP7BPTJYYCD6DCF/chunks/000001
+/docker/prometheus/01J5V2QHZ8QJ2HD77N8YWWN61Q/chunks/000001
+/docker/prometheus/01J5V4YWFGW4ZA9SFF0T5QDSV0/chunks/000001
+/docker/prometheus/wal/00000024
+/docker/prometheus/wal/00000025
+/docker/prometheus/wal/00000026
