@@ -36,7 +36,7 @@ sonarqube-check-job:
     - unit-test-job
   cache:
     policy: pull
-    key: "${CI_COMMIT_SHORT_SHA}"
+    key: "${$CI_COMMIT_SHA}"
     paths:
       - sonar-scanner/
 
@@ -92,7 +92,8 @@ deploy_prod-job:
     - chmod 644 ~/.ssh/known_hosts
   script:
     - scp -r ./docker $PROD_USER@$PROD_HOST:~
-    - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose.services.yml down"
+    - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.services.yml down"
+    - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml down"
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/discovery:0.0.1-SNAPSHOT"
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/authentication:0.0.1-SNAPSHOT"
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/user-service:0.0.1-SNAPSHOT"
@@ -103,5 +104,5 @@ deploy_prod-job:
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/geo-service:0.0.1-SNAPSHOT"
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/gateway:0.0.1-SNAPSHOT"
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/frontend:latest --force"
-    - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose.services.yml up -d"
-
+    - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml up -d"
+    - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.services.yml up -d"
