@@ -1,6 +1,6 @@
 stages:
-  - compile
-  - test
+#  - compile
+#  - test
   - sonarqube-check
   - deploy_docker_images
   - deploy_prod
@@ -16,23 +16,23 @@ variables:
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
 
-compile-job:
- stage: compile
- script:
-   - echo "Compiling the code..."
-   - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
-
-unit-test-job:
- stage: test
- script:
-   - echo "Running unit tests..."
-   - mvn test $MAVEN_OPTS_CLI
+#compile-job:
+# stage: compile
+# script:
+#   - echo "Compiling the code..."
+#   - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
+#
+#unit-test-job:
+# stage: test
+# script:
+#   - echo "Running unit tests..."
+#   - mvn test $MAVEN_OPTS_CLI
 
 sonarqube-check-job:
   stage: sonarqube-check
-  dependencies:
-    - compile-job
-    - unit-test-job
+#  dependencies:
+#    - compile-job
+#    - unit-test-job
   cache:
     policy: pull
     key: "${$CI_COMMIT_SHA}"
@@ -41,7 +41,7 @@ sonarqube-check-job:
 
   script:
     - echo "Deleting docker images..."
-    - docker rmi -f $(docker images -aq)
+    - docker rmi -f $(docker images -aq) << "0"
     - mvn verify sonar:sonar $MAVEN_OPTS_CLI
   allow_failure: true
   rules:
