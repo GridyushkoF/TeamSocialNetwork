@@ -35,7 +35,6 @@ sonarqube-check-job:
     - compile-job
     - unit-test-job
   script:
-    - sudo chmod 666 /var/run/docker.sock
     - mvn verify sonar:sonar $MAVEN_OPTS_CLI
   allow_failure: true
   rules:
@@ -84,7 +83,6 @@ deploy_prod-job:
     - chmod 644 ~/.ssh/known_hosts
   script:
     - scp -r ./docker $PROD_USER@$PROD_HOST:~
-    - ssh $PROD_USER@$PROD_HOST "sudo chmod 666 /var/run/docker.sock"
     - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.services.yml down"
     - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml down"
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/discovery:0.0.1-SNAPSHOT"
