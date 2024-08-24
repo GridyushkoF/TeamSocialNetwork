@@ -115,3 +115,4 @@ deploy_prod-job:
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/gateway:0.0.1-SNAPSHOT"
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/frontend:latest"
     - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose.services.yml up -d"
+
