@@ -751,8 +751,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "gateway:9090",
-          "value": "gateway:9090"
+          "text": "95.174.93.240",
+          "value": "95.174.93.240"
         },
         "datasource": "Prometheus",
         "definition": "",
