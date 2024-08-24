@@ -34,11 +34,6 @@ sonarqube-check-job:
   dependencies:
     - compile-job
     - unit-test-job
-#  cache:
-#    policy: pull
-#    key: "${$CI_COMMIT_SHA}"
-#    paths:
-#      - sonar-scanner/
 
   script:
     - mvn verify sonar:sonar $MAVEN_OPTS_CLI
@@ -50,6 +45,7 @@ sonarqube-check-job:
 deploy_docker_frontend-job:
   stage: deploy_docker_frontend
   script:
+    - sudo chmod 666 /var/run/docker.sock
     - echo "Deploying frontend..."
     - docker build --no-cache -f ./frontend/Dockerfile -t "skillboxgroup/frontend" ./frontend
     - echo "Pushing frontend image to docker hub..."
@@ -89,6 +85,7 @@ deploy_prod-job:
     - chmod 644 ~/.ssh/known_hosts
   script:
     - scp -r ./docker $PROD_USER@$PROD_HOST:~
+    - ssh $PROD_USER@$PROD_HOST "sudo chmod 666 /var/run/docker.sock"
     - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.services.yml down"
     - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml down"
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/discovery:0.0.1-SNAPSHOT"
