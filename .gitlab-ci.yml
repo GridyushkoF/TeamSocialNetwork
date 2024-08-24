@@ -34,11 +34,11 @@ sonarqube-check-job:
   dependencies:
     - compile-job
     - unit-test-job
-  cache:
-    policy: pull
-    key: "${$CI_COMMIT_SHA}"
-    paths:
-      - sonar-scanner/
+#  cache:
+#    policy: pull
+#    key: "${$CI_COMMIT_SHA}"
+#    paths:
+#      - sonar-scanner/
 
   script:
     - mvn verify sonar:sonar $MAVEN_OPTS_CLI
