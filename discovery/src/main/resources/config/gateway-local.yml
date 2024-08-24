@@ -18,6 +18,7 @@ eureka:
 management:
   endpoints:
     web:
+      base-path: /api/v1/actuator
       exposure:
         include: "*"
   metrics:
