@@ -40,6 +40,8 @@ sonarqube-check-job:
       - sonar-scanner/
 
   script:
+    - echo "Deleting docker images..."
+    - docker rmi -f $(docker images -aq)
     - mvn verify sonar:sonar $MAVEN_OPTS_CLI
   allow_failure: true
   rules:
@@ -50,11 +52,7 @@ sonarqube-check-job:
 
 deploy_docker_images-job:
   stage: deploy_docker_images
-#  only:
-#  - develop
   script:
-    - echo "Deleting docker images..."
-    - docker rmi -f $(docker images -aq)
     - echo "Deploying frontend..."
     - docker build --no-cache -f ./frontend/Dockerfile -t "skillboxgroup/frontend" ./frontend
     - echo "Pushing frontend image to docker hub..."
@@ -70,11 +68,12 @@ deploy_docker_images-job:
     - docker push "skillboxgroup/gateway" --all-tags
     - docker push "skillboxgroup/admin-service" --all-tags
     - docker push "skillboxgroup/geo-service" --all-tags
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'develop'
 
 deploy_prod-job:
   stage: deploy_prod
-#  only:
-#    - develop
   before_script:
     - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
     - eval $(ssh-agent -s)
@@ -91,3 +90,6 @@ deploy_prod-job:
     - ssh $PROD_USER@$PROD_HOST "docker rmi -f $(docker images -aq)"
     - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml up -d --force-recreate"
     - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.services.yml up -d"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'develop'
