@@ -14,15 +14,15 @@ import java.util.List;
 
 @Service
 public class PostSpecificationService {
+    private static final String AUTHOR_ID = "authorId";
     public Specification<Post> getSpecificationByDto(PostSearchDto postSearchDto, Long currenAuthUserID) {
         return (root, query, builder) -> {
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(builder.or(builder.equal(root.get("type"), PostType.POSTED),
-                    builder.equal(root.get("authorId"), currenAuthUserID)));
+                    builder.equal(root.get(AUTHOR_ID), currenAuthUserID)));
             addIdPredicate(postSearchDto, root, predicates);
             addAccountsPredicate(postSearchDto, root, predicates);
             addAuthorIdPredicate(postSearchDto, root, builder, predicates);
-            addAuthorPredicate(postSearchDto, root, builder, predicates);
             addTitlePredicate(postSearchDto, root, builder, predicates);
             addPostTextPredicate(postSearchDto, root, builder, predicates);
             addFriendsPredicate(postSearchDto);
@@ -59,7 +59,7 @@ public class PostSpecificationService {
 
     private static void addFriendsPredicate(PostSearchDto postSearchDto) {
         if (postSearchDto.isWithFriends()) {
-            //TODO: сделать когда будет полностью готова FriendShip-логика
+            // сделать когда будет полностью готова FriendShip-логика
         }
     }
 
@@ -75,21 +75,15 @@ public class PostSpecificationService {
         }
     }
 
-    private static void addAuthorPredicate(PostSearchDto postSearchDto, Root<Post> root, CriteriaBuilder builder, List<Predicate> predicates) {
-        // if (!postSearchDto.getAuthor().isEmpty()) {
-        //     predicates.add(builder.equal(root.get("author"), postSearchDto.getAuthor()));
-        // }
-    }
-
     private static void addAuthorIdPredicate(PostSearchDto postSearchDto, Root<Post> root, CriteriaBuilder builder, List<Predicate> predicates) {
         if (postSearchDto.getBlockedIds() != null && !postSearchDto.getBlockedIds().isEmpty()) {
-            predicates.add(builder.not(root.get("authorId").in(postSearchDto.getBlockedIds())));
+            predicates.add(builder.not(root.get(AUTHOR_ID).in(postSearchDto.getBlockedIds())));
         }
     }
 
     private static void addAccountsPredicate(PostSearchDto postSearchDto, Root<Post> root, List<Predicate> predicates) {
         if (postSearchDto.getAccountIds() != null && !postSearchDto.getAccountIds().isEmpty()) {
-            predicates.add(root.get("authorId").in(postSearchDto.getAccountIds()));
+            predicates.add(root.get(AUTHOR_ID).in(postSearchDto.getAccountIds()));
         }
     }
 

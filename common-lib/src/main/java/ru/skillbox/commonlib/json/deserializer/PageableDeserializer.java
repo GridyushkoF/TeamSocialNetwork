@@ -1,4 +1,4 @@
-package ru.skillbox.postservice.config.json.deserializer;
+package ru.skillbox.commonlib.json.deserializer;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;

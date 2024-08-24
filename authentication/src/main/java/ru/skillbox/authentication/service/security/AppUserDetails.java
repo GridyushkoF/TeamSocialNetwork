@@ -6,7 +6,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.skillbox.authentication.model.entity.User;
 
-
 import java.util.Collection;
 import java.util.Collections;
 

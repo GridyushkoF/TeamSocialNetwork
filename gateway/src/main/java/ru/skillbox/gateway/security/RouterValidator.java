@@ -19,5 +19,8 @@ public class RouterValidator {
                     .stream()
                     .noneMatch(pattern -> pattern.matcher(request.getURI()
                             .getPath()).matches());
+    private RouterValidator() {
+
+    }
 
 }

@@ -4,7 +4,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.dialogservice.model.dto.*;
+import ru.skillbox.dialogservice.model.dto.DialogDto;
+import ru.skillbox.dialogservice.model.dto.DialogRs;
+import ru.skillbox.dialogservice.model.dto.MessageDto;
 import ru.skillbox.dialogservice.service.DialogService;
 import ru.skillbox.dialogservice.service.MessageService;
 

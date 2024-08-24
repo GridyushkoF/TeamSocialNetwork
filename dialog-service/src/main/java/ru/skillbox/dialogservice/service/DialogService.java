@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skillbox.dialogservice.exception.NotFoundException;
 import ru.skillbox.dialogservice.mapper.DialogMapper;
-import ru.skillbox.dialogservice.model.dto.*;
+import ru.skillbox.dialogservice.model.dto.DialogDto;
 import ru.skillbox.dialogservice.model.entity.Dialog;
 import ru.skillbox.dialogservice.repository.DialogRepository;
 
@@ -23,7 +23,8 @@ public class DialogService {
     private final DialogRepository dialogRepository;
     private final MessageService messageService;
     private final DialogMapper dialogMapper;
-
+    private static final String MEMBER_1 = "member1Id";
+    private static final String MEMBER_2 = "member2Id";
     public Page<DialogDto> getDialogs(int page,
                                       String sort,
                                       Long currentAuthUserId) {
@@ -45,20 +46,20 @@ public class DialogService {
     private static Specification<Dialog> getDialogSpecification(Long authUserId, Long partnerId) {
         return (root, cq, cb) -> cb.or(
                 cb.and(
-                        cb.equal(root.get("member1Id"), authUserId),
-                        cb.equal(root.get("member2Id"), partnerId)
+                        cb.equal(root.get(MEMBER_1), authUserId),
+                        cb.equal(root.get(MEMBER_2), partnerId)
                 ),
                 cb.and(
-                        cb.equal(root.get("member1Id"), partnerId),
-                        cb.equal(root.get("member2Id"), authUserId)
+                        cb.equal(root.get(MEMBER_1), partnerId),
+                        cb.equal(root.get(MEMBER_2), authUserId)
                 )
         );
     }
     private static Specification<Dialog> getAuthUserDialogsSpecification(Long authUserId) {
         return (root, cq, cb) ->
                 cb.or(
-                        cb.equal(root.get("member1Id"), authUserId),
-                        cb.equal(root.get("member2Id"), authUserId)
+                        cb.equal(root.get(MEMBER_1), authUserId),
+                        cb.equal(root.get(MEMBER_2), authUserId)
                 );
     }
 

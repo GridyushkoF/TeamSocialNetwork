@@ -9,18 +9,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skillbox.commonlib.dto.post.CommentDto;
+import ru.skillbox.commonlib.dto.post.CommentType;
 import ru.skillbox.commonlib.dto.post.PostType;
 import ru.skillbox.commonlib.dto.post.pages.PageCommentDto;
 import ru.skillbox.postservice.TestDependenciesContainer;
 import ru.skillbox.postservice.model.entity.Comment;
-import ru.skillbox.commonlib.dto.post.CommentType;
 import ru.skillbox.postservice.model.entity.Post;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
-public class CommentServiceIT extends TestDependenciesContainer {
+class CommentServiceIT extends TestDependenciesContainer {
 
 
     private Long postId;

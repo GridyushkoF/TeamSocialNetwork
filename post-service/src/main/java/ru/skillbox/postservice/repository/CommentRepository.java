@@ -7,8 +7,6 @@ import org.springframework.stereotype.Repository;
 import ru.skillbox.postservice.exception.CommentNotFoundException;
 import ru.skillbox.postservice.model.entity.Comment;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Repository
