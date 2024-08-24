@@ -37,8 +37,10 @@ yandex-cloud:
 management:
   endpoints:
     web:
-      base-path: /api/v1/actuator
-      exposure:
+      base-path: /
+      path-mapping:
+        health: /api/v1/*
+    exposure:
         include: "*"
   metrics:
     export:
