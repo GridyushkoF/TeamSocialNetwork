@@ -36,7 +36,7 @@ sonarqube-check-job:
     - unit-test-job
   cache:
     policy: pull
-    key: "${CI_COMMIT_SHORT_SHA}"
+    key: "${$CI_COMMIT_SHA}"
     paths:
       - sonar-scanner/
 
