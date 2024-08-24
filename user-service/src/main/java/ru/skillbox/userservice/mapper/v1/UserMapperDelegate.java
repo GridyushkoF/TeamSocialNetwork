@@ -1,16 +1,21 @@
-package ru.skillbox.userservice.mapper.V1;
+package ru.skillbox.userservice.mapper.v1;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.skillbox.commonlib.dto.account.AccountDto;
 import ru.skillbox.commonlib.dto.account.StatusCode;
 import ru.skillbox.userservice.model.entity.Friendship;
 import ru.skillbox.userservice.model.entity.FriendshipId;
 import ru.skillbox.userservice.model.entity.User;
 import ru.skillbox.userservice.repository.FriendshipRepository;
-
+@Component
 public abstract class UserMapperDelegate implements UserMapperV1 {
-    @Autowired
     private FriendshipRepository friendshipRepository;
+    @Autowired
+    public void setFriendshipRepository(FriendshipRepository friendshipRepository) {
+        this.friendshipRepository = friendshipRepository;
+    }
 
     @Override
     public AccountDto userToResponse(Long authUserId, User user) {

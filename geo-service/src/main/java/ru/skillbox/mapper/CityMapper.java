@@ -31,4 +31,7 @@ public class CityMapper {
     private static boolean isDivisionCity(DivisionDto division) {
         return division.getAreas().isEmpty();
     }
+    private CityMapper() {
+
+    }
 }

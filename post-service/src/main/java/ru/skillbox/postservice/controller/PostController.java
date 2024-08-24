@@ -6,14 +6,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import ru.skillbox.commonlib.dto.post.PhotoDto;
 import ru.skillbox.commonlib.dto.post.PostDto;
 import ru.skillbox.commonlib.dto.post.PostSearchDto;
 import ru.skillbox.commonlib.dto.post.PostType;
 import ru.skillbox.commonlib.dto.post.pages.PagePostDto;
 import ru.skillbox.postservice.service.PostService;
-import ru.skillbox.postservice.util.SortCreatorUtil;
+import ru.skillbox.commonlib.util.SortCreatorUtil;
 
 import java.util.List;
 import java.util.Objects;

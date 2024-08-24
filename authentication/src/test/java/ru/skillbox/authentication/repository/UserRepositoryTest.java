@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @DataJpaTest
-public class UserRepositoryTest {
+class UserRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;
@@ -22,7 +22,7 @@ public class UserRepositoryTest {
     private UserRepository userRepositoryJpa;
 
     @Test
-    public void whenGetByEmail_thenReturnUser() {
+    void whenGetByEmail_thenReturnUser() {
         User user = User.builder()
                 .firstName("Petr")
                 .lastName("Petrov")

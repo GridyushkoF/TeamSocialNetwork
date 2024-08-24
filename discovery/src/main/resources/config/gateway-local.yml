@@ -46,3 +46,5 @@ management:
                 - 0.99
 server:
   port: 9090
+app:
+  userMicroservicePath: lb://USER-SERVICE

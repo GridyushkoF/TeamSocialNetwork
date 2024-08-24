@@ -1,4 +1,4 @@
-package ru.skillbox.postservice.config.json.serializer;
+package ru.skillbox.commonlib.json.serializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

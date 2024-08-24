@@ -6,17 +6,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skillbox.commonlib.dto.post.LikeDto;
 import ru.skillbox.postservice.exception.LikeException;
-import ru.skillbox.postservice.model.entity.Comment;
 import ru.skillbox.postservice.model.entity.Like;
 import ru.skillbox.postservice.model.entity.LikeEntityType;
-import ru.skillbox.postservice.model.entity.Post;
 import ru.skillbox.postservice.repository.CommentRepository;
 import ru.skillbox.postservice.repository.LikeRepository;
 import ru.skillbox.postservice.repository.PostRepository;
 import ru.skillbox.postservice.util.CommentValidatorUtil;
 import ru.skillbox.postservice.util.PostValidatorUtil;
 
-import java.util.HashSet;
 import java.util.Optional;
 
 @Service

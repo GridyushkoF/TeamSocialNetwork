@@ -53,5 +53,7 @@ public class AccountPredicate {
         }
         return before.and(after);
     }
+    private AccountPredicate() {
 
+    }
 }
