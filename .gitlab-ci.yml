@@ -34,8 +34,8 @@ sonarqube-check-job:
   dependencies:
     - compile-job
     - unit-test-job
-
   script:
+    - sudo chmod 666 /var/run/docker.sock
     - mvn verify sonar:sonar $MAVEN_OPTS_CLI
   allow_failure: true
   rules:
@@ -45,7 +45,6 @@ sonarqube-check-job:
 deploy_docker_frontend-job:
   stage: deploy_docker_frontend
   script:
-    - sudo chmod 666 /var/run/docker.sock
     - echo "Deploying frontend..."
     - docker build --no-cache -f ./frontend/Dockerfile -t "skillboxgroup/frontend" ./frontend
     - echo "Pushing frontend image to docker hub..."
