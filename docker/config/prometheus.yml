@@ -31,12 +31,12 @@ scrape_configs:
       - targets: [ '95.174.93.240' ]
   - job_name: 'user-service_monitoring'
     scrape_interval: 15s
-    metrics_path: '/api/v1/account/actuator/prometheus'
+    metrics_path: '/api/v1/user-service-check/actuator/prometheus'
     static_configs:
       - targets: [ '95.174.93.240' ]
   - job_name: 'friend-service_monitoring'
     scrape_interval: 15s
-    metrics_path: '/api/v1/friends/actuator/prometheus'
+    metrics_path: '/api/v1/user-service-check/actuator/prometheus'
     static_configs:
       - targets: [ '95.174.93.240' ]
   - job_name: 'gateway_monitoring'
