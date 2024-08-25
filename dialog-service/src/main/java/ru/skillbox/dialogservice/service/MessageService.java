@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import ru.skillbox.commonlib.dto.statistics.CountDto;
 import ru.skillbox.dialogservice.mapper.MessageMapper;
 import ru.skillbox.dialogservice.model.dto.DialogRs;
 import ru.skillbox.dialogservice.model.dto.MessageDto;
@@ -53,11 +54,11 @@ public class MessageService {
         this.dialogService = dialogService;
     }
 
-    public DialogRs getUnread(Long authUserId) {
-        List<Message> messages = messageRepository
-                .findAll(getAuthUserUnreadMessagesSpecification(authUserId));
-        log.info("Get unread messages - {}", messages);
-        return new DialogRs(messageMapper.toDtoList(messages));
+    public CountDto getUnread(Long authUserId) {
+        int messagesAmount = Integer.parseInt(String.valueOf(messageRepository
+                .count(getAuthUserUnreadMessagesSpecification(authUserId))));
+        log.info("Get unread messages amount - {}", messagesAmount);
+        return new CountDto(messagesAmount);
     }
 
     public Page<MessageDto> getMessages(Long authUserId, Long conversationPartnerId,

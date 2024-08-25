@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import ru.skillbox.commonlib.dto.statistics.CountDto;
 import ru.skillbox.dialogservice.model.dto.DialogDto;
 import ru.skillbox.dialogservice.model.dto.DialogRs;
 import ru.skillbox.dialogservice.model.dto.MessageDto;
@@ -35,7 +36,7 @@ public class DialogController {
         return dialogService.getDialogs(page, sort, currentAuthUserId);
     }
     @GetMapping("/unread")
-    public DialogRs getUnread (
+    public CountDto getUnread (
             HttpServletRequest request
     ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));

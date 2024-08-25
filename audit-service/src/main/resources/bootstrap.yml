@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: audit-service
+  profiles:
+    active: local
+  cloud:
+    config:
+      uri: ${CONFIG_URI:http://localhost:8761}
+      fail-fast: true
+    stream:
+      function:
+        definition: auditEventSubscriber
+      bindings:
+        auditEventSubscriber-in-0:
+          destination: audit
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
+app:
+  apiPreifx: /api/v1
+
+
+# could be used for debugging
+#logging:
+#  level:
+#    org:
+#      springframework: TRACE
+

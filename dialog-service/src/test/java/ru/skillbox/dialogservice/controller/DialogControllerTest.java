@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import ru.skillbox.commonlib.dto.statistics.CountDto;
 import ru.skillbox.dialogservice.model.dto.DialogDto;
 import ru.skillbox.dialogservice.model.dto.DialogRs;
 import ru.skillbox.dialogservice.model.dto.MessageDto;
@@ -123,14 +124,14 @@ class DialogControllerTest {
     void testGetUnread() throws Exception {
 
         Mockito.when(messageService.getUnread(1L))
-                .thenReturn(new DialogRs(messageDtoList));
+                .thenReturn(new CountDto(messageDtoList.size()));
         mvc.perform(
                         get("/api/v1/dialogs/unread").header("id", 1)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(authenticated())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(messageDto.getMessageText())));
+                .andExpect(content().string(containsString("\"count\":1")));
 
         Mockito.verify(messageService, Mockito.times(1))
                 .getUnread(1L);

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import ru.skillbox.commonlib.dto.statistics.CountDto;
 import ru.skillbox.dialogservice.model.dto.DialogRs;
 import ru.skillbox.dialogservice.model.dto.MessageDto;
 import ru.skillbox.dialogservice.model.entity.Message;
@@ -54,11 +55,9 @@ class MessageServiceTest {
 
     @Test
     void testGetUnread() {
-        DialogRs dialogRs = messageService.getUnread(2L);
-        assertNotNull(dialogRs);
-        assertEquals("test message", dialogRs.getContent().get(0).getMessageText());
-        List<MessageDto> messages = dialogRs.getContent();
-        assertThrows(IndexOutOfBoundsException.class, () -> messages.get(1));
+        CountDto unreadMessagesAmount = messageService.getUnread(2L);
+        assertNotNull(unreadMessagesAmount);
+        assertEquals(1, unreadMessagesAmount.getCount());
     }
 
     @Test
@@ -103,14 +102,12 @@ class MessageServiceTest {
                 .build();
         messageRepository.save(message);
 
-        DialogRs dialogRs = messageService.getUnread(1L);
-        assertNotNull(dialogRs);
-        assertEquals("test response", dialogRs.getContent().get(0).getMessageText());
-        assertEquals(1, dialogRs.getContent().size());
+        CountDto unreadMessagesAmount = messageService.getUnread(1L);
+        assertEquals(1, unreadMessagesAmount.getCount());
 
         messageService.updateDialogMessages(1L, 1L);
 
-        dialogRs = messageService.getUnread(1L);
-        assertEquals(0, dialogRs.getContent().size());
+        CountDto newUnreadMessagesAmount = messageService.getUnread(1L);
+        assertEquals(0, newUnreadMessagesAmount.getCount());
     }
 }
