@@ -86,7 +86,7 @@ deploy_prod-job:
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/geo-service:0.0.1-SNAPSHOT"
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/gateway:0.0.1-SNAPSHOT"
     - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/frontend:latest --force"
-    - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml up -d --force-recreate"
+    - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml up -d --force-recreate --remove-orphans"
     - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.services.yml up -d"
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
