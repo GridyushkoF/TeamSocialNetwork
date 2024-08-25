@@ -5,7 +5,7 @@ services:
       - "5432:5432"
     restart: always
     environment:
-      - POSTGRES_MULTIPLE_DATABASES="user_db","post_db","dialog_db","notification_db"
+      - POSTGRES_DB=global_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
@@ -73,6 +73,17 @@ services:
         aliases:
           - prometheus
     restart: on-failure
+  frontend:
+    build:
+      context: ../frontend/
+      no_cache: true
+    image: skillgroup35/frontend
+    ports:
+      - "8099:80"
+    tty: true
+    restart: always
+    volumes:
+      - ./nginx-config:/etc/nginx/conf.d
 
 volumes:
   kafka:

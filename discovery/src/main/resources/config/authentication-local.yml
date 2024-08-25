@@ -2,7 +2,7 @@ spring:
   application:
     name: authentication
   datasource:
-    url: jdbc:postgresql://${POSTGRESQL:localhost}:5432/user_db
+    url: jdbc:postgresql://${POSTGRESQL:localhost}:5432/global_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver

@@ -50,6 +50,7 @@
         <module>gateway</module>
         <module>admin-service</module>
         <module>geo-service</module>
+        <module>audit-service</module>
         <module>jacoco-aggregator</module>
     </modules>
 
