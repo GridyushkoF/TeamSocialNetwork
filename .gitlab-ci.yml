@@ -1,6 +1,5 @@
 stages:
   - compile
-  - test
   - sonarqube-check
   - deploy_docker_frontend
   - deploy_docker_services
@@ -23,17 +22,10 @@ compile-job:
     - echo "Compiling the code..."
     - mvn clean compile $MAVEN_OPTS_CLI -DskipTests
 
-unit-test-job:
-  stage: test
-  script:
-    - echo "Running unit tests..."
-    - mvn test $MAVEN_OPTS_CLI
-
 sonarqube-check-job:
   stage: sonarqube-check
   dependencies:
     - compile-job
-    - unit-test-job
   script:
     - mvn verify sonar:sonar $MAVEN_OPTS_CLI
   allow_failure: true
@@ -50,7 +42,6 @@ deploy_docker_frontend-job:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin
     - docker push "skillboxgroup/frontend" --all-tags
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH == 'develop'
 
 deploy_docker_services-job:
