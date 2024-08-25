@@ -59,6 +59,7 @@ services:
         aliases:
           - grafana
     restart: on-failure
+    user: "0"
 
   prometheus:
     image: prom/prometheus
