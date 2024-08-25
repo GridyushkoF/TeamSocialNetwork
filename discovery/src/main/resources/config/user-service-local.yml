@@ -38,7 +38,7 @@ management:
   endpoints:
     web:
       base-path: /api/v1/account/actuator
-    exposure:
+      exposure:
         include: "*"
   metrics:
     export:
