@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.skillbox.commonlib.notification.NotificationStatus;
+import ru.skillbox.commonlib.event.notification.NotificationStatus;
 import ru.skillbox.notificationservice.mapper.v1.NotificationMapperV1;
 import ru.skillbox.notificationservice.mapper.v1.SettingsMapperV1;
 import ru.skillbox.notificationservice.model.dto.*;

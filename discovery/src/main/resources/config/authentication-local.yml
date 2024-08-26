@@ -23,6 +23,16 @@ spring:
     username: ru.kirill.service@yandex.ru
     password: kfixqwdiisdphnuq
 
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
+    topic: audit
+  cloud:
+    function:
+      definition: auditEventPublisher
+    bindings:
+      auditEventPublisher-out-0:
+        destination: audit
+
 eureka:
   client:
     serviceUrl:

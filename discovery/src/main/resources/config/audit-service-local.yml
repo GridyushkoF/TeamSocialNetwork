@@ -20,6 +20,10 @@ spring:
   web:
     resources:
       add-mappings: true
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
+    topic: audit
+
 eureka:
   client:
     serviceUrl:

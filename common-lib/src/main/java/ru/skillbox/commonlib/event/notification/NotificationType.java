@@ -1,4 +1,4 @@
-package ru.skillbox.commonlib.notification;
+package ru.skillbox.commonlib.event.notification;
 
 public enum NotificationType {
     FRIEND_REQUEST,

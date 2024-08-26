@@ -9,10 +9,12 @@ spring:
       fail-fast: true
     stream:
       function:
-        definition: postEventPublisher
+        definition: postEventPublisher;auditEventPublisher
       bindings:
         postEventPublisher-out-0:
           destination: notifications
+        auditEventPublisher-out-0:
+          destination: audit
 
 eureka:
   client:

@@ -15,9 +15,11 @@ import ru.skillbox.authentication.model.entity.Role;
 import ru.skillbox.authentication.model.entity.User;
 import ru.skillbox.authentication.model.web.AuthenticationRequest;
 import ru.skillbox.authentication.model.web.AuthenticationResponse;
+import ru.skillbox.authentication.processor.AuditProcessor;
 import ru.skillbox.authentication.repository.UserRepository;
 import ru.skillbox.authentication.service.security.AppUserDetails;
 import ru.skillbox.authentication.service.security.jwt.JwtService;
+import ru.skillbox.commonlib.event.audit.ActionType;
 
 @Component
 @RequiredArgsConstructor
@@ -27,6 +29,7 @@ public class AuthenticationService  {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final AuditProcessor auditProcessor;
 
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest){
@@ -65,6 +68,8 @@ public class AuthenticationService  {
                 .isDeleted(false)
                 .build();
 
-        userRepository.save(user);
+        User newUser = userRepository.save(user);
+
+        auditProcessor.process(newUser, ActionType.CREATE, newUser.getId());
     }
 }

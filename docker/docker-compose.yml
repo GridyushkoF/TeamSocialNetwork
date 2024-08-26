@@ -9,7 +9,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - ./pg-init-scripts:/docker-entrypoint-initdb.d
       - database-data:/var/lib/postgresql/data/
 
   redis:
@@ -73,17 +72,6 @@ services:
         aliases:
           - prometheus
     restart: on-failure
-  frontend:
-    build:
-      context: ../frontend/
-      no_cache: true
-    image: skillgroup35/frontend
-    ports:
-      - "8099:80"
-    tty: true
-    restart: always
-    volumes:
-      - ./nginx-config:/etc/nginx/conf.d
 
 volumes:
   kafka:

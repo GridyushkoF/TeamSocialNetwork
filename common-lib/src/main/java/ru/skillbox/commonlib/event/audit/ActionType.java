@@ -1,4 +1,4 @@
-package ru.skillbox.auditservice.model.entity;
+package ru.skillbox.commonlib.event.audit;
 
 public enum ActionType {
     CREATE,

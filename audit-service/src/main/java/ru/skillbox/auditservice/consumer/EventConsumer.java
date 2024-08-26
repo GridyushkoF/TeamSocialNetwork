@@ -1,4 +1,4 @@
-package ru.skillbox.notificationservice.consumer;
+package ru.skillbox.auditservice.consumer;
 
 
 import ru.skillbox.commonlib.event.Event;
