@@ -61,3 +61,5 @@ management:
                 - 0.99
 server:
   port: 0
+app:
+  apiPrefix: /api/v1
