@@ -1,4 +1,4 @@
-package ru.skillbox.userservice.controller;
+package ru.skillbox.userservice.service.specifiaction_api;
 
 import ru.skillbox.userservice.model.entity.User;
 

@@ -49,7 +49,7 @@ class DialogControllerTest {
 
     @Configuration
     @ComponentScan(basePackageClasses = {DialogController.class})
-    public static class TestConf {
+    public static class TestConfig {
     }
 
     private DialogDto dialogDto;

@@ -1,0 +1,19 @@
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  codec:
+    max-in-memory-size: 1048576
+  cloud:
+    config:
+      enabled: false
+  liquibase:
+    enabled: false
+  application:
+    name: geo-service
+  profiles:
+    active: test
+eureka:
+  client:
+    enabled: false

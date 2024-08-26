@@ -10,14 +10,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import ru.skillbox.commonlib.dto.post.PostType;
-import ru.skillbox.postservice.mapper.PostMapper;
-import ru.skillbox.commonlib.dto.post.PhotoDto;
 import ru.skillbox.commonlib.dto.post.PostDto;
 import ru.skillbox.commonlib.dto.post.PostSearchDto;
+import ru.skillbox.commonlib.dto.post.PostType;
+import ru.skillbox.commonlib.dto.post.ReactionDto;
 import ru.skillbox.commonlib.dto.post.pages.PagePostDto;
+import ru.skillbox.postservice.mapper.PostMapper;
 import ru.skillbox.postservice.mapper.PostMapperDecorator;
+import ru.skillbox.postservice.model.entity.Like;
 import ru.skillbox.postservice.model.entity.LikeEntityType;
 import ru.skillbox.postservice.model.entity.Post;
 import ru.skillbox.postservice.processor.PostProcessor;
@@ -28,10 +28,9 @@ import ru.skillbox.postservice.service.specification_api.PostSpecificationServic
 import ru.skillbox.postservice.util.ColumnsUtil;
 import ru.skillbox.postservice.util.PostValidatorUtil;
 
-import java.io.File;
-import java.time.*;
+import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -55,7 +54,7 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost(PostDto postToUpdate, Long authUserId) {
+    public Post updatePost(PostDto postToUpdate, Long authUserId) {
         postValidator.throwAccessExceptionIfUserNotAuthor(postToUpdate, authUserId);
         postValidator.throwExceptionIfPostNotValid(postToUpdate.getId());
         Post existingPost = postRepository.getPostByIdOrThrowException(postToUpdate.getId());
@@ -65,6 +64,7 @@ public class PostService {
         existingPost.setTags(postToUpdate.getTags() != null ? postMapperDecorator.convertTagsAndGet(postToUpdate, existingPost).getTags() : existingPost.getTags());
         postRepository.save(existingPost);
         log.info("post with id " + postToUpdate.getId() + " was updated by postDto: " + postToUpdate);
+        return existingPost;
     }
 
 
@@ -90,8 +90,14 @@ public class PostService {
         List<PostDto> content = postsPage.get().map(postMapper::postToPostDto).toList();
         content = content.stream()
                 .peek(postDto -> {
-                    boolean myLike = likeRepository.existsByEntityTypeAndEntityIdAndUserId(LikeEntityType.POST, postDto.getId(), userId);
-                    postDto.setMyLike(myLike);
+                    List<ReactionDto> allReactionsOnPost = likeRepository.findReactionsGroupedByType(
+                            LikeEntityType.POST,
+                            postDto.getId()
+                    );
+                    postDto.setReactions(allReactionsOnPost);
+                    Optional<Like> myLike = likeRepository.findByEntityTypeAndEntityIdAndUserId(LikeEntityType.POST, postDto.getId(), userId);
+                    postDto.setMyLike(myLike.isPresent());
+                    myLike.ifPresent(like -> postDto.setMyReaction(like.getReactionType()));
                     Long likesAmount = likeRepository.countAllByEntityTypeAndEntityId(LikeEntityType.POST, postDto.getId());
                     postDto.setLikeAmount(likesAmount);
                     Long commentsCount = commentRepository.countByPostId(postDto.getId());
@@ -117,7 +123,7 @@ public class PostService {
     }
 
     @Transactional
-    public void createNewPost(PostDto postDto, HttpServletRequest request) {
+    public Post createNewPost(PostDto postDto, HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
         if (postDto.getPublishDate() != null) {
             postDto.setType(PostType.QUEUED);
@@ -132,6 +138,7 @@ public class PostService {
         if (newPost.getType().equals(PostType.POSTED)) {
             processor.process(newPost);
         }
+        return newPost;
     }
 
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
@@ -144,27 +151,6 @@ public class PostService {
                     log.info("post updated by scheduler " + newPost);
                     processor.process(newPost);
                 });
-    }
-
-    public PhotoDto uploadImage(MultipartFile multipartFile) {
-        //demo
-        try {
-            File imagesDir = new File("/images/");
-            if (!imagesDir.exists()) {
-                imagesDir.mkdir();
-            }
-            String originalFileName = multipartFile.getOriginalFilename();
-            assert originalFileName != null;
-            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-            String newFileName = UUID.randomUUID() + fileExtension;
-            String filePath = imagesDir.getPath() + File.separator + newFileName;
-
-            multipartFile.transferTo(new File(filePath));
-            return new PhotoDto(newFileName);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("error when saving file");
-        }
     }
 
 }

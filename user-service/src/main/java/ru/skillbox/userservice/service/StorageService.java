@@ -1,55 +1,63 @@
-
 package ru.skillbox.userservice.service;
 
-
-import org.springframework.scheduling.annotation.Async;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skillbox.commonlib.dto.account.AccountDto;
-import ru.skillbox.userservice.exception.BadRequestException;
 
-
-import java.io.IOException;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 @Service
-public class StorageService{
+@Log4j2
+@RequiredArgsConstructor
+public class StorageService {
 
-    // private final ImageRepository imageRepository;
+    private final AmazonS3 amazonS3Client;
+    @Value("${yandex-cloud.bucket-name}")
+    private String bucketName;
 
-    @Async
-    @Transactional
-    public CompletableFuture<AccountDto> loadImageToStorage(MultipartFile file) {
-        if (file.isEmpty()) {
-            return CompletableFuture.failedFuture(
-                    new BadRequestException("Empty file")
-            );
+    public String uploadFileAndGetLink(MultipartFile multipartFile) {
+        String fileUrl = "";
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            String originalFileName = multipartFile.getOriginalFilename();
+            String hashedFilename = hashFilename(originalFileName);
+            fileUrl = "https://storage.yandexcloud.net/" + bucketName + "/" + hashedFilename;
+            uploadFileToS3Bucket(hashedFilename, inputStream, multipartFile.getSize());
+        } catch (Exception e) {
+            log.error("Error uploading file: ", e);
         }
-        //Image image = new Image();
-        //image.setImageTitle(file.getOriginalFilename());
-        if (Objects.requireNonNull(file.getContentType()).contains("png")) {
-            //image.setImageType(ImageType.PNG);
-        } else if (Objects.requireNonNull(file.getContentType()).contains("jpeg")) {
-            //image.setImageType(ImageType.JPEG);
-        } else {
-            return CompletableFuture.failedFuture(
-                    new BadRequestException("incorrect file type")
-            );
-        }
+        return fileUrl;
+    }
+
+    private String hashFilename(String filename) {
         try {
-            byte[] fileBytes = file.getBytes();
-            //image.setImageBogy(fileBytes);
-            return CompletableFuture.completedFuture(
-                    AccountDto.builder().build()
-                    //ResponseImageData.of(imageRepository.save(image))
-            );
-        } catch (IOException ex) {
-            return CompletableFuture.failedFuture(
-                    new BadRequestException("Could not store file " + file.getOriginalFilename() + ". Please try again!")
-            );
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(filename.getBytes(StandardCharsets.UTF_8));
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(hash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error hashing filename", e);
         }
     }
 
+    private void uploadFileToS3Bucket(String fileName, InputStream inputStream, long size) {
+        try {
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(size);
+            amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, metadata));
+            log.info("File uploaded successfully: " + fileName);
+        } catch (AmazonServiceException e) {
+            log.error("AmazonServiceException: ", e);
+        } catch (Exception e) {
+            log.error("Exception while uploading file: ", e);
+        }
+    }
 }

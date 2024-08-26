@@ -34,5 +34,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("from User u where day(u.birthDate) = day(CURRENT_DATE) and month(u.birthDate) = month(CURRENT_DATE)")
     List<User> findBirthdayUsers(LocalDateTime CURRENT_DATE);
-
+    Long countByIsBlocked(boolean isBlocked);
 }

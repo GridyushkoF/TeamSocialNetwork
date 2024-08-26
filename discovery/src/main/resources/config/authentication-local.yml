@@ -2,7 +2,7 @@ spring:
   application:
     name: authentication
   datasource:
-    url: jdbc:postgresql://localhost:5432/user_db
+    url: jdbc:postgresql://${POSTGRESQL:localhost}:5432/user_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -22,9 +22,6 @@ spring:
     protocol: smtps
     username: ru.kirill.service@yandex.ru
     password: kfixqwdiisdphnuq
-
-server:
-  port: 0
 
 eureka:
   client:
@@ -46,6 +43,7 @@ security:
 management:
   endpoints:
     web:
+      base-path: /api/v1/auth/actuator
       exposure:
         include: "*"
   metrics:
@@ -59,3 +57,18 @@ management:
       show-details: always
     metrics:
       enabled: true
+      distribution:
+        percentiles-histogram:
+          http:
+            server:
+              requests:
+                true
+        percentiles:
+          http:
+            server:
+              requests:
+                - 0.5
+                - 0.9
+                - 0.99
+server:
+  port: 0

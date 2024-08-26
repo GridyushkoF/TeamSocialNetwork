@@ -35,23 +35,6 @@ public class AdminService {
         return getStatisticsByPeriod(periodRequestDto,request,"/api/v1/post/statistic/like",AdminStatisticsDto.class);
     }
 
-    public void blockOrUnblockUser(
-            Long userId,
-            boolean shouldBlock,
-            HttpServletRequest request) {
-        String path = "/api/v1/account/admin-api/block/" + userId;
-        WebClient.RequestHeadersSpec<?> query;
-        if (shouldBlock) {
-            query = webClient.put()
-                    .uri(path);
-        } else {
-            query = webClient.delete()
-                    .uri(path);
-        }
-
-        query = query.header("Authorization", request.getHeader("Authorization"));
-        query.retrieve();
-    }
 
     public <T> T getStatisticsByPeriod(PeriodRequestDto periodRequestDto,
                                                     HttpServletRequest request,

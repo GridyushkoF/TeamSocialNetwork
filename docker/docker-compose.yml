@@ -12,18 +12,6 @@ services:
       - ./pg-init-scripts:/docker-entrypoint-initdb.d
       - database-data:/var/lib/postgresql/data/
 
-  frontend:
-    build:
-      context: ../frontend/
-      no_cache: true
-    image: skillgroup35/frontend
-    ports:
-      - "8099:80"
-    tty: true
-    restart: always
-    volumes:
-      - ./nginx-config:/etc/nginx/conf.d
-
   redis:
     image: redis:latest
     restart: always
@@ -32,7 +20,6 @@ services:
     volumes:
       - ./redis/data:/root/redis
     environment:
-      - REDIS_PASSWORD=redis
       - REDIS_PORT=6379
       - REDIS_DATABASES=1
 
@@ -68,7 +55,32 @@ services:
     environment:
       - KAFKA_CLUSTERS_0_NAME=local
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
-
+  grafana:
+    build: './config/grafana'
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      monitoring:
+        aliases:
+          - grafana
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 3001:9090
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus:/prometheus
+    networks:
+      monitoring:
+        aliases:
+          - prometheus
 volumes:
   kafka:
   database-data:
+networks:
+  monitoring:

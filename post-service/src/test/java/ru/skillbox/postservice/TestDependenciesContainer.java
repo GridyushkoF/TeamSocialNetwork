@@ -19,6 +19,9 @@ import ru.skillbox.postservice.repository.CommentRepository;
 import ru.skillbox.postservice.repository.LikeRepository;
 import ru.skillbox.postservice.repository.PostRepository;
 import ru.skillbox.postservice.repository.TagRepository;
+import ru.skillbox.postservice.service.CommentService;
+import ru.skillbox.postservice.service.LikeService;
+import ru.skillbox.postservice.service.PostService;
 
 import java.util.List;
 
@@ -40,6 +43,12 @@ public class TestDependenciesContainer {
     protected PostMapper postMapper;
     @Autowired
     protected CommentMapper commentMapper;
+    @Autowired
+    protected PostService postService;
+    @Autowired
+    protected CommentService commentService;
+    @Autowired
+    protected LikeService likeService;
 
     protected MockMvc mockMvc;
 

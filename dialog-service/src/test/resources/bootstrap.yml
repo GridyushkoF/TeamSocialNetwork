@@ -32,6 +32,6 @@ eureka:
     enabled: false
 
 app:
-  feignClient:
-    url: "http://localhost:9090/api/v1"
+  gateway:
+    url: http://localhost:9090
   apiPrefix: /api/v1

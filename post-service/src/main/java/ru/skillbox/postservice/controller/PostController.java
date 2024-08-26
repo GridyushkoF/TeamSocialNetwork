@@ -78,13 +78,5 @@ public class PostController {
         postService.createNewPost(postDto, request);
     }
 
-    @PostMapping("/storagePostPhoto")
-    public ResponseEntity<PhotoDto> uploadPhotoToStorage(
-            @RequestParam(value = "file") MultipartFile file
-    ) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(postService.uploadImage(file));
-    }
-
 }
 

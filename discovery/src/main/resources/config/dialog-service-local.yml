@@ -3,7 +3,7 @@ spring:
     name: dialog-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/dialog_db
+    url: jdbc:postgresql://${POSTGRESQL:localhost}:5432/dialog_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -23,13 +23,46 @@ spring:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
     topic: notifications
 
-server:
-  port: 0
+
 app:
   apiPrefix: /api/v1
+  gateway:
+    url: ${GATEWAY_URI:http://localhost:9090}
 
 eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka/}
     enabled: true
+management:
+  endpoints:
+    web:
+      base-path: /api/v1/dialogs/actuator
+      exposure:
+        include: "*"
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+      distribution:
+        percentiles-histogram:
+          http:
+            server:
+              requests:
+                true
+        percentiles:
+          http:
+            server:
+              requests:
+                - 0.5
+                - 0.9
+                - 0.99
+server:
+  port: 0

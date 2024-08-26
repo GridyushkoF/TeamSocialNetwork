@@ -12,6 +12,7 @@ import ru.skillbox.postservice.service.LikeService;
 @RequestMapping("${app.apiPrefix}/post")
 public class LikeController {
     private final LikeService likeService;
+
     @PostMapping("/{id}/like")
     @ResponseStatus(HttpStatus.CREATED)
     public void likePost(
@@ -20,7 +21,7 @@ public class LikeController {
             HttpServletRequest request
     ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        likeService.likePost(postId,likeDto,currentAuthUserId);
+        likeService.likePost(postId, likeDto, currentAuthUserId);
     }
 
     @DeleteMapping("/{id}/like")
@@ -30,7 +31,7 @@ public class LikeController {
             HttpServletRequest request
     ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        likeService.unlikePost(postId,currentAuthUserId);
+        likeService.unlikePost(postId, currentAuthUserId);
     }
 
     @PostMapping("/{id}/comment/{commentId}/like")
@@ -41,7 +42,7 @@ public class LikeController {
             HttpServletRequest request
     ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        likeService.likeComment(postId,commentId,currentAuthUserId);
+        likeService.likeComment(postId, commentId, currentAuthUserId);
     }
 
     @DeleteMapping("/{id}/comment/{commentId}/like")
@@ -52,6 +53,6 @@ public class LikeController {
             HttpServletRequest request
     ) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        likeService.unlikeComment(postId,commentId,currentAuthUserId);
+        likeService.unlikeComment(postId, commentId, currentAuthUserId);
     }
 }

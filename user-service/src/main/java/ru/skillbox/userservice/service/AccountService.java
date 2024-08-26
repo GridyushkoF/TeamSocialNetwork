@@ -1,11 +1,14 @@
 package ru.skillbox.userservice.service;
 
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skillbox.commonlib.dto.account.AccountByFilterDto;
@@ -17,7 +20,7 @@ import ru.skillbox.commonlib.dto.statistics.DateCountPointDto;
 import ru.skillbox.commonlib.dto.statistics.PeriodRequestDto;
 import ru.skillbox.commonlib.dto.statistics.UsersStatisticsDto;
 import ru.skillbox.commonlib.util.admin.AdminStatisticsRepository;
-import ru.skillbox.userservice.controller.AccountPredicate;
+import ru.skillbox.userservice.service.specifiaction_api.AccountPredicate;
 import ru.skillbox.userservice.exception.AccountAlreadyExistsException;
 import ru.skillbox.userservice.exception.NoSuchAccountException;
 import ru.skillbox.userservice.exception.NotAuthException;
@@ -25,18 +28,26 @@ import ru.skillbox.userservice.mapper.V1.UserMapperV1;
 import ru.skillbox.userservice.model.entity.User;
 import ru.skillbox.userservice.repository.UserRepository;
 import ru.skillbox.userservice.util.BeanUtil;
-
+import io.micrometer.core.instrument.MeterRegistry;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class AccountService {
 
     private final UserRepository userRepository;
     private final UserMapperV1 userMapper;
     private final AdminStatisticsRepository adminStatisticsRepository;
+    private final MeterRegistry meterRegistry;
+    @Scheduled(fixedRate = 5000)
+    public void updateBlockedUsersAmountMetrics() {
+        Long blockedUsersAmount = userRepository.countByIsBlocked(true);
+        log.info("Blocked users amount: " + blockedUsersAmount);
+        meterRegistry.gauge("users.blocked", blockedUsersAmount);
+    }
 
     public String recoveryUserAccount(AccountRecoveryRq recoveryRequest) {
         return recoveryRequest.getEmail();
@@ -70,14 +81,13 @@ public class AccountService {
         return "Account with id: " + userId + " deleted";
     }
 
+    @Transactional
     public String blockAccount(boolean block, long id) {
-        if (block) {
-            // logic with DB
-            return "blocked";
-        } else {
-            // logic with DB
-            return "unblocked";
-        }
+        userRepository.findById(id).ifPresent(user -> {
+            user.setBlocked(block);
+            userRepository.save(user);
+        });
+        return "Block or unblock ready!";
     }
 
     public Page<AccountDto> getAllAccounts(Pageable page, Long authUserId) {
@@ -132,11 +142,7 @@ public class AccountService {
         return new PageImpl<>(pageList, nextPage, users.size());
     }
     public UsersStatisticsDto getUsersStatistics(PeriodRequestDto periodRequestDto) {
-        long usersAmount = adminStatisticsRepository.countEntities(
-                "User",
-                "regDate",
-                periodRequestDto.getFirstMonth(),
-                periodRequestDto.getLastMonth());
+        long usersAmount = userRepository.count();
         List<DateCountPointDto> dateCountStatistics = adminStatisticsRepository.getDateCountStatistics(
                 "regDate",
                 "MONTH",
