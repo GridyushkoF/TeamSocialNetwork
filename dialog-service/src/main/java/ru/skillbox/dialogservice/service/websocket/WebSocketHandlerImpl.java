@@ -3,6 +3,7 @@ package ru.skillbox.dialogservice.service.websocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
@@ -10,6 +11,8 @@ import org.springframework.web.socket.WebSocketSession;
 import ru.skillbox.dialogservice.model.dto.ConversationMessageDto;
 import ru.skillbox.dialogservice.model.enums.MessageType;
 import ru.skillbox.dialogservice.service.MessageService;
+import ru.skillbox.dialogservice.service.feign.DialogFeignClient;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,8 +23,9 @@ public class WebSocketHandlerImpl implements WebSocketHandler {
 
     private final ObjectMapper mapper;
     private final MessageService service;
-
+    private final DialogFeignClient dialogFeignClient;
     private final Map<Long, WebSocketSession> sessions = new HashMap<>();
+
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
@@ -54,11 +58,19 @@ public class WebSocketHandlerImpl implements WebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) {
-
+        dialogFeignClient.closeConnection(Long.parseLong(session.getPrincipal().getName()));
     }
 
     @Override
     public boolean supportsPartialMessages() {
         return false;
     }
+
+//
+//    private void findUserByIdAndChangeStatusToFalse(Long id) {
+//        dialogFeignClient.closeConnection(id);
+//
+//    }
+
+
 }
