@@ -177,7 +177,7 @@
 				<artifactId>dockerfile-maven-plugin</artifactId>
 				<version>1.4.13</version>
 				<configuration>
-					<repository>skillboxgroup/user-service</repository>
+					<repository>skillboxgroup/audit-service</repository>
 				</configuration>
 			</plugin>
 			<plugin>
