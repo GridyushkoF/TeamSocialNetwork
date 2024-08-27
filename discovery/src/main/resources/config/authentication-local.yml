@@ -42,7 +42,7 @@ eureka:
 service:
   recovery:
     salt: hdsllLkjhHvKkjhgxgfdGkLGJfyfXFzsSgrT89JCgfDFtfggGyGFgfc
-    uri: http://localhost:8099/change-password/{recoveryLink}
+    uri: http://95.174.92.252/change-password/{recoveryLink}
 
 
 security:

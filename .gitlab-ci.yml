@@ -58,6 +58,7 @@ deploy_docker_services-job:
     - docker push "skillboxgroup/gateway" --all-tags
     - docker push "skillboxgroup/admin-service" --all-tags
     - docker push "skillboxgroup/geo-service" --all-tags
+    - docker push "skillboxgroup/audit-service" --all-tags
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH == 'develop'
@@ -76,17 +77,6 @@ deploy_prod-job:
     - scp -r ./docker $PROD_USER@$PROD_HOST:~
     - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.services.yml down"
     - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml down"
-#    - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/discovery:0.0.1-SNAPSHOT"
-#    - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/authentication:0.0.1-SNAPSHOT"
-#    - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/user-service:0.0.1-SNAPSHOT"
-#    - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/post-service:0.0.1-SNAPSHOT"
-#    - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/dialog-service:0.0.1-SNAPSHOT"
-#    - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/notification-service:0.0.1-SNAPSHOT"
-#    - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/admin-service:0.0.1-SNAPSHOT"
-#    - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/geo-service:0.0.1-SNAPSHOT"
-#    - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/audit-service:0.0.1-SNAPSHOT"
-#    - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/gateway:0.0.1-SNAPSHOT"
-#    - ssh $PROD_USER@$PROD_HOST "docker image rm skillboxgroup/frontend:latest --force"
     - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml up -d --force-recreate --remove-orphans"
     - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.services.yml up -d --force-recreate --remove-orphans"
   rules:
