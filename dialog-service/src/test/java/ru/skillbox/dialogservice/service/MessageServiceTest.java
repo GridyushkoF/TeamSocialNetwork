@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import ru.skillbox.commonlib.dto.statistics.CountDto;
-import ru.skillbox.dialogservice.model.dto.DialogRs;
 import ru.skillbox.dialogservice.model.dto.MessageDto;
 import ru.skillbox.dialogservice.model.entity.Message;
 import ru.skillbox.dialogservice.model.enums.MessageStatus;
@@ -18,7 +17,8 @@ import ru.skillbox.dialogservice.repository.MessageRepository;
 import java.time.Instant;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" })

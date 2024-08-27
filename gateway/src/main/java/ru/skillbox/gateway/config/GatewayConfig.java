@@ -1,23 +1,28 @@
 package ru.skillbox.gateway.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.skillbox.gateway.security.AdminAuthFilter;
 import ru.skillbox.gateway.security.AuthenticationFilter;
 
 @Configuration
 public class GatewayConfig {
 
     private final AuthenticationFilter filter;
+    private final AdminAuthFilter adminFilter;
     @Value("${app.userMicroservicePath}")
     private String pathToUserMicroservice;
 
     @Autowired
-    public GatewayConfig(AuthenticationFilter filter) {
+    public GatewayConfig(@Qualifier("authenticationFilter") AuthenticationFilter filter,
+                         @Qualifier("adminAuthFilter") AdminAuthFilter adminFilter) {
         this.filter = filter;
+        this.adminFilter = adminFilter;
     }
 
     @Bean
@@ -32,6 +37,11 @@ public class GatewayConfig {
                         "post_route", r -> r.path("/api/v1/tag/**")
                                 .filters(f -> f.filter(filter))
                                 .uri("lb://POST-SERVICE")
+                )
+                .route(
+                        "auth_route", r -> r.path("/api/v1/auth/**")
+                                .filters(f -> f.filter(filter))
+                                .uri("lb://AUTHENTICATION")
                 )
                 .route(
                         "auth_route", r -> r.path("/api/v1/auth/**")
@@ -75,12 +85,12 @@ public class GatewayConfig {
                 )
                 .route(
                         "admin_route", r -> r.path("/api/v1/admin-console/**")
-                                .filters(f -> f.filter(filter))
+                                .filters(f -> f.filter(filter).filter(adminFilter))
                                 .uri("lb://ADMIN-CONSOLE")
                 )
                 .route(
-                        "audit_route", r -> r.path("/api/v1/audit/**")
-                                .filters(f -> f.filter(filter))
+                        "audit-log_route", r -> r.path("/api/v1/audit/**")
+                                .filters(f -> f.filter(filter).filter(adminFilter))
                                 .uri("lb://AUDIT-SERVICE")
                 )
                 .build();

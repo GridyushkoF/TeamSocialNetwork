@@ -120,6 +120,7 @@ class PostServiceIT extends TestDependenciesContainer {
     }
 
     //-----------------------------UTIL--------------------------
+    @Override
     public PostDto generateTestPostDto() {
         return PostDto.builder()
                 .title("Test Post")

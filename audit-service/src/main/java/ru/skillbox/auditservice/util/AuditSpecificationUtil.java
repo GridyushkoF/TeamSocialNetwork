@@ -2,7 +2,6 @@ package ru.skillbox.auditservice.util;
 
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
 import ru.skillbox.auditservice.model.dto.AuditSearchFilterDto;
 import ru.skillbox.auditservice.model.entity.AuditLog;
 

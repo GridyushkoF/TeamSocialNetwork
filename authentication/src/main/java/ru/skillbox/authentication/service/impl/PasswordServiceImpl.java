@@ -12,12 +12,13 @@ import ru.skillbox.authentication.exception.IncorrectRecoveryLinkException;
 import ru.skillbox.authentication.model.dto.RecoveryPasswordRequest;
 import ru.skillbox.authentication.model.dto.SetPasswordRequest;
 import ru.skillbox.authentication.model.dto.SimpleResponse;
-import ru.skillbox.authentication.model.entity.User;
-import ru.skillbox.authentication.repository.UserRepository;
+import ru.skillbox.authentication.model.entity.sql.User;
+import ru.skillbox.authentication.repository.sql.UserRepository;
 import ru.skillbox.authentication.service.PasswordService;
-import ru.skillbox.authentication.service.utils.CryptoTool;
+import ru.skillbox.authentication.util.CryptoUtil;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -25,7 +26,7 @@ import java.util.Map;
 public class PasswordServiceImpl implements PasswordService {
 
     private final JavaMailSender javaMailSender;
-    private final CryptoTool cryptoTool;
+    private final CryptoUtil cryptoUtil;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -57,7 +58,7 @@ public class PasswordServiceImpl implements PasswordService {
     private String getMailBody(RecoveryPasswordRequest request) {
         var userOpt = userRepository.findByEmail(request.getEmail());
         if (userOpt.isPresent()) {
-            String encodedString = cryptoTool.encode(request.getTemp(), userOpt.get().getId());
+            String encodedString = cryptoUtil.encodeWithTemp(request.getTemp(), userOpt.get().getId());
             String msg  = "Для восстановления пароля перейдите по ссылке: " + activationUri;
             return msg.replace("{recoveryLink}", encodedString);
         }
@@ -68,7 +69,7 @@ public class PasswordServiceImpl implements PasswordService {
 
     @Override
     public SimpleResponse setNewPassword(String recoveryLink, SetPasswordRequest request) {
-        Map<Long, Long> decodedData = cryptoTool.decode(recoveryLink);
+        Map<Long, Long> decodedData = cryptoUtil.decodeWithTemp(recoveryLink);
         var entry = decodedData.entrySet().stream().findFirst();
         if (entry.isPresent()) {
             long id = entry.get().getValue();
@@ -78,8 +79,8 @@ public class PasswordServiceImpl implements PasswordService {
                 log.error("Действие ссылки восстановления пароля истекло");
                 throw new IncorrectRecoveryLinkException("Действие ссылки истекло");
             }
-            var userOpt = userRepository.findById(id);
-            User user = userOpt.get();
+            Optional<User> userOptional = userRepository.findById(id);
+            User user = userOptional.get();
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             userRepository.save(user);
             log.info("Пароль успешно изменён");
