@@ -18,7 +18,6 @@ import ru.skillbox.authentication.model.web.ChangeEmailRequest;
 import ru.skillbox.authentication.model.web.ChangePasswordRequest;
 import ru.skillbox.authentication.repository.nosql.EmailChangeRequestRepository;
 import ru.skillbox.authentication.repository.sql.UserRepository;
-import ru.skillbox.authentication.util.CryptoUtil;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

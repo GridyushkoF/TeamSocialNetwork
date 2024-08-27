@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import ru.skillbox.authentication.exception.AlreadyExistsException;
 import ru.skillbox.authentication.exception.IncorrectPasswordException;
 import ru.skillbox.authentication.model.dto.RegUserDto;
 import ru.skillbox.authentication.model.entity.sql.Role;
@@ -16,6 +17,7 @@ import ru.skillbox.authentication.model.entity.sql.User;
 import ru.skillbox.authentication.model.web.AuthenticationRequest;
 import ru.skillbox.authentication.model.web.AuthenticationResponse;
 import ru.skillbox.authentication.processor.AuditProcessor;
+import ru.skillbox.authentication.repository.nosql.EmailChangeRequestRepository;
 import ru.skillbox.authentication.repository.sql.UserRepository;
 import ru.skillbox.authentication.service.security.AppUserDetails;
 import ru.skillbox.authentication.service.security.jwt.JwtService;
@@ -30,6 +32,7 @@ public class AuthenticationService  {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuditProcessor auditProcessor;
+    private final EmailChangeRequestRepository emailChangeRequestRepository;
 
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest){
@@ -67,9 +70,10 @@ public class AuthenticationService  {
                 .isBlocked(false)
                 .isDeleted(false)
                 .build();
-
+        if(emailChangeRequestRepository.findByOldEmail(user.getEmail()).isEmpty()) {
+            throw new AlreadyExistsException("this email is busy, because somebody going to change email to this, try again later or connect with email owner");
+        }
         User newUser = userRepository.save(user);
-
         auditProcessor.process(newUser, ActionType.CREATE, newUser.getId());
     }
 

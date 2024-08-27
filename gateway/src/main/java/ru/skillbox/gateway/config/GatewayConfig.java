@@ -44,11 +44,6 @@ public class GatewayConfig {
                                 .uri("lb://AUTHENTICATION")
                 )
                 .route(
-                        "auth_route", r -> r.path("/api/v1/auth/**")
-                                .filters(f -> f.filter(filter))
-                                .uri("lb://AUTHENTICATION")
-                )
-                .route(
                         "account_route", r -> r.path("/api/v1/account/**")
                                 .filters(f -> f.filter(filter))
                                 .uri(pathToUserMicroservice)

@@ -10,10 +10,11 @@ services:
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
-      - DATABASE_URL=jdbc:postgresql://postgres:5432/user_db
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/global_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
       - POSTGRESQL=postgres
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     restart: on-failure
     depends_on:
       - discovery
@@ -23,7 +24,7 @@ services:
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
-      - DATABASE_URL=jdbc:postgresql://postgres:5432/dialog_db
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/global_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
       - POSTGRESQL=postgres
@@ -38,7 +39,7 @@ services:
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
-      - DATABASE_URL=jdbc:postgresql://postgres:5432/notification_db
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/global_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
       - POSTGRESQL=postgres
@@ -52,7 +53,7 @@ services:
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
-      - DATABASE_URL=jdbc:postgresql://postgres:5432/post_db
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/global_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
       - POSTGRESQL=postgres
@@ -66,7 +67,7 @@ services:
     environment:
       - CONFIG_URI=http://discovery:8761
       - EUREKA_URI=http://discovery:8761/eureka
-      - DATABASE_URL=jdbc:postgresql://postgres:5432/user_db
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/global_db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
       - POSTGRESQL=postgres
@@ -96,6 +97,20 @@ services:
     depends_on:
       - admin-service
 
+  audit-service:
+    image: skillboxgroup/audit-service:0.0.1-SNAPSHOT
+    environment:
+      - CONFIG_URI=http://discovery:8761
+      - EUREKA_URI=http://discovery:8761/eureka
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/global_db
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - POSTGRESQL=postgres
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    restart: on-failure
+    depends_on:
+      - geo-service
+
   gateway:
     image: skillboxgroup/gateway:0.0.1-SNAPSHOT
     ports:
@@ -113,6 +128,7 @@ services:
       - user-service
       - admin-service
       - geo-service
+      - audit-service
 
   frontend:
     image: skillboxgroup/frontend
