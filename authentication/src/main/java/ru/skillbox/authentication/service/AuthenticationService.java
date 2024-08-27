@@ -90,5 +90,7 @@ public class AuthenticationService  {
         User user = userRepository.findById(id).orElseThrow();
         user.setOnline(false);
         userRepository.save(user);
+
+
     }
 }
