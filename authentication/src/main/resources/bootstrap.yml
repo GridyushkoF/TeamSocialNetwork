@@ -17,9 +17,6 @@ spring:
       bindings:
         auditEventPublisher-out-0:
           destination: audit
-  kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
-    topic: audit
 
 eureka:
   client:
