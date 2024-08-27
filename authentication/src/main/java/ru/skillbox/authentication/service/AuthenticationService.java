@@ -2,7 +2,6 @@ package ru.skillbox.authentication.service;
 
 
 
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +17,7 @@ import ru.skillbox.authentication.model.dto.RegUserDto;
 import ru.skillbox.authentication.model.entity.Role;
 import ru.skillbox.authentication.model.entity.User;
 import ru.skillbox.authentication.repository.UserRepository;
-import ru.skillbox.authentication.service.security.Jwt.JwtService;
+import ru.skillbox.authentication.service.security.jwt.JwtService;
 import ru.skillbox.authentication.service.security.AppUserDetails;
 
 @Component
