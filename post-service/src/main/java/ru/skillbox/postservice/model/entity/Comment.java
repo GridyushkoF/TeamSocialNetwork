@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import ru.skillbox.commonlib.dto.post.CommentType;
+
 import java.time.ZonedDateTime;
 import java.util.Set;
 

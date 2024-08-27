@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.skillbox.commonlib.dto.post.CommentDto;
 import ru.skillbox.commonlib.dto.post.pages.PageCommentDto;
 import ru.skillbox.postservice.service.CommentService;
-import ru.skillbox.postservice.util.SortCreatorUtil;
+import ru.skillbox.commonlib.util.SortCreatorUtil;
 
 import java.util.List;
 

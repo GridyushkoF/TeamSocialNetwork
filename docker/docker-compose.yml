@@ -45,16 +45,6 @@ services:
       - kafka:/data
     restart: on-failure
 
-  # Convenient UI for Apache Kafka https://github.com/provectus/kafka-ui
-  kafka-ui:
-    image: provectuslabs/kafka-ui
-    container_name: kafka-ui
-    ports:
-      - "9999:8080"
-    restart: always
-    environment:
-      - KAFKA_CLUSTERS_0_NAME=local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
   grafana:
     build: './config/grafana'
     ports:
@@ -68,6 +58,9 @@ services:
       monitoring:
         aliases:
           - grafana
+    restart: on-failure
+    user: "0"
+
   prometheus:
     image: prom/prometheus
     ports:
@@ -79,6 +72,8 @@ services:
       monitoring:
         aliases:
           - prometheus
+    restart: on-failure
+
 volumes:
   kafka:
   database-data:

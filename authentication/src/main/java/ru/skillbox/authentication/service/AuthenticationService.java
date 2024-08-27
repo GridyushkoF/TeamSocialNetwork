@@ -12,14 +12,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.skillbox.authentication.exception.IncorrectPasswordException;
-import ru.skillbox.authentication.model.web.AuthenticationRequest;
-import ru.skillbox.authentication.model.web.AuthenticationResponse;
 import ru.skillbox.authentication.model.dto.RegUserDto;
 import ru.skillbox.authentication.model.entity.Role;
 import ru.skillbox.authentication.model.entity.User;
+import ru.skillbox.authentication.model.web.AuthenticationRequest;
+import ru.skillbox.authentication.model.web.AuthenticationResponse;
 import ru.skillbox.authentication.repository.UserRepository;
-import ru.skillbox.authentication.service.security.Jwt.JwtService;
 import ru.skillbox.authentication.service.security.AppUserDetails;
+import ru.skillbox.authentication.service.security.jwt.JwtService;
 
 @Component
 @RequiredArgsConstructor

@@ -1,0 +1,33 @@
+spring:
+  cloud:
+    config:
+      enabled: false
+  liquibase:
+    enabled: false
+  application:
+    name: user-service
+  profiles:
+    active: test
+  datasource:
+    url: jdbc:h2:mem:test_db
+    driver-class-name: org.h2.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        temp:
+          use_jdbc_metadata_defaults: false
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+eureka:
+  client:
+    enabled: false
+custom:
+  rest:
+    basePath: /api/v1
+yandex-cloud:
+  id-key: YCAJEbjmnRHm7TJgZkPR3RaHq
+  secret-key: YCPwGX7Y9t6l-Or0pEQtkoPRYkNPz3a9Pw1UxjPA
+  bucket-name: skillbox-social-network-media-bucket

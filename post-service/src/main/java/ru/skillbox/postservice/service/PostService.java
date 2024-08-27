@@ -25,7 +25,7 @@ import ru.skillbox.postservice.repository.CommentRepository;
 import ru.skillbox.postservice.repository.LikeRepository;
 import ru.skillbox.postservice.repository.PostRepository;
 import ru.skillbox.postservice.service.specification_api.PostSpecificationService;
-import ru.skillbox.postservice.util.ColumnsUtil;
+import ru.skillbox.commonlib.util.ColumnsUtil;
 import ru.skillbox.postservice.util.PostValidatorUtil;
 
 import java.time.ZonedDateTime;
@@ -89,7 +89,7 @@ public class PostService {
         Page<Post> postsPage = postRepository.findAll(postSpecification, pageable);
         List<PostDto> content = postsPage.get().map(postMapper::postToPostDto).toList();
         content = content.stream()
-                .peek(postDto -> {
+                .map(postDto -> {
                     List<ReactionDto> allReactionsOnPost = likeRepository.findReactionsGroupedByType(
                             LikeEntityType.POST,
                             postDto.getId()
@@ -102,6 +102,7 @@ public class PostService {
                     postDto.setLikeAmount(likesAmount);
                     Long commentsCount = commentRepository.countByPostId(postDto.getId());
                     postDto.setCommentsCount(commentsCount);
+                    return postDto;
                 }).toList();
         return buildPagePostDto(pageable, postsPage, content);
     }
