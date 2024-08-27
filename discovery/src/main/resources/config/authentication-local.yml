@@ -2,7 +2,7 @@ spring:
   application:
     name: authentication
   datasource:
-    url: jdbc:postgresql://${POSTGRESQL:localhost}:5432/user_db
+    url: jdbc:postgresql://${POSTGRESQL:localhost}:5432/global_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -23,6 +23,16 @@ spring:
     username: ru.kirill.service@yandex.ru
     password: kfixqwdiisdphnuq
 
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
+    topic: audit
+  cloud:
+    function:
+      definition: auditEventPublisher
+    bindings:
+      auditEventPublisher-out-0:
+        destination: audit
+
 eureka:
   client:
     serviceUrl:
@@ -32,7 +42,7 @@ eureka:
 service:
   recovery:
     salt: hdsllLkjhHvKkjhgxgfdGkLGJfyfXFzsSgrT89JCgfDFtfggGyGFgfc
-    uri: http://localhost:8099/change-password/{recoveryLink}
+    uri: http://95.174.92.252/change-password/{recoveryLink}
 
 
 security:

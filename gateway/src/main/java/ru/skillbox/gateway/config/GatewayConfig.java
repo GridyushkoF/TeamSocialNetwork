@@ -78,6 +78,11 @@ public class GatewayConfig {
                                 .filters(f -> f.filter(filter))
                                 .uri("lb://ADMIN-CONSOLE")
                 )
+                .route(
+                        "audit_route", r -> r.path("/api/v1/audit/**")
+                                .filters(f -> f.filter(filter))
+                                .uri("lb://AUDIT-SERVICE")
+                )
                 .build();
     }
 }

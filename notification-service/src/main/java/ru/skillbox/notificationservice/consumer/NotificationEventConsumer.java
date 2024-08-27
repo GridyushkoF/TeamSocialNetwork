@@ -2,7 +2,7 @@ package ru.skillbox.notificationservice.consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.skillbox.commonlib.notification.NotificationEvent;
+import ru.skillbox.commonlib.event.notification.NotificationEvent;
 import ru.skillbox.notificationservice.model.dto.NotificationInputDto;
 import ru.skillbox.notificationservice.model.entity.Settings;
 import ru.skillbox.notificationservice.repository.SettingsRepository;

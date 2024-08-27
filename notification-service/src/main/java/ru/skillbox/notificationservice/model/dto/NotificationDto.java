@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.skillbox.commonlib.notification.NotificationType;
+import ru.skillbox.commonlib.event.notification.NotificationType;
 
 import java.time.LocalDateTime;
 

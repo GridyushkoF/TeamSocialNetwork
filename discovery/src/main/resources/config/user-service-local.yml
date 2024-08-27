@@ -2,7 +2,7 @@ spring:
   application:
     name: user-service
   datasource:
-    url: jdbc:postgresql://${POSTGRESQL:localhost}:5432/user_db
+    url: jdbc:postgresql://${POSTGRESQL:localhost}:5432/global_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -20,7 +20,15 @@ spring:
 
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
-    topic: notifications
+    topic: notifications;audit
+  cloud:
+    function:
+      definition: friendshipEventPublisher;auditEventPublisher
+    bindings:
+      friendshipEventPublisher-out-0:
+        destination: notifications
+      auditEventPublisher-out-0:
+        destination: audit
   web:
     resources:
       add-mappings: true

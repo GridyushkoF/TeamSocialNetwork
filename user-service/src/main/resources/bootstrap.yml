@@ -9,14 +9,16 @@ spring:
       fail-fast: true
     stream:
       function:
-        definition: friendshipEventPublisher
+        definition: friendshipEventPublisher;auditEventPublisher
       bindings:
         friendshipEventPublisher-out-0:
           destination: notifications
+        auditEventPublisher-out-0:
+          destination: audit
 
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
-    topic: notifications
+    topic: notifications;audit
 
 
 eureka:

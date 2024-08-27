@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skillbox.commonlib.dto.account.AccountDto;
 import ru.skillbox.commonlib.dto.account.StatusCode;
+import ru.skillbox.commonlib.event.notification.NotificationType;
 import ru.skillbox.userservice.exception.NoSuchAccountException;
 import ru.skillbox.userservice.mapper.v1.FriendMapperV1;
 import ru.skillbox.userservice.mapper.v1.UserMapperV1;
@@ -17,6 +18,7 @@ import ru.skillbox.userservice.model.dto.FriendDto;
 import ru.skillbox.userservice.model.entity.Friendship;
 import ru.skillbox.userservice.model.entity.FriendshipId;
 import ru.skillbox.userservice.model.entity.User;
+import ru.skillbox.userservice.processor.FriendProcessor;
 import ru.skillbox.userservice.repository.FriendshipRepository;
 import ru.skillbox.userservice.repository.UserRepository;
 
@@ -33,6 +35,7 @@ public class FriendshipService {
     private final FriendshipRepository friendshipRepository;
     private final FriendMapperV1 friendMapper;
     private final UserMapperV1 userMapper;
+    private final FriendProcessor friendProcessor;
     private static final String ACCOUNT_WITH_ID = "Account with id: ";
     private static final String DOES_NOT_EXISTS = " does not exists";
 
@@ -43,6 +46,8 @@ public class FriendshipService {
 
         setFriendship(currentAuthUserId, accountId, StatusCode.REQUEST_TO);
         setFriendship(accountId, currentAuthUserId, StatusCode.REQUEST_FROM);
+
+        friendProcessor.process(currentAuthUserId, accountId, NotificationType.FRIEND_REQUEST);
     }
 
     private void setFriendship(Long accountIdFrom, Long accountIdTo, StatusCode statusCode) {

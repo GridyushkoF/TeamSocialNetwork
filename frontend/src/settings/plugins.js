@@ -32,7 +32,7 @@ Vue.use(VueMoment, {
 
 // import chat from "@/plugins/socketio";
 import chat from '@/plugins/websocket';
-Vue.use(chat, { server: '95.174.93.240' }); // <- для стэнда, чтобы работал websocket.
+Vue.use(chat, { server: '95.174.92.252' }); // <- для стэнда, чтобы работал websocket.
 
 // import VueSocketIO from 'vue-socket.io';
 // Vue.use(chat, { server: 'localhost:9090' }); // <- для локальной разработки. При выгрузке на стэнд закомментировать.
