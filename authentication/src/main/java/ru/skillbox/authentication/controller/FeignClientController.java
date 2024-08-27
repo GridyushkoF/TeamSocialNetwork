@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.skillbox.authentication.model.entity.User;
 import ru.skillbox.authentication.repository.UserRepository;
+import ru.skillbox.authentication.service.AuthenticationService;
 import ru.skillbox.authentication.service.security.Jwt.JwtService;
 import ru.skillbox.commonlib.dto.auth.JwtRequest;
 
@@ -19,7 +20,7 @@ import java.util.Map;
 public class FeignClientController {
 
     private final JwtService jwtService;
-    private final UserRepository userRepository;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/getclaims")
     public Map<String, Object> getJwtTokenClimesHandler(@RequestBody JwtRequest request) {
@@ -28,9 +29,7 @@ public class FeignClientController {
 
     @GetMapping("/close")
     public void closeConnection(Long id) {
-        User user = userRepository.findById(id).orElseThrow();
-        user.setOnline(false);
-        userRepository.save(user);
+        authenticationService.closeConnection(id);
     }
 
 }

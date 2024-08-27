@@ -30,6 +30,8 @@ public class AuthenticationService  {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
+    private static final int BEAERER_TOKEN_INDEX = 7;
+
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest){
 
@@ -75,12 +77,18 @@ public class AuthenticationService  {
     }
 
     public void logout(String authorizationHeader) {
-        String jwtToken = authorizationHeader.substring(7);
+        String jwtToken = authorizationHeader.substring(BEAERER_TOKEN_INDEX);
         String email = jwtService.getAllClaimsFromToken(jwtToken).getSubject();
         User user = userRepository.findByEmail(email).orElseThrow();
         user.setOnline(false);
         userRepository.save(user);
 
         log.info("Пользователь " + email + " вышел из системы.");
+    }
+
+    public void closeConnection(Long id) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setOnline(false);
+        userRepository.save(user);
     }
 }

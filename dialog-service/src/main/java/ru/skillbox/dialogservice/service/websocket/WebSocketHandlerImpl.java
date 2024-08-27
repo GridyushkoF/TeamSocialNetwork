@@ -3,7 +3,6 @@ package ru.skillbox.dialogservice.service.websocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
@@ -65,12 +64,4 @@ public class WebSocketHandlerImpl implements WebSocketHandler {
     public boolean supportsPartialMessages() {
         return false;
     }
-
-//
-//    private void findUserByIdAndChangeStatusToFalse(Long id) {
-//        dialogFeignClient.closeConnection(id);
-//
-//    }
-
-
 }
