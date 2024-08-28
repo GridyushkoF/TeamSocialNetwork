@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import ru.skillbox.authentication.exception.AlreadyExistsException;
 import ru.skillbox.authentication.exception.IncorrectPasswordException;
 import ru.skillbox.authentication.model.dto.RegUserDto;
-import ru.skillbox.authentication.model.entity.sql.Role;
 import ru.skillbox.authentication.model.entity.sql.User;
 import ru.skillbox.authentication.model.web.AuthenticationRequest;
 import ru.skillbox.authentication.model.web.AuthenticationResponse;
@@ -21,6 +20,7 @@ import ru.skillbox.authentication.repository.nosql.EmailChangeRequestRepository;
 import ru.skillbox.authentication.repository.sql.UserRepository;
 import ru.skillbox.authentication.service.security.AppUserDetails;
 import ru.skillbox.authentication.service.security.jwt.JwtService;
+import ru.skillbox.commonlib.dto.account.Role;
 import ru.skillbox.commonlib.event.audit.ActionType;
 
 @Component
