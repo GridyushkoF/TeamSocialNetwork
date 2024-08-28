@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.service.security;
+package ru.skillbox.authentication.model.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.skillbox.authentication.model.dto.RecoveryPasswordRequest;
 import ru.skillbox.authentication.model.dto.SetPasswordRequest;
 import ru.skillbox.authentication.model.dto.SimpleResponse;
-import ru.skillbox.authentication.repository.sql.UserRepository;
 import ru.skillbox.authentication.service.PasswordService;
 
 @RestController
@@ -18,7 +17,6 @@ import ru.skillbox.authentication.service.PasswordService;
 public class PasswordResetController {
 
     private final PasswordService passwordService;
-    private final UserRepository userRepository;
 
     @PostMapping("/recovery/")
     public ResponseEntity<SimpleResponse> resetPassword(

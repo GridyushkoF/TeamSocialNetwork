@@ -29,9 +29,9 @@ public class UserController {
     private final CaptchaService captchaService;
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
-    private final UserSecurityDataService userSecurityDataService;
 
     @PostMapping("/register")
+    @ResponseStatus(HttpStatus.OK)
     public void createUser(@RequestBody RegUserDto userDto) {
         if (!captchaService.validateCaptcha(userDto.getCaptchaSecret()
                 , userDto.getCaptchaCode())) {
@@ -56,13 +56,5 @@ public class UserController {
     public ResponseEntity<AuthenticationResponse> loginUser(
             @RequestBody AuthenticationRequest authenticationRequest) {
         return ResponseEntity.ok(authenticationService.login(authenticationRequest));
-    }
-    @PostMapping("/change-email-link")
-    public SimpleResponse changeEmail(@RequestBody ChangeEmailRequest changeEmailRequest,@RequestHeader("id") Long userId) throws NoSuchAlgorithmException {
-        return userSecurityDataService.sendEmailChangeRequestToEmail(changeEmailRequest,userId);
-    }
-    @PostMapping("/change-password-link")
-    public void changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, @RequestHeader("id") Long userId) {
-        userSecurityDataService.changePassword(changePasswordRequest,userId);
     }
 }

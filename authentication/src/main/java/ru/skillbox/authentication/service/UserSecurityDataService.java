@@ -1,6 +1,7 @@
 package ru.skillbox.authentication.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +43,7 @@ public class UserSecurityDataService {
         if (userRepository.existsByEmail(changeEmailRequest.getEmail().getEmail())) {
             throw new AlreadyExistsException("this email already exists in database");
         }
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("user not found"));
         emailChangeRequestRepository.findByOldEmail(user.getEmail()).ifPresent(emailChangeRequestRepository::delete);
         EmailChangeRequest emailChangeRequest = emailChangeRequestRepository.save(EmailChangeRequest.builder()
                 .id(UUID.randomUUID().toString())
@@ -73,7 +74,7 @@ public class UserSecurityDataService {
             return  "Для смены email: " + changeEmailHost + "/api/v1/auth/change-email/verification/" +
                     emailChangeRequest.getOldEmail() + "/" + emailChangeRequest.getCurrentTempCode() + "/confirm";
         }
-        log.error("Восстановление по емаил: {} не удалось. Email не найден в БД", emailChangeRequest.getOldEmail());
+        log.error("Смена по емаил: {} не удалась. Email не найден в БД", emailChangeRequest.getOldEmail());
         throw new EntityNotFoundException("Пользователь с данным Email не зарегистрирован");
     }
     public String generateSecureTempKey(int length) throws NoSuchAlgorithmException {
@@ -90,7 +91,7 @@ public class UserSecurityDataService {
     }
     @Transactional
     public void changeEmail(String userEmail, String changeEmailKey) {
-        EmailChangeRequest emailChangeRequest = emailChangeRequestRepository.findByOldEmail(userEmail).orElseThrow();
+        EmailChangeRequest emailChangeRequest = emailChangeRequestRepository.findByOldEmail(userEmail).orElseThrow(() -> new EntityNotFoundException("user with email " + userEmail + "not found"));
         if(!emailChangeRequest.getCurrentTempCode().equals(changeEmailKey)) {
             throw new IncorrectPasswordException("provided key not found");
         }
@@ -109,6 +110,5 @@ public class UserSecurityDataService {
         }
         user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword2()));
         userRepository.save(user);
-
     }
 }

@@ -18,7 +18,7 @@ import ru.skillbox.authentication.model.web.AuthenticationResponse;
 import ru.skillbox.authentication.processor.AuditProcessor;
 import ru.skillbox.authentication.repository.nosql.EmailChangeRequestRepository;
 import ru.skillbox.authentication.repository.sql.UserRepository;
-import ru.skillbox.authentication.service.security.AppUserDetails;
+import ru.skillbox.authentication.model.security.AppUserDetails;
 import ru.skillbox.authentication.service.security.jwt.JwtService;
 import ru.skillbox.commonlib.dto.account.Role;
 import ru.skillbox.commonlib.event.audit.ActionType;
@@ -60,7 +60,27 @@ public class AuthenticationService  {
     }
 
     public void register(RegUserDto userDto) {
-        User user = User.builder()
+        User user = regUserDtoToUser(userDto);
+        throwExceptionIfThereIsChangeEmailRequestWithThisEmail(user);
+        throwExceptionIfEmailExists(user);
+        log.info(emailChangeRequestRepository.findAll().toString());
+        User newUser = userRepository.save(user);
+        auditProcessor.process(newUser, ActionType.CREATE, newUser.getId());
+    }
+
+    public void throwExceptionIfThereIsChangeEmailRequestWithThisEmail(User user) {
+        if(emailChangeRequestRepository.findByOldEmail(user.getEmail()).isPresent()) {
+            throw new AlreadyExistsException("this email is busy, because somebody going to change email to this, try again later or connect with email owner");
+        }
+    }
+    public void throwExceptionIfEmailExists(User user) {
+        if(userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new AlreadyExistsException("this email is registered now!");
+        }
+    }
+
+    private User regUserDtoToUser(RegUserDto userDto) {
+        return User.builder()
                 .firstName(userDto.getFirstName())
                 .lastName(userDto.getLastName())
                 .email(userDto.getEmail())
@@ -70,11 +90,6 @@ public class AuthenticationService  {
                 .isBlocked(false)
                 .isDeleted(false)
                 .build();
-        if(emailChangeRequestRepository.findByOldEmail(user.getEmail()).isEmpty()) {
-            throw new AlreadyExistsException("this email is busy, because somebody going to change email to this, try again later or connect with email owner");
-        }
-        User newUser = userRepository.save(user);
-        auditProcessor.process(newUser, ActionType.CREATE, newUser.getId());
     }
 
 }

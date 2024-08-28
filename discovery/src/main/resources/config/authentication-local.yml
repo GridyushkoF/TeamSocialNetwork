@@ -86,3 +86,4 @@ server:
   port: 0
 app:
   changeEmailHost: http://localhost
+  apiPrefix: /api/v1
