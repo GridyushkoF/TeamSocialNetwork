@@ -34,6 +34,8 @@ public class UserSecurityDataService {
     private static final int SLASH_NUMBER = 47;
     @Value("${spring.mail.username}")
     private String fromEmail;
+    @Value("${app.changeEmailHost}")
+    private String changeEmailHost;
 
     @Transactional
     public SimpleResponse sendEmailChangeRequestToEmail(ChangeEmailRequest changeEmailRequest, Long userId) throws NoSuchAlgorithmException {
@@ -68,7 +70,7 @@ public class UserSecurityDataService {
     private String getMailBody(String oldEmail, EmailChangeRequest emailChangeRequest) {
         var userOpt = userRepository.findByEmail(oldEmail);
         if (userOpt.isPresent()) {
-            return  "Для смены email: " + "http://localhost/api/v1/auth/change-email/verification/" +
+            return  "Для смены email: " + changeEmailHost + "/api/v1/auth/change-email/verification/" +
                     emailChangeRequest.getOldEmail() + "/" + emailChangeRequest.getCurrentTempCode() + "/confirm";
         }
         log.error("Восстановление по емаил: {} не удалось. Email не найден в БД", emailChangeRequest.getOldEmail());
