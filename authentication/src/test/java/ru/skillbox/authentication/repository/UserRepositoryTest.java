@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
-import ru.skillbox.authentication.model.entity.sql.Role;
 import ru.skillbox.authentication.model.entity.sql.User;
 import ru.skillbox.authentication.repository.sql.UserRepository;
+import ru.skillbox.commonlib.dto.account.Role;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
