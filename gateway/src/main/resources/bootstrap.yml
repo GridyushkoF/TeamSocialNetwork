@@ -21,12 +21,20 @@ springdoc:
     urls:
       - name: auth
         url: /api/v1/auth/v3/api-docs
+      - name: account
+        url: /api/v1/account/v3/api-docs
+      - name: post
+        url: /api/v1/post/v3/api-docs
       - name: dialogs
         url: /api/v1/dialogs/v3/api-docs
-#      - name: post
-#        url: /api/v1/post/v3/api-docs
-#      - name: user
-#        url: /api/v1/account/v3/api-docs
+      - name: notifications
+        url: /api/v1/notifications/v3/api-docs
+      - name: audit
+        url: /api/v1/audit/v3/api-docs
+      - name: admin
+        url: /api/v1/admin-console/statistic/v3/api-docs
+      - name: geo
+        url: /api/v1/geo/v3/api-docs
 
 # could be used for debugging
 #logging:

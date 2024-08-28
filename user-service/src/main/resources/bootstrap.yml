@@ -32,6 +32,10 @@ custom:
   rest:
     basePath: /api/v1
 
+springdoc:
+  api-docs:
+    path: /account/v3/api-docs
+
 
 # could be used for debugging
 #logging:
