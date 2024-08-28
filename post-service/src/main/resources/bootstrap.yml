@@ -23,6 +23,10 @@ eureka:
   instance:
     preferIpAddress: true
 
+springdoc:
+  api-docs:
+    path: /api/v1/post/v3/api-docs
+
 # could be used for debugging
 #logging:
 #  level:

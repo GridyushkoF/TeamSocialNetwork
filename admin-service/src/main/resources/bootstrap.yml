@@ -15,6 +15,10 @@ eureka:
   instance:
     preferIpAddress: true
 
+springdoc:
+  api-docs:
+    path: /api/v1/admin-console/statistic/v3/api-docs
+
 # could be used for debugging
 #logging:
 #  level:
