@@ -1,6 +1,7 @@
 package ru.skillbox.authentication.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import ru.skillbox.authentication.TestDependenciesContainer;
 import ru.skillbox.authentication.model.dto.RecoveryPasswordRequest;
 import ru.skillbox.authentication.model.dto.SetPasswordRequest;
 import ru.skillbox.authentication.model.entity.sql.User;
+import ru.skillbox.authentication.repository.sql.UserRepository;
 import ru.skillbox.authentication.util.CryptoUtil;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,6 +32,12 @@ class PasswordResetControllerIT extends TestDependenciesContainer {
 
     @Autowired
     private CryptoUtil cryptoUtil;
+    @Autowired
+    private UserRepository userRepository;
+    @BeforeEach
+    void setUp() {
+        userRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("Reset password - existing user, email sent")
