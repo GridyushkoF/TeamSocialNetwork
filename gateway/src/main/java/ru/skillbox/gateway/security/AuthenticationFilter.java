@@ -3,6 +3,7 @@ package ru.skillbox.gateway.security;
 import io.jsonwebtoken.Claims;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -16,6 +17,7 @@ import reactor.core.publisher.Mono;
 
 @RefreshScope
 @Component
+@Log4j2
 public class AuthenticationFilter implements GatewayFilter {
 
     private final JwtUtil jwtUtil;
@@ -52,7 +54,8 @@ public class AuthenticationFilter implements GatewayFilter {
         return chain.filter(exchange);
     }
 
-    private Mono<Void> onError(ServerWebExchange exchange, HttpStatus httpStatus) {
+    private Mono<Void> onError(ServerWebExchange exchange,String err, HttpStatus httpStatus) {
+        log.error(err);
         invalidAuthCounter.increment();
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
