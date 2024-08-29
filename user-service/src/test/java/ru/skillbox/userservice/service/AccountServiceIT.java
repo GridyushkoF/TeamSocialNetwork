@@ -1,6 +1,5 @@
 package ru.skillbox.userservice.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,9 +46,6 @@ class AccountServiceIT {
         userRepository.deleteAll();
     }
 
-    @AfterEach
-    void tearDown() {
-    }
 
     @Test
     @DisplayName("test recovery of user account")

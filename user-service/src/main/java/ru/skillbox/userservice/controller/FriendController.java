@@ -13,7 +13,6 @@ import ru.skillbox.userservice.model.dto.FriendDto;
 import ru.skillbox.userservice.service.FriendshipService;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/friends")
