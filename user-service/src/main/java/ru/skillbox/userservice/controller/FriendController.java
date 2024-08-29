@@ -6,10 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.commonlib.dto.account.AccountDto;
 import ru.skillbox.commonlib.dto.account.StatusCode;
 import ru.skillbox.commonlib.dto.statistics.CountDto;
 import ru.skillbox.userservice.model.dto.FriendDto;
+import ru.skillbox.userservice.model.dto.RecommendedFriendDto;
 import ru.skillbox.userservice.service.FriendshipService;
 
 import java.util.List;
@@ -71,7 +71,7 @@ public class FriendController {
     }
 
     @GetMapping("/recommendations")
-    public ResponseEntity<List<AccountDto>> getByRecommendation(HttpServletRequest request) {
+    public ResponseEntity<List<RecommendedFriendDto>> getByRecommendation(HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
         return ResponseEntity.ok(friendshipService.getFriendRecommendations(currentAuthUserId));
     }
