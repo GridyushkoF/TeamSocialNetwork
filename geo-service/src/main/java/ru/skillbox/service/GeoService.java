@@ -18,21 +18,21 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GeoService {
-    private static final String PREFIX_URL = "https://api.hh.ru";
+    private final String prefixUrl = "https://api.hh.ru";
     private final ObjectMapper objectMapper;
     private final HttpUtil httpUtil;
     private final CountryMapper countryMapper;
 
     @Cacheable(cacheNames = "cities")
     public List<CityDto> getCitiesByCountryId(int id) throws JsonProcessingException {
-        String url = PREFIX_URL + "/areas/" + id;
+        String url = prefixUrl + "/areas/" + id;
         DivisionDto countryDto = objectMapper.readValue(httpUtil.sendHttpAndGetTextResponse(url),
                 new TypeReference<>(){});
         return CityMapper.convertDivisionToCities(countryDto,countryDto.getId());
     }
     @Cacheable(cacheNames = "countries")
     public List<CountryResponse> getCountries() throws JsonProcessingException {
-        String url = PREFIX_URL + "/areas/countries";
+        String url = prefixUrl + "/areas/countries";
         return countryMapper.dtoListToResponseList(objectMapper.readValue(httpUtil.sendHttpAndGetTextResponse(url),
                 new TypeReference<>(){}));
     }

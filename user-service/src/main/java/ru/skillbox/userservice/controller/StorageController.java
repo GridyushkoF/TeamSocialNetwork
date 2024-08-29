@@ -17,7 +17,7 @@ public class StorageController {
     private final StorageService storageService;
 
     @PostMapping
-    public ResponseEntity<Map<String,String>> uploadFile(@ModelAttribute MultipartFile file,
+    public ResponseEntity<?> uploadFile(@ModelAttribute MultipartFile file,
                                         @RequestParam("type") String fileType) {
         return ResponseEntity.ok(Map.of("fileName",storageService.uploadFileAndGetLink(file)));
     }

@@ -9,16 +9,14 @@ spring:
       fail-fast: true
     stream:
       function:
-        definition: friendshipEventPublisher;auditEventPublisher
+        definition: friendshipEventPublisher
       bindings:
         friendshipEventPublisher-out-0:
           destination: notifications
-        auditEventPublisher-out-0:
-          destination: audit
 
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
-    topic: notifications;audit
+    topic: notifications
 
 
 eureka:
@@ -31,10 +29,6 @@ eureka:
 custom:
   rest:
     basePath: /api/v1
-
-springdoc:
-  api-docs:
-    path: /account/v3/api-docs
 
 
 # could be used for debugging

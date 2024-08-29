@@ -3,10 +3,7 @@ package ru.skillbox.adminservice.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.skillbox.adminservice.service.AdminService;
 import ru.skillbox.commonlib.dto.statistics.AdminStatisticsDto;
 import ru.skillbox.commonlib.dto.statistics.PeriodRequestDto;
@@ -22,6 +19,7 @@ public class AdminStatisticsController {
     public ResponseEntity<AdminStatisticsDto> getPostsStatistics(
             @ModelAttribute PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
+        System.out.println(periodRequestDto);
         return ResponseEntity.ok(adminService.getPostsStatistics(periodRequestDto,request));
     }
     @GetMapping("/comment")

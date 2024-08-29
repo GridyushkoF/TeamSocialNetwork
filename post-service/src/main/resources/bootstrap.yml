@@ -9,12 +9,10 @@ spring:
       fail-fast: true
     stream:
       function:
-        definition: postEventPublisher;auditEventPublisher
+        definition: postEventPublisher
       bindings:
         postEventPublisher-out-0:
           destination: notifications
-        auditEventPublisher-out-0:
-          destination: audit
 
 eureka:
   client:
@@ -22,10 +20,6 @@ eureka:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
   instance:
     preferIpAddress: true
-
-springdoc:
-  api-docs:
-    path: /api/v1/post/v3/api-docs
 
 # could be used for debugging
 #logging:

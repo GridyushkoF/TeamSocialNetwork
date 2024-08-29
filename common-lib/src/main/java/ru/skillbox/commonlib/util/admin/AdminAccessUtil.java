@@ -11,7 +11,4 @@ public class AdminAccessUtil {
             throw new AdminAccessException();
         }
     }
-    private AdminAccessUtil() {
-
-    }
 }

@@ -18,7 +18,6 @@ eureka:
 management:
   endpoints:
     web:
-      base-path: /api/v1/actuator
       exposure:
         include: "*"
   metrics:
@@ -47,5 +46,3 @@ management:
                 - 0.99
 server:
   port: 9090
-app:
-  userMicroservicePath: lb://USER-SERVICE

@@ -50,6 +50,7 @@ public class TokenFilter extends OncePerRequestFilter {
                         tokenPayload.get("id")
                 );
             } catch (FeignException e) {
+                e.printStackTrace();
                 log.info("ошибка валидации токена");
             }
         }

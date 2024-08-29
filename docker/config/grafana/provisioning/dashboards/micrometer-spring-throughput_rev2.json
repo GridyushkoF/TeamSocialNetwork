@@ -751,8 +751,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "95.174.92.252",
-          "value": "95.174.92.252"
+          "text": "host.docker.internal:8080",
+          "value": "host.docker.internal:8080"
         },
         "datasource": "Prometheus",
         "definition": "",

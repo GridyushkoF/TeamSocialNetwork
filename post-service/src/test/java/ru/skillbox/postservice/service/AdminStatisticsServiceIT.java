@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ActiveProfiles("test")
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
-class AdminStatisticsServiceIT extends TestDependenciesContainer {
+public class AdminStatisticsServiceIT extends TestDependenciesContainer {
 
     @Autowired
     private AdminStatisticsService adminStatisticsService;

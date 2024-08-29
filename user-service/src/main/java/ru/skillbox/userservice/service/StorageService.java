@@ -44,9 +44,8 @@ public class StorageService {
             byte[] hash = digest.digest(filename.getBytes(StandardCharsets.UTF_8));
             return Base64.getUrlEncoder().withoutPadding().encodeToString(hash);
         } catch (NoSuchAlgorithmException e) {
-            log.error("can't cash file with name: " + filename + e);
+            throw new RuntimeException("Error hashing filename", e);
         }
-        return filename;
     }
 
     private void uploadFileToS3Bucket(String fileName, InputStream inputStream, long size) {

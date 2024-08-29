@@ -4,23 +4,27 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.skillbox.commonlib.dto.post.CommentDto;
+import ru.skillbox.commonlib.dto.post.pages.PageCommentDto;
 import ru.skillbox.postservice.TestDependenciesContainer;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @Testcontainers
 @EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" })
-class CommentControllerIT extends TestDependenciesContainer {
+public class CommentControllerIT extends TestDependenciesContainer {
 
     @BeforeEach
     void initBeforeEach() {
@@ -54,6 +58,40 @@ class CommentControllerIT extends TestDependenciesContainer {
     void deleteComment_NotAccess() throws Exception {
         getDeleteCommentResultActions(2L).andExpect(status().isForbidden());
     }
+
+//    @Test
+//    @DisplayName("getting comments on the post and checking correctness of response test")
+//    void getCommentsOnPost_CorrectResponse() throws Exception {
+//        Long postId = postRepository.findAll().get(0).getId();
+//        int page = 0;
+//        int size = 10;
+//        List<String> sort = List.of("id,asc");
+//
+//        MvcResult result = mockMvc.perform(get(apiPrefix + "/post/" + postId + "/comment")
+//                        .param("page", String.valueOf(page))
+//                        .param("size", String.valueOf(size))
+//                        .param("sort", String.join(",", sort))
+//                        .param("isDeleted", "false")
+//                        .header("id", "1")
+//                )
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//        PageCommentDto pageCommentDto = objectMapper.readValue(result.getResponse().getContentAsString(), PageCommentDto.class);
+//
+//        assertFalse(pageCommentDto.getContent().isEmpty());
+//        pageCommentDto.getContent().forEach(comment -> {
+//            assertNotNull(comment.getId());
+//            assertNotNull(comment.getCommentText());
+//            assertNotNull(comment.getAuthorId());
+//        });
+//        assertEquals(10, pageCommentDto.getSize());
+//        assertEquals(0, pageCommentDto.getNumber());
+//        assertTrue(pageCommentDto.isFirst());
+//        assertTrue(pageCommentDto.isLast());
+//        assertEquals(1, pageCommentDto.getNumberOfElements());
+//        assertEquals(Sort.by(Sort.Direction.ASC, "id"), pageCommentDto.getSort());
+//    }
 
     @Test
     @DisplayName("get sub comments returns OK status")

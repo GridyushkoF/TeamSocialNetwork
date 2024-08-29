@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SettingsDto {
-    private Long id;
+    private Long Id;
     private Long userId;
     private boolean friendRequest;
     private boolean friendBirthday;

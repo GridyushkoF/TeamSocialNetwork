@@ -1,14 +1,18 @@
 package ru.skillbox.authentication.controller;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.authentication.exception.AlreadyExistsException;
 import ru.skillbox.authentication.exception.CaptchaValidatedExcepction;
 import ru.skillbox.authentication.model.dto.RegUserDto;
+import ru.skillbox.authentication.model.entity.User;
 import ru.skillbox.authentication.model.web.AuthenticationRequest;
 import ru.skillbox.authentication.model.web.AuthenticationResponse;
 import ru.skillbox.authentication.repository.UserRepository;
@@ -28,11 +32,11 @@ public class UserController {
     public void createUser(@RequestBody RegUserDto userDto) {
         if (!captchaService.validateCaptcha(userDto.getCaptchaSecret()
                 , userDto.getCaptchaCode())) {
-            log.error("Пользователь '{}' ввел невалидную капчу.", userDto.getEmail());
+            log.error("Пользователь '" + userDto.getEmail() + "' ввел невалидную капчу.");
             throw new CaptchaValidatedExcepction("No pass captcha");
         }
         if (userRepository.existsByEmail(userDto.getEmail())) {
-            log.error("Ошибка регистрации. Email '{}' уже зарегистрирован.", userDto.getEmail());
+            log.error("Ошибка регистрации. Email '" + userDto.getEmail() + "' уже зарегистрирован.");
             throw new AlreadyExistsException("Email уже занят");
         }
         authenticationService.register(userDto);

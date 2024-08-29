@@ -20,10 +20,11 @@ public class AuthenticationFilter implements GatewayFilter {
 
     private final JwtUtil jwtUtil;
     private final Counter invalidAuthCounter;
-
+    private final MeterRegistry meterRegistry;
     @Autowired
     public AuthenticationFilter(JwtUtil jwtUtil, MeterRegistry meterRegistry) {
         this.jwtUtil = jwtUtil;
+        this.meterRegistry = meterRegistry;
         this.invalidAuthCounter = Counter
                 .builder("invalid.auth.counter")
                 .tag("auth_status","invalid")
@@ -52,7 +53,7 @@ public class AuthenticationFilter implements GatewayFilter {
         return chain.filter(exchange);
     }
 
-    private Mono<Void> onError(ServerWebExchange exchange, HttpStatus httpStatus) {
+    private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) {
         invalidAuthCounter.increment();
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);

@@ -2,8 +2,8 @@ package ru.skillbox.postservice.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.skillbox.commonlib.dto.post.PostDto;
 import ru.skillbox.postservice.exception.PostAccessException;
+import ru.skillbox.commonlib.dto.post.PostDto;
 import ru.skillbox.postservice.model.entity.Post;
 import ru.skillbox.postservice.repository.PostRepository;
 

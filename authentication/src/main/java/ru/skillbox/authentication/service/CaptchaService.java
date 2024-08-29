@@ -51,7 +51,7 @@ public class CaptchaService {
     }
 
     @Scheduled(fixedRate = 60 * 1000)
-    public void cleanUpCaptcha(){
+    public void CleanUpCaptcha(){
         long expirationTime = TimeUnit.MINUTES.toMillis(5);
         long currentTime = System.currentTimeMillis();
         hashMap.entrySet().removeIf(entry ->

@@ -3,9 +3,9 @@ spring:
     name: dialog-service
 
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/global_db}
-    username: ${DATABASE_USER:postgres}
-    password: ${DATABASE_PASSWORD:postgres}
+    url: jdbc:postgresql://${POSTGRESQL:localhost}:5432/dialog_db
+    username: postgres
+    password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

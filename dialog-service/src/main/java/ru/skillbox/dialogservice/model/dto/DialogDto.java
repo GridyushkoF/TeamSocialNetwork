@@ -2,9 +2,9 @@ package ru.skillbox.dialogservice.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Data;
+import lombok.Builder;
 
 @AllArgsConstructor
 @NoArgsConstructor

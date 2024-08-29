@@ -60,7 +60,7 @@ public class SecurityBeanConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .authorizeHttpRequests(auth ->
+                .authorizeHttpRequests((auth) ->
                         auth.requestMatchers("/**").permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())

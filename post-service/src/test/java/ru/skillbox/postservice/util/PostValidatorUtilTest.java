@@ -1,5 +1,8 @@
 package ru.skillbox.postservice.util;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,10 +15,7 @@ import ru.skillbox.postservice.repository.PostRepository;
 
 import java.text.MessageFormat;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
-
-class PostValidatorUtilTest {
+public class PostValidatorUtilTest {
 
     @Mock
     private PostRepository postRepository;

@@ -13,14 +13,13 @@ import ru.skillbox.postservice.model.entity.Like;
 import ru.skillbox.postservice.model.entity.LikeEntityType;
 import ru.skillbox.postservice.model.entity.Post;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-class LikeControllerIT extends TestDependenciesContainer {
+public class LikeControllerIT extends TestDependenciesContainer {
 
     @BeforeEach
     public void doBeforeEach() {
@@ -41,10 +40,23 @@ class LikeControllerIT extends TestDependenciesContainer {
         ).andExpect(status().isCreated());
 
         Like like = likeRepository.findAll().get(0);
-        assertEquals(LikeEntityType.POST,like.getEntityType());
+        assertEquals(like.getEntityType(), LikeEntityType.POST);
         assertEquals(like.getEntityId(), post.getId());
         assertEquals(like.getUserId(), userId);
     }
+
+//    @Test
+//    void likePost_LikeAlreadyExists() throws Exception {
+//        Post post = postRepository.findAll().get(0);
+//        Long userId = 1L;
+//        saveTestLikeInDb(LikeEntityType.POST, post.getId(), userId);
+//        LikeDto likeDto = new LikeDto(); // Create a LikeDto if needed
+//        mockMvc.perform(post(apiPrefix + "/post/" + post.getId() + "/like")
+//                .header("id", userId)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(likeDto)) // Send likeDto as JSON
+//        ).andExpect(status().isBadRequest());
+//    }
 
     @Test
     void likePost_PostNotAccess() throws Exception {

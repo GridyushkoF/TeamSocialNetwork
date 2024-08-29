@@ -10,8 +10,6 @@ import ru.skillbox.dialogservice.model.dto.DialogDto;
 import ru.skillbox.dialogservice.model.entity.Dialog;
 import ru.skillbox.dialogservice.repository.DialogRepository;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -39,15 +37,10 @@ class DialogServiceTest {
     void testGetDialogs() {
         String sort = "unreadCount,desc";
         Page<DialogDto> dialogs = dialogService.getDialogs(0, sort, 1L);
-
         assertNotNull(dialogs);
         assertEquals(1, dialogs.getTotalElements());
-        List<DialogDto> dialogContent = dialogs.getContent();
-
-        assertEquals(1, dialogContent.get(0).getId());
-        assertThrows(IndexOutOfBoundsException.class, () -> {
-            dialogContent.get(1);
-        });
+        assertEquals(1, dialogs.getContent().get(0).getId());
+        assertThrows(IndexOutOfBoundsException.class, ()-> dialogs.getContent().get(1));
     }
 
     @Test

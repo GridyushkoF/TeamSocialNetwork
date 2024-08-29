@@ -42,7 +42,7 @@ public class TokenAuthentication implements Authentication {
 
     @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-        //Field is final, method need only to override a parent
+
     }
 
     @Override

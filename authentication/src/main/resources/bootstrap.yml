@@ -11,12 +11,6 @@ spring:
     config:
       uri: ${CONFIG_URI:http://localhost:8761}
       fail-fast: true
-    stream:
-      function:
-        definition: auditEventPublisher
-      bindings:
-        auditEventPublisher-out-0:
-          destination: audit
 
 eureka:
   client:
