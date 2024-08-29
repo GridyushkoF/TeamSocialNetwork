@@ -1,6 +1,8 @@
 package ru.skillbox.authentication.service;
 
 
+
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,6 +46,10 @@ public class AuthenticationService  {
 
             AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
 
+            User user = userRepository.findByEmail(userDetails.getEmail()).orElseThrow();
+            user.setOnline(true);
+            userRepository.save(user);
+
             String jwt = jwtService.generateJwtToken(userDetails);
             log.info("Пользователь '" + authenticationRequest.getEmail() +
                     "' успешно прошел аутентификацию.");
@@ -71,5 +77,15 @@ public class AuthenticationService  {
         User newUser = userRepository.save(user);
 
         auditProcessor.process(newUser, ActionType.CREATE, newUser.getId());
+    }
+
+    public void logout(String authorizationHeader) {
+        String jwtToken = authorizationHeader.substring(7);
+        String email = jwtService.getAllClaimsFromToken(jwtToken).getSubject();
+        User user = userRepository.findByEmail(email).orElseThrow();
+        user.setOnline(false);
+        userRepository.save(user);
+
+        log.info("Пользователь " + email + " вышел из системы.");
     }
 }
