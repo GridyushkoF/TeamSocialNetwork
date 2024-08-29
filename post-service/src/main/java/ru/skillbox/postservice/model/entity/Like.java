@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import ru.skillbox.commonlib.dto.post.LikeReactionType;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Entity

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.skillbox.commonlib.dto.post.PostDto;
@@ -21,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-class PostControllerIT extends TestDependenciesContainer {
+public class PostControllerIT extends TestDependenciesContainer {
     @BeforeEach
     void initBeforeEach() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
@@ -100,7 +102,7 @@ class PostControllerIT extends TestDependenciesContainer {
                         .param("postText", testPostDto.getPostText())
                         .param("withFriends", String.valueOf(false))
                         .param("isDelete", String.valueOf(false))
-                        .header("id", "1")
+                        .header("id","1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -116,9 +118,22 @@ class PostControllerIT extends TestDependenciesContainer {
                 .andExpect(status().isCreated());
     }
 
+//    @Test
+//    @DisplayName("image uploading test")
+//    void uploadPhotoToStorage() throws Exception {
+//        byte[] imageBytes = "Test image content".getBytes();
+//        MockMultipartFile multipartFile = new MockMultipartFile(
+//                "file", "test_image.jpg", "image/jpeg", imageBytes);
+//
+//        mockMvc.perform(multipart(apiPrefix + "/post/storagePostPhoto")
+//                        .file(multipartFile))
+//                .andExpect(status().isCreated())
+//                .andExpect(jsonPath("$.imagePath").isNotEmpty());
+//    }
+
     //-------------------------UTIL-METHODS------------------------------
 
-    private Post saveAndGetTestPostToUpdate() {
+    private Post saveAndGetTestPostToUpdate() throws Exception {
         return savePostInDbAndGet(PostDto.builder()
                 .title("Test Post to update")
                 .postText("This is a test post to update")
@@ -136,7 +151,7 @@ class PostControllerIT extends TestDependenciesContainer {
         return updatedPostDto;
     }
 
-    private Post saveAndGetTestPostToDelete() {
+    private Post saveAndGetTestPostToDelete() throws Exception {
         return savePostInDbAndGet(PostDto.builder()
                 .title("Test Post to delete")
                 .postText("This is a test post to delete")

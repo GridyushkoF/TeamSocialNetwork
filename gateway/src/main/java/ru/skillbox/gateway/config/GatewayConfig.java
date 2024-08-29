@@ -1,7 +1,6 @@
 package ru.skillbox.gateway.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -12,8 +11,6 @@ import ru.skillbox.gateway.security.AuthenticationFilter;
 public class GatewayConfig {
 
     private final AuthenticationFilter filter;
-    @Value("${app.userMicroservicePath}")
-    private String pathToUserMicroservice;
 
     @Autowired
     public GatewayConfig(AuthenticationFilter filter) {
@@ -39,19 +36,19 @@ public class GatewayConfig {
                                 .uri("lb://AUTHENTICATION")
                 )
                 .route(
-                        "account_route", r -> r.path("/api/v1/account/**")
+                        "user_route", r -> r.path("/api/v1/account/**")
                                 .filters(f -> f.filter(filter))
-                                .uri(pathToUserMicroservice)
+                                .uri("lb://USER-SERVICE")
                 )
                 .route(
-                        "friends_route", r -> r.path("/api/v1/friends/**")
+                        "user_route", r -> r.path("/api/v1/friends/**")
                                 .filters(f -> f.filter(filter))
-                                .uri(pathToUserMicroservice)
+                                .uri("lb://USER-SERVICE")
                 )
                 .route(
-                        "storage_route", r -> r.path("/api/v1/storage/**")
+                        "user_route", r -> r.path("/api/v1/storage/**")
                                 .filters(f -> f.filter(filter))
-                                .uri(pathToUserMicroservice)
+                                .uri("lb://USER-SERVICE")
                 )
                 .route(
                         "dialog_route", r -> r.path("/api/v1/dialogs/**")
@@ -77,11 +74,6 @@ public class GatewayConfig {
                         "admin_route", r -> r.path("/api/v1/admin-console/**")
                                 .filters(f -> f.filter(filter))
                                 .uri("lb://ADMIN-CONSOLE")
-                )
-                .route(
-                        "audit_route", r -> r.path("/api/v1/audit/**")
-                                .filters(f -> f.filter(filter))
-                                .uri("lb://AUDIT-SERVICE")
                 )
                 .build();
     }

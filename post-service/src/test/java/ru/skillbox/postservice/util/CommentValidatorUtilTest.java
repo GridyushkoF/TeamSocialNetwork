@@ -13,7 +13,7 @@ import ru.skillbox.postservice.repository.CommentRepository;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-class CommentValidatorUtilTest {
+public class CommentValidatorUtilTest {
 
     @Mock
     private CommentRepository commentRepository;

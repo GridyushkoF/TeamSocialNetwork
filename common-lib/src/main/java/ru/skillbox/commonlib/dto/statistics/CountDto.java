@@ -1,9 +1,9 @@
 package ru.skillbox.commonlib.dto.statistics;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Data;
+import lombok.Builder;
 
 @AllArgsConstructor
 @NoArgsConstructor

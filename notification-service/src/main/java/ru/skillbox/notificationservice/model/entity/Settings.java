@@ -2,10 +2,7 @@ package ru.skillbox.notificationservice.model.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -15,7 +12,7 @@ import lombok.Setter;
 public class Settings {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long Id;
     @Column(name = "user_id")
     private Long userId;
     @Column(name = "friend_request")

@@ -20,10 +20,11 @@ public class AuthenticationFilter implements GatewayFilter {
 
     private final JwtUtil jwtUtil;
     private final Counter invalidAuthCounter;
-
+    private final MeterRegistry meterRegistry;
     @Autowired
     public AuthenticationFilter(JwtUtil jwtUtil, MeterRegistry meterRegistry) {
         this.jwtUtil = jwtUtil;
+        this.meterRegistry = meterRegistry;
         this.invalidAuthCounter = Counter
                 .builder("invalid.auth.counter")
                 .tag("auth_status","invalid")

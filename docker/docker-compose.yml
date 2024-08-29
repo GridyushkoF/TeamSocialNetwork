@@ -5,21 +5,12 @@ services:
       - "5432:5432"
     restart: always
     environment:
-      - POSTGRES_DB=global_db
+      - POSTGRES_MULTIPLE_DATABASES="user_db","post_db","dialog_db","notification_db"
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
+      - ./pg-init-scripts:/docker-entrypoint-initdb.d
       - database-data:/var/lib/postgresql/data/
-  pgadmin:
-    image: dpage/pgadmin4
-    ports:
-      - "8999:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
-    restart: always
-    depends_on:
-      - postgres
 
   redis:
     image: redis:latest
@@ -54,6 +45,16 @@ services:
       - kafka:/data
     restart: on-failure
 
+  # Convenient UI for Apache Kafka https://github.com/provectus/kafka-ui
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "9999:8080"
+    restart: always
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
   grafana:
     build: './config/grafana'
     ports:
@@ -67,9 +68,6 @@ services:
       monitoring:
         aliases:
           - grafana
-    restart: on-failure
-    user: "0"
-
   prometheus:
     image: prom/prometheus
     ports:
@@ -81,8 +79,6 @@ services:
       monitoring:
         aliases:
           - prometheus
-    restart: on-failure
-
 volumes:
   kafka:
   database-data:

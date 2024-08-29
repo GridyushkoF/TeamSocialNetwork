@@ -14,22 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 @Component
 public class PostMapperDecorator implements PostMapper {
 
+    @Autowired
+    @Qualifier("delegate")
     private PostMapper delegate;
-    @Autowired
-    public void setDelegate(@Qualifier("delegate") PostMapper delegate) {
-        this.delegate = delegate;
-    }
-    @Autowired
-    public void setTagRepository(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
-    }
 
+    @Autowired
     private TagRepository tagRepository;
-
 
     @Override
     public Post postDtoToPost(PostDto postDto) {
@@ -39,7 +32,7 @@ public class PostMapperDecorator implements PostMapper {
 
     public Post convertTagsAndGet(PostDto postDto, Post post) {
         List<Tag> dbTags = new ArrayList<>();
-        if (postDto.getTags() == null) {
+        if(postDto.getTags() == null) {
             postDto.setTags(new ArrayList<>());
         }
         postDto.getTags().forEach(tagWrapper -> {
@@ -50,7 +43,7 @@ public class PostMapperDecorator implements PostMapper {
                 return tag;
             }));
         });
-        if (post.getTags() == null) {
+        if(post.getTags() == null) {
             post.setTags(new ArrayList<>());
         }
         post.getTags().addAll(dbTags);
@@ -60,10 +53,10 @@ public class PostMapperDecorator implements PostMapper {
     @Override
     public PostDto postToPostDto(Post post) {
         PostDto postDto = delegate.postToPostDto(post);
-        if (postDto.getTags() == null) {
+        if(postDto.getTags() == null) {
             postDto.setTags(new ArrayList<>());
         }
-        if (post.getTags() == null) {
+        if(post.getTags() == null) {
             post.setTags(new ArrayList<>());
         }
         postDto.getTags()

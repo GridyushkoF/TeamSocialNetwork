@@ -10,10 +10,11 @@ import org.springframework.web.socket.WebSocketSession;
 import ru.skillbox.dialogservice.model.dto.ConversationMessageDto;
 import ru.skillbox.dialogservice.model.enums.MessageType;
 import ru.skillbox.dialogservice.service.MessageService;
+import ru.skillbox.dialogservice.service.feign.DialogFeignClient;
+
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @Component
@@ -21,12 +22,13 @@ public class WebSocketHandlerImpl implements WebSocketHandler {
 
     private final ObjectMapper mapper;
     private final MessageService service;
-
+    private final DialogFeignClient dialogFeignClient;
     private final Map<Long, WebSocketSession> sessions = new HashMap<>();
+
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
-        sessions.put(Long.parseLong(Objects.requireNonNull(session.getPrincipal()).getName()), session);
+        sessions.put(Long.parseLong(session.getPrincipal().getName()), session);
     }
 
     @Override
@@ -50,12 +52,12 @@ public class WebSocketHandlerImpl implements WebSocketHandler {
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) {
-        //Realize later
+
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) {
-        //Realize a user status
+        dialogFeignClient.closeConnection(Long.parseLong(session.getPrincipal().getName()));
     }
 
     @Override

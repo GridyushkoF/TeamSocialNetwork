@@ -1,6 +1,7 @@
 package ru.skillbox.authentication.service;
 
 
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,16 +11,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.skillbox.authentication.exception.IncorrectPasswordException;
+import ru.skillbox.authentication.model.web.AuthenticationRequest;
+import ru.skillbox.authentication.model.web.AuthenticationResponse;
 import ru.skillbox.authentication.model.dto.RegUserDto;
 import ru.skillbox.authentication.model.entity.Role;
 import ru.skillbox.authentication.model.entity.User;
-import ru.skillbox.authentication.model.web.AuthenticationRequest;
-import ru.skillbox.authentication.model.web.AuthenticationResponse;
-import ru.skillbox.authentication.processor.AuditProcessor;
 import ru.skillbox.authentication.repository.UserRepository;
-import ru.skillbox.authentication.service.security.AppUserDetails;
 import ru.skillbox.authentication.service.security.jwt.JwtService;
-import ru.skillbox.commonlib.event.audit.ActionType;
+import ru.skillbox.authentication.service.security.AppUserDetails;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +28,8 @@ public class AuthenticationService  {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    private final AuditProcessor auditProcessor;
+
+    private static final int BEAERER_TOKEN_INDEX = 7;
 
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest){
@@ -43,6 +43,10 @@ public class AuthenticationService  {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
+
+            User user = userRepository.findByEmail(userDetails.getEmail()).orElseThrow();
+            user.setOnline(true);
+            userRepository.save(user);
 
             String jwt = jwtService.generateJwtToken(userDetails);
             log.info("Пользователь '" + authenticationRequest.getEmail() +
@@ -68,8 +72,24 @@ public class AuthenticationService  {
                 .isDeleted(false)
                 .build();
 
-        User newUser = userRepository.save(user);
+        userRepository.save(user);
+    }
 
-        auditProcessor.process(newUser, ActionType.CREATE, newUser.getId());
+    public void logout(String authorizationHeader) {
+        String jwtToken = authorizationHeader.substring(BEAERER_TOKEN_INDEX);
+        String email = jwtService.getAllClaimsFromToken(jwtToken).getSubject();
+        User user = userRepository.findByEmail(email).orElseThrow();
+        user.setOnline(false);
+        userRepository.save(user);
+
+        log.info("Пользователь " + email + " вышел из системы.");
+    }
+
+    public void closeConnection(Long id) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setOnline(false);
+        userRepository.save(user);
+
+
     }
 }

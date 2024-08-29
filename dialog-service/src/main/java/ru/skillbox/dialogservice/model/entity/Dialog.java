@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-@Table(name = "dialogs")
 public class Dialog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

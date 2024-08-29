@@ -16,7 +16,7 @@ import ru.skillbox.postservice.model.entity.LikeEntityType;
 import ru.skillbox.postservice.processor.CommentProcessor;
 import ru.skillbox.postservice.repository.CommentRepository;
 import ru.skillbox.postservice.repository.LikeRepository;
-import ru.skillbox.commonlib.util.ColumnsUtil;
+import ru.skillbox.postservice.util.ColumnsUtil;
 import ru.skillbox.postservice.util.CommentValidatorUtil;
 import ru.skillbox.postservice.util.PostValidatorUtil;
 
@@ -63,7 +63,7 @@ public class CommentService {
                     }
                     return commentDto.isBlocked();
                 })
-                .map(commentDto -> {
+                .peek(commentDto -> {
                     Long likesAmount = likeRepository.countAllByEntityTypeAndEntityId(LikeEntityType.COMMENT, commentDto.getId());
                     commentDto.setLikeAmount(likesAmount);
                     boolean myLike = likeRepository.existsByEntityTypeAndEntityIdAndUserId(
@@ -72,7 +72,6 @@ public class CommentService {
                             userId
                     );
                     commentDto.setMyLike(myLike);
-                    return commentDto;
                 })
                 .toList();
     }

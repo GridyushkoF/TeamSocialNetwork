@@ -2,7 +2,6 @@ package ru.skillbox.postservice.util;
 
 import org.junit.Test;
 import org.springframework.data.domain.Sort;
-import ru.skillbox.commonlib.util.SortCreatorUtil;
 
 import java.util.Arrays;
 import java.util.Collections;
