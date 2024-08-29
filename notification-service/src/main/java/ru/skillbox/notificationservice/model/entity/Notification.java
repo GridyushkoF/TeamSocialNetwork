@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import ru.skillbox.commonlib.notification.NotificationStatus;
-import ru.skillbox.commonlib.notification.NotificationType;
+import ru.skillbox.commonlib.event.notification.NotificationStatus;
+import ru.skillbox.commonlib.event.notification.NotificationType;
 
 import java.time.LocalDateTime;
 

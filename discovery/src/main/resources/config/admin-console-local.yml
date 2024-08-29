@@ -12,7 +12,7 @@ eureka:
 management:
   endpoints:
     web:
-      base-path: /api/v1/post/admin-console
+      base-path: /api/v1/admin-console/actuator
       exposure:
         include: "*"
   metrics:

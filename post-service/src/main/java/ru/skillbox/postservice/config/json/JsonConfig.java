@@ -7,12 +7,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Pageable;
 import ru.skillbox.commonlib.dto.post.LikeReactionType;
-import ru.skillbox.postservice.config.json.deserializer.LikeReactionTypeDeserializer;
-import ru.skillbox.postservice.config.json.deserializer.DateTimeDeserializer;
-import ru.skillbox.postservice.config.json.deserializer.PageableDeserializer;
-import ru.skillbox.postservice.config.json.serializer.LikeReactionTypeSerializer;
-import ru.skillbox.postservice.config.json.serializer.DateTimeSerializer;
-import ru.skillbox.postservice.config.json.serializer.PageableSerializer;
+import ru.skillbox.commonlib.json.deserializer.DateTimeDeserializer;
+import ru.skillbox.commonlib.json.deserializer.LikeReactionTypeDeserializer;
+import ru.skillbox.commonlib.json.deserializer.PageableDeserializer;
+import ru.skillbox.commonlib.json.serializer.DateTimeSerializer;
+import ru.skillbox.commonlib.json.serializer.LikeReactionTypeSerializer;
+import ru.skillbox.commonlib.json.serializer.PageableSerializer;
 
 import java.time.ZonedDateTime;
 

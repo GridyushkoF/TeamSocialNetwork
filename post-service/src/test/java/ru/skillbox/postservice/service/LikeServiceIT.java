@@ -15,11 +15,10 @@ import ru.skillbox.postservice.model.entity.Like;
 import ru.skillbox.postservice.model.entity.LikeEntityType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
-public class LikeServiceIT extends TestDependenciesContainer {
+class LikeServiceIT extends TestDependenciesContainer {
     private Long postId;
 
     @BeforeEach
@@ -40,7 +39,7 @@ public class LikeServiceIT extends TestDependenciesContainer {
     void likePost() {
         LikeDto likeDto = new LikeDto("POST",LikeReactionType.HEART);
         likeService.likePost(postId,likeDto,1L);
-        assertTrue(likeRepository.count() == 1);
+        assertEquals(1, likeRepository.count());
     }
 
     @Test

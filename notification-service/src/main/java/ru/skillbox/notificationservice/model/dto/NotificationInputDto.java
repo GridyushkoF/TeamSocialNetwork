@@ -3,7 +3,7 @@ package ru.skillbox.notificationservice.model.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import ru.skillbox.commonlib.notification.NotificationType;
+import ru.skillbox.commonlib.event.notification.NotificationType;
 
 @Getter
 @Setter

@@ -7,8 +7,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import ru.skillbox.commonlib.dto.statistics.CountDto;
 import ru.skillbox.dialogservice.mapper.MessageMapper;
-import ru.skillbox.dialogservice.model.dto.*;
+import ru.skillbox.dialogservice.model.dto.DialogRs;
+import ru.skillbox.dialogservice.model.dto.MessageDto;
 import ru.skillbox.dialogservice.model.entity.Message;
 import ru.skillbox.dialogservice.model.enums.MessageStatus;
 import ru.skillbox.dialogservice.processor.DialogMessageProcessor;
@@ -21,26 +23,42 @@ import java.util.List;
 @Service
 public class MessageService {
 
+    private static final String RECIPIENT_ID = "recipientId";
     private final MessageRepository messageRepository;
     private final MessageMapper messageMapper;
     private final DialogMessageProcessor dialogMessageProcessor;
-
-    @Autowired
-    @Lazy
     private DialogService dialogService;
-
-    public DialogRs getUnread(Long authUserId) {
-        List<Message> messages = messageRepository
-                .findAll(getAuthUserUnreadMessagesSpecification(authUserId));
-        log.info("Get unread messages - {}", messages);
-        return new DialogRs(messageMapper.toDtoList(messages));
-    }
 
     private static Specification<Message> getAuthUserUnreadMessagesSpecification(Long authUserId) {
         return (root, cq, cb) -> cb.and(
-                cb.equal(root.get("recipientId"), authUserId),
+                cb.equal(root.get(RECIPIENT_ID), authUserId),
                 cb.equal(root.get("status"), MessageStatus.SENT)
         );
+    }
+
+    private static Specification<Message> getMessageSpecification(Long authUserId, Long participantId) {
+        return (root, cq, cb) -> cb.or(
+                cb.and(
+                        cb.equal(root.get("authorId"), authUserId),
+                        cb.equal(root.get(RECIPIENT_ID), participantId)
+                ),
+                cb.and(
+                        cb.equal(root.get("authorId"), participantId),
+                        cb.equal(root.get(RECIPIENT_ID), authUserId)
+                )
+        );
+    }
+
+    @Autowired
+    public void setDialogService(@Lazy DialogService dialogService) {
+        this.dialogService = dialogService;
+    }
+
+    public CountDto getUnread(Long authUserId) {
+        int messagesAmount = Integer.parseInt(String.valueOf(messageRepository
+                .count(getAuthUserUnreadMessagesSpecification(authUserId))));
+        log.info("Get unread messages amount - {}", messagesAmount);
+        return new CountDto(messagesAmount);
     }
 
     public Page<MessageDto> getMessages(Long authUserId, Long conversationPartnerId,
@@ -58,19 +76,6 @@ public class MessageService {
 
         return new PageImpl<>(pageList, nextPage, messages.size());
 
-    }
-
-    private static Specification<Message> getMessageSpecification(Long authUserId, Long participantId) {
-        return (root, cq, cb) -> cb.or(
-                cb.and(
-                        cb.equal(root.get("authorId"), authUserId),
-                        cb.equal(root.get("recipientId"), participantId)
-                ),
-                cb.and(
-                        cb.equal(root.get("authorId"), participantId),
-                        cb.equal(root.get("recipientId"), authUserId)
-                )
-        );
     }
 
     public void saveMessage(MessageDto messageDto) {
@@ -92,7 +97,10 @@ public class MessageService {
                         .stream()
                         .filter(message -> message.getRecipientId().equals(currentAuthUserId))
                         .filter(message -> message.getStatus().equals(MessageStatus.SENT))
-                        .peek(message -> message.setStatus(MessageStatus.READ))
+                        .map(message -> {
+                            message.setStatus(MessageStatus.READ);
+                            return message;
+                        })
                         .toList()
         );
     }

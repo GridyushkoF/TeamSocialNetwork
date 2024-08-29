@@ -24,4 +24,7 @@ public class AdminQueryGeneratorUtil {
         return String.format("SELECT COUNT(e) FROM %s e WHERE e.%s BETWEEN :dateTimeFrom AND :dateTimeTo",
                 entityName, dateFieldName);
     }
+    private AdminQueryGeneratorUtil() {
+
+    }
 }
