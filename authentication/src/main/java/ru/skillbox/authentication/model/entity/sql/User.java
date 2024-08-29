@@ -1,9 +1,10 @@
-package ru.skillbox.authentication.model.entity;
+package ru.skillbox.authentication.model.entity.sql;
 
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import ru.skillbox.commonlib.dto.account.Role;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.service.security.jwt;
+package ru.skillbox.authentication.config;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import io.jsonwebtoken.security.Keys;
@@ -13,7 +13,7 @@ import java.time.Duration;
 @Configuration
 @ConfigurationProperties("security.jwt")
 @Setter
-public class JwtConfiguration {
+public class JwtConfig {
 
     private String secret;
     private Duration tokenExpiration;

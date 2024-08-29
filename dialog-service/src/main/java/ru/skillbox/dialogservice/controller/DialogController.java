@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.commonlib.dto.statistics.CountDto;
 import ru.skillbox.dialogservice.model.dto.DialogDto;
-import ru.skillbox.dialogservice.model.dto.DialogRs;
 import ru.skillbox.dialogservice.model.dto.MessageDto;
 import ru.skillbox.dialogservice.service.DialogService;
 import ru.skillbox.dialogservice.service.MessageService;

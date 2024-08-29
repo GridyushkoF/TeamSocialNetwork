@@ -18,8 +18,8 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthenticationFilter implements GatewayFilter {
 
-    private final JwtUtil jwtUtil;
-    private final Counter invalidAuthCounter;
+    protected final JwtUtil jwtUtil;
+    protected final Counter invalidAuthCounter;
 
     @Autowired
     public AuthenticationFilter(JwtUtil jwtUtil, MeterRegistry meterRegistry) {
@@ -35,39 +35,42 @@ public class AuthenticationFilter implements GatewayFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
+        String token = null;
+        if (!isAuthMissing(request)) {
+            token = this.getAuthHeader(request);
+        }
 
         if (RouterValidator.isSecured.test(request)) {
             if (this.isAuthMissing(request)) {
-                return this.onError(exchange, "Authorization header is missing in request", HttpStatus.UNAUTHORIZED);
+                return this.onError(exchange, HttpStatus.UNAUTHORIZED);
             }
-
-            final String token = this.getAuthHeader(request);
 
             if (jwtUtil.isInvalid(token)) {
-                return this.onError(exchange, "Authorization header is invalid", HttpStatus.UNAUTHORIZED);
+                return this.onError(exchange, HttpStatus.UNAUTHORIZED);
             }
-
+        }
+        if (!isAuthMissing(request)) {
             this.populateRequestWithHeaders(exchange, token);
         }
         return chain.filter(exchange);
     }
 
-    private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) {
+    protected Mono<Void> onError(ServerWebExchange exchange, HttpStatus httpStatus) {
         invalidAuthCounter.increment();
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
         return response.setComplete();
     }
 
-    private String getAuthHeader(ServerHttpRequest request) {
+    protected String getAuthHeader(ServerHttpRequest request) {
         return request.getHeaders().getOrEmpty("Authorization").get(0);
     }
 
-    private boolean isAuthMissing(ServerHttpRequest request) {
+    protected boolean isAuthMissing(ServerHttpRequest request) {
         return !request.getHeaders().containsKey("Authorization");
     }
 
-    private void populateRequestWithHeaders(ServerWebExchange exchange, String tokenString) {
+    protected void populateRequestWithHeaders(ServerWebExchange exchange, String tokenString) {
         String jwtToken = tokenString.substring(7);
         Claims tokenClaims = jwtUtil.getAllClaimsFromToken(jwtToken);
         String userId = tokenClaims.get("id").toString();

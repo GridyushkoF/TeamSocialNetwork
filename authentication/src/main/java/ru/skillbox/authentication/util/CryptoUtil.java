@@ -1,24 +1,24 @@
-package ru.skillbox.authentication.service.utils;
+package ru.skillbox.authentication.util;
 
 import org.hashids.Hashids;
 import ru.skillbox.authentication.exception.IncorrectRecoveryLinkException;
 
 import java.util.Map;
 
-public class CryptoTool {
+public class CryptoUtil {
 
     private final Hashids hashids;
 
-    public CryptoTool(String salt) {
+    public CryptoUtil(String salt) {
         var minimalLength = 10;
         this.hashids = new Hashids(salt, minimalLength);
     }
 
-    public String encode(long temp, long id) {
+    public String encodeWithTemp(long temp, long id) {
         return hashids.encode(temp, id);
     }
 
-    public Map<Long, Long> decode(String encodedString) {
+    public Map<Long, Long> decodeWithTemp(String encodedString) {
         long[] decodedValues = hashids.decode(encodedString);
         if (decodedValues.length == 2) {
             return Map.of(decodedValues[0], decodedValues[1]);
@@ -26,4 +26,5 @@ public class CryptoTool {
             throw new IncorrectRecoveryLinkException("Неверный формат закодированной строки");
         }
     }
+
 }

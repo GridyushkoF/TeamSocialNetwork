@@ -23,7 +23,9 @@ public class PostDto {
     private String title;
     private PostType type;
     private String postText;
+    @Builder.Default
     private boolean isBlocked = false;
+    @Builder.Default
     private boolean isDelete = false;
     private Long commentsCount;
     private List<TagWrapper> tags;

@@ -113,6 +113,12 @@ public class User {
     private List<User> friendsTo = new ArrayList<>();
 
     public Set<User> getFriends() {
+        if(friendsTo == null) {
+            friendsTo = new ArrayList<>();
+        }
+        if(friendsFrom == null) {
+            friendsFrom = new ArrayList<>();
+        }
         return Stream.concat(friendsFrom.stream(), friendsTo.stream())
                 .collect(toSet());
     }
