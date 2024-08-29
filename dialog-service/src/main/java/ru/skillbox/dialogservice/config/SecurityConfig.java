@@ -39,8 +39,8 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .addFilterAfter(tokenFilter, BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/swagger-ui/**", "v3/api-docs",
-                                        "v3/api-docs/*", "/swagger-resources/*").permitAll()
+                        auth.requestMatchers("/api/v1/dialogs/v3/api-docs",
+                                        "/api/v1/dialogs/v3/api-docs/**").permitAll()
                                 .requestMatchers("/api/v1/dialogs/actuator/prometheus").permitAll()
                                 .anyRequest().authenticated()
                 )

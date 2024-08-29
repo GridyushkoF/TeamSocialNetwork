@@ -15,6 +15,7 @@ import ru.skillbox.commonlib.dto.post.PostSearchDto;
 import ru.skillbox.commonlib.dto.post.PostType;
 import ru.skillbox.commonlib.dto.post.ReactionDto;
 import ru.skillbox.commonlib.dto.post.pages.PagePostDto;
+import ru.skillbox.commonlib.event.audit.ActionType;
 import ru.skillbox.postservice.mapper.PostMapper;
 import ru.skillbox.postservice.mapper.PostMapperDecorator;
 import ru.skillbox.postservice.model.entity.Like;
@@ -63,7 +64,8 @@ public class PostService {
         existingPost.setDelete(postToUpdate.isDelete());
         existingPost.setTags(postToUpdate.getTags() != null ? postMapperDecorator.convertTagsAndGet(postToUpdate, existingPost).getTags() : existingPost.getTags());
         postRepository.save(existingPost);
-        log.info("post with id " + postToUpdate.getId() + " was updated by postDto: " + postToUpdate);
+        log.info("post with id {} was updated by postDto: {}", postToUpdate.getId(), postToUpdate);
+        processor.auditProcess(existingPost, ActionType.UPDATE);
         return existingPost;
     }
 
@@ -79,7 +81,8 @@ public class PostService {
             likeRepository.findAllByEntityTypeAndEntityId(LikeEntityType.COMMENT, comment.getId());
         });
         postRepository.save(post);
-        log.info("post marked as deleted  " + postId + " attached comments marked as deleted and all likes deleted ");
+        processor.auditProcess(post, ActionType.DELETE);
+        log.info("post marked as deleted {} attached comments marked as deleted and all likes deleted ", postId);
     }
 
     @Transactional
@@ -135,10 +138,11 @@ public class PostService {
         postDto.setId(null);
         Post post = postMapper.postDtoToPost(postDto);
         Post newPost = postRepository.save(post);
-        log.info("post created by dto " + postDto);
+        log.info("post created by dto {}", postDto);
         if (newPost.getType().equals(PostType.POSTED)) {
-            processor.process(newPost);
+            processor.notificationProcess(newPost);
         }
+        processor.auditProcess(newPost, ActionType.CREATE);
         return newPost;
     }
 
@@ -149,8 +153,9 @@ public class PostService {
                 .forEach(post -> {
                     post.setType(PostType.POSTED);
                     Post newPost = postRepository.save(post);
-                    log.info("post updated by scheduler " + newPost);
-                    processor.process(newPost);
+                    log.info("post updated by scheduler {}", newPost);
+                    processor.notificationProcess(newPost);
+                    processor.auditProcess(newPost, ActionType.UPDATE);
                 });
     }
 

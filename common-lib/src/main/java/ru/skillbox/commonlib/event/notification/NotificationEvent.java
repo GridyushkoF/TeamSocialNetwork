@@ -1,8 +1,9 @@
-package ru.skillbox.commonlib.notification;
+package ru.skillbox.commonlib.event.notification;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
+import ru.skillbox.commonlib.event.Event;
 
 @Data
 @Builder

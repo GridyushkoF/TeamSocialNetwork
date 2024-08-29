@@ -16,6 +16,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @Data
 @Builder
+@Table(name = "messages")
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

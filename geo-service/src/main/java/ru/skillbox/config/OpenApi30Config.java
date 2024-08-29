@@ -1,4 +1,4 @@
-package ru.skillbox.authentication;
+package ru.skillbox.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -8,8 +8,9 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@OpenAPIDefinition(info = @Info(title = "Auth API", version = "v1"),
-        servers = {@Server(url = "http://localhost:9090/api/v1/auth")})
+@OpenAPIDefinition(info = @Info(title = "Geo API", version = "v1", description = "Социальная сеть (Skillbox group 48)"),
+        servers = {@Server(url = "http://95.174.92.252")}
+)
 @SecurityScheme(
         name = "bearerAuth",
         type = SecuritySchemeType.HTTP,
