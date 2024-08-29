@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.skillbox.authentication.model.entity.User;
 import ru.skillbox.authentication.repository.UserRepository;
-import ru.skillbox.authentication.service.security.Jwt.JwtService;
+import ru.skillbox.authentication.service.security.jwt.JwtService;
 import ru.skillbox.commonlib.dto.auth.JwtRequest;
 
 import java.util.Map;
