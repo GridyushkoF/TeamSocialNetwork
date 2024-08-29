@@ -79,12 +79,15 @@ public class UserSecurityDataService {
     }
     public String generateSecureTempKey(int length) throws NoSuchAlgorithmException {
         SecureRandom secureRandom = SecureRandom.getInstanceStrong();
-        byte[] keyBytes = new byte[length];
-        secureRandom.nextBytes(keyBytes);
         StringBuilder sb = new StringBuilder();
-        for (byte b : keyBytes) {
-            if (b != SLASH_NUMBER) {
-                sb.append(String.format("%02x", b));
+        int generatedBytes = 0;
+
+        while (generatedBytes < length) {
+            byte[] keyBytes = new byte[1];
+            secureRandom.nextBytes(keyBytes);
+            if (keyBytes[0] != SLASH_NUMBER) {
+                sb.append(String.format("%02x", keyBytes[0]));
+                generatedBytes++;
             }
         }
         return sb.toString();
