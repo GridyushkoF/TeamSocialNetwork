@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.commonlib.dto.account.AccountDto;
 import ru.skillbox.commonlib.dto.account.StatusCode;
+import ru.skillbox.commonlib.dto.statistics.CountDto;
 import ru.skillbox.userservice.model.dto.FriendDto;
 import ru.skillbox.userservice.service.FriendshipService;
 
@@ -76,9 +77,8 @@ public class FriendController {
     }
 
     @GetMapping("/count")
-    public ResponseEntity<Integer> requestCount(HttpServletRequest request) {
+    public ResponseEntity<CountDto> requestCount(HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        return ResponseEntity.ok(friendshipService.getFriendRequestCount(currentAuthUserId));
+        return ResponseEntity.ok(new CountDto(friendshipService.getFriendRequestCount(currentAuthUserId)));
     }
-
 }

@@ -4,23 +4,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.skillbox.commonlib.dto.statistics.PeriodRequestDto;
 import ru.skillbox.commonlib.dto.account.AccountByFilterDto;
 import ru.skillbox.commonlib.dto.account.AccountDto;
-import ru.skillbox.commonlib.dto.account.AccountRecoveryRq;
+import ru.skillbox.commonlib.dto.account.AccountRecoveryRequest;
 import ru.skillbox.commonlib.dto.statistics.UsersStatisticsDto;
+import ru.skillbox.commonlib.util.SortCreatorUtil;
 import ru.skillbox.commonlib.util.admin.AdminAccessUtil;
 import ru.skillbox.userservice.service.AccountService;
 
@@ -34,8 +27,11 @@ public class AccountController {
     private final AccountService accountService;
 
     @PutMapping("/recovery")
-    public ResponseEntity<String> recoveryUserAccount(@Valid @RequestBody AccountRecoveryRq recoveryRq) {
-        return ResponseEntity.ok(accountService.recoveryUserAccount(recoveryRq));
+    public ResponseEntity<String> recoveryUserAccount(
+            @Valid
+            @RequestBody AccountRecoveryRequest recoveryRequest) {
+        return ResponseEntity.ok(accountService
+                .recoveryUserAccount(recoveryRequest));
     }
 
     @GetMapping("/me")
@@ -55,13 +51,20 @@ public class AccountController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<AccountDto>> getAllAccounts(@RequestParam Pageable page, HttpServletRequest request) {
-        return ResponseEntity.ok(accountService.getAllAccounts(page, Long.parseLong(request.getHeader("id"))));
+    public ResponseEntity<Page<AccountDto>> getAllAccounts(
+            @RequestParam(value = "page",defaultValue = "0") int page,
+            @RequestParam(value = "size",defaultValue = "5") int size,
+            @RequestParam(value = "sort") List<String> sort,
+            @RequestHeader Long id) {
+        return ResponseEntity.ok(accountService
+                .getAllAccounts(PageRequest.of(page,size,
+                        SortCreatorUtil.createSort(sort)), id));
     }
 
     @PostMapping
-    public ResponseEntity<?> createAccount(@RequestBody AccountDto accountDto, HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createAccount(accountDto, Long.parseLong(request.getHeader("id"))));
+    public ResponseEntity<Long> createAccount(@RequestBody AccountDto accountDto, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(accountService.createAccount(accountDto, Long.parseLong(request.getHeader("id"))));
     }
 
     @PostMapping("/searchByFilter")
@@ -75,17 +78,21 @@ public class AccountController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<AccountDto>> searchAccount(@RequestParam boolean isDeleted, HttpServletRequest request) {
-        return ResponseEntity.ok(accountService.searchAccount(isDeleted, Long.parseLong(request.getHeader("id"))));
+    public ResponseEntity<Page<AccountDto>> searchAccount(
+            @RequestParam boolean isDeleted,
+          HttpServletRequest request) {
+        return ResponseEntity.ok(accountService
+                .searchAccount(isDeleted,
+                        Long.parseLong(request.getHeader("id"))));
     }
 
     @GetMapping("/ids")
-    public ResponseEntity<?> getAllIds() {
+    public ResponseEntity<List<Long>> getAllIds() {
         return ResponseEntity.ok(accountService.getAllIds());
     }
 
     @GetMapping("/accountIds")
-    public ResponseEntity<?> getAccountIds(@RequestParam Long[] ids, HttpServletRequest request) {
+    public ResponseEntity<List<AccountDto>> getAccountIds(@RequestParam Long[] ids, HttpServletRequest request) {
         return ResponseEntity.ok(accountService.getAccountIds(ids, Long.parseLong(request.getHeader("id"))));
     }
     //----------------------------ADMIN-ACCESS---------------------------
@@ -97,7 +104,7 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getUsersStatistics(periodRequestDto));
     }
 
-    @PutMapping("/admin-api/block/{id}")
+    @PutMapping("/block/{id}")
     public ResponseEntity<String> blockAccountById(
             @PathVariable Integer id,
             HttpServletRequest request) {
@@ -105,7 +112,7 @@ public class AccountController {
         return ResponseEntity.ok(accountService.blockAccount(true, id));
     }
 
-    @DeleteMapping("/admin-api/block/{id}")
+    @DeleteMapping("/block/{id}")
     public ResponseEntity<String> unblockAccountById(
             @PathVariable Integer id,
             HttpServletRequest request) {

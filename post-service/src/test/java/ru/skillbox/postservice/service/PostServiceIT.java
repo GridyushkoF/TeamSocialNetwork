@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
-public class PostServiceIT extends TestDependenciesContainer {
+class PostServiceIT extends TestDependenciesContainer {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -120,6 +120,7 @@ public class PostServiceIT extends TestDependenciesContainer {
     }
 
     //-----------------------------UTIL--------------------------
+    @Override
     public PostDto generateTestPostDto() {
         return PostDto.builder()
                 .title("Test Post")
