@@ -1,6 +1,7 @@
 package ru.skillbox.dialogservice.controller;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,7 @@ class DialogControllerTest {
 
 
     @Test
+    @DisplayName("test update dialog by id, dialog is updated")
     void testUpdateDialog() throws Exception {
         Mockito.when(dialogService.updateDialog(1L, 1L))
                 .thenReturn(dialogDto);
