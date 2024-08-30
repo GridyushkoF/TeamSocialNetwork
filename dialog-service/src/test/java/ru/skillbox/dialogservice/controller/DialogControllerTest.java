@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import ru.skillbox.commonlib.dto.statistics.CountDto;
 import ru.skillbox.dialogservice.model.dto.DialogDto;
-import ru.skillbox.dialogservice.model.dto.DialogRs;
 import ru.skillbox.dialogservice.model.dto.MessageDto;
 import ru.skillbox.dialogservice.model.enums.MessageStatus;
 import ru.skillbox.dialogservice.service.DialogService;

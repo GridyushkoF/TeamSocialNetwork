@@ -1,6 +1,5 @@
 package ru.skillbox.userservice.controller;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,9 +24,6 @@ class StorageControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
-    void setUp() {
-    }
     @Value("${custom.rest.basePath}")
     private String apiPrefix;
     @Test

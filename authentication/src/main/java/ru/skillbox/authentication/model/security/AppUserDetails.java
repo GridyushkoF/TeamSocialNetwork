@@ -1,10 +1,10 @@
-package ru.skillbox.authentication.service.security;
+package ru.skillbox.authentication.model.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.skillbox.authentication.model.entity.User;
+import ru.skillbox.authentication.model.entity.sql.User;
 
 import java.util.Collection;
 import java.util.Collections;

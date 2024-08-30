@@ -1,4 +1,4 @@
-package ru.skillbox.authentication.service.security;
+package ru.skillbox.authentication.config;
 
 
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.skillbox.authentication.service.impl.UserDetailsServiceImpl;
-import ru.skillbox.authentication.service.utils.CryptoTool;
+import ru.skillbox.authentication.util.CryptoUtil;
 
 @Configuration
 @EnableWebSecurity
@@ -48,8 +48,8 @@ public class SecurityBeanConfig {
 
 
     @Bean
-    public CryptoTool getCryptoTool() {
-        return new CryptoTool(salt);
+    public CryptoUtil getCryptoTool() {
+        return new CryptoUtil(salt);
     }
 
     @Bean

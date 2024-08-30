@@ -9,11 +9,17 @@ import org.springframework.web.bind.annotation.*;
 import ru.skillbox.authentication.exception.AlreadyExistsException;
 import ru.skillbox.authentication.exception.CaptchaValidatedExcepction;
 import ru.skillbox.authentication.model.dto.RegUserDto;
+import ru.skillbox.authentication.model.dto.SimpleResponse;
 import ru.skillbox.authentication.model.web.AuthenticationRequest;
 import ru.skillbox.authentication.model.web.AuthenticationResponse;
-import ru.skillbox.authentication.repository.UserRepository;
+import ru.skillbox.authentication.model.web.ChangeEmailRequest;
+import ru.skillbox.authentication.model.web.ChangePasswordRequest;
+import ru.skillbox.authentication.repository.sql.UserRepository;
 import ru.skillbox.authentication.service.AuthenticationService;
 import ru.skillbox.authentication.service.CaptchaService;
+import ru.skillbox.authentication.service.UserSecurityDataService;
+
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +31,7 @@ public class UserController {
     private final UserRepository userRepository;
 
     @PostMapping("/register")
+    @ResponseStatus(HttpStatus.OK)
     public void createUser(@RequestBody RegUserDto userDto) {
         if (!captchaService.validateCaptcha(userDto.getCaptchaSecret()
                 , userDto.getCaptchaCode())) {
