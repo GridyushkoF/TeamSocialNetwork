@@ -1,5 +1,6 @@
 package ru.skillbox.commonlib.dto.account;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
@@ -23,8 +24,11 @@ public class AccountDto {
     private ZonedDateTime birthDate;
     private String messagePermission;
     private ZonedDateTime lastOnlineTime;
+    @JsonProperty("isOnline")
     private boolean isOnline;
+    @JsonProperty("isBlocked")
     private boolean isBlocked;
+    @JsonProperty("isDeleted")
     private boolean isDeleted;
     private String photoId;
     private String photoName;
@@ -32,4 +36,6 @@ public class AccountDto {
     private ZonedDateTime createdOn;
     private ZonedDateTime updatedOn;
     private String password;
+    private String emojiStatus;
+    private String profileCover;
 }

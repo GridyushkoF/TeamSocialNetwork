@@ -39,6 +39,8 @@ public abstract class UserMapperDelegate implements UserMapperV1 {
                 .statusCode(getStatusCode(authUserId, user.getId()))
                 .lastOnlineTime(user.getLastOnlineTime())
                 .password(user.getPassword())
+                .emojiStatus(user.getEmojiStatus())
+                .profileCover(user.getProfileCover())
                 .build();
     }
 

@@ -22,4 +22,11 @@
         <addForeignKeyConstraint baseColumnNames="account_id_to" baseTableName="friendship" constraintName="fk_account_id_to" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" validate="true"/>
     </changeSet>
 
+    <changeSet id="addEmojiStatusAndProfileCoverColumnsToUsersTable" author="Gridyushko Fedor">
+        <addColumn tableName="users">
+            <column name="emoji_status" type="VARCHAR(255)"/>
+            <column name="profile_cover" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
