@@ -27,7 +27,7 @@ import ru.skillbox.authentication.model.entity.sql.User;
 import ru.skillbox.authentication.model.security.AppUserDetails;
 import ru.skillbox.authentication.model.web.AuthenticationRequest;
 import ru.skillbox.authentication.model.web.AuthenticationResponse;
-import ru.skillbox.authentication.repository.nosql.EmailChangeRequestRepository;
+import ru.skillbox.authentication.repository.sql.UserRepository;
 import ru.skillbox.authentication.service.AuthenticationService;
 import ru.skillbox.authentication.service.CaptchaService;
 import ru.skillbox.authentication.service.security.jwt.JwtService;
@@ -47,8 +47,6 @@ class UserControllerIT extends TestDependenciesContainer {
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private EmailChangeRequestRepository emailChangeRequestRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -60,6 +58,8 @@ class UserControllerIT extends TestDependenciesContainer {
     private AuthenticationService authenticationService;
     @Autowired
     private JwtService jwtService;
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     public void setUp() {
@@ -96,9 +96,26 @@ class UserControllerIT extends TestDependenciesContainer {
 
     @Test
     @DisplayName("Create user - when captcha is invalid, should return bad request")
-    void createUser_WhenCaptchaInvalid_ShouldReturnBadRequest() throws Exception {
+    void createUser_whenCaptchaInvalid_ShouldReturnBadRequest() throws Exception {
         RegUserDto userDto = getRegUserDto();
         when(captchaService.validateCaptcha(any(), any())).thenReturn(false);
+        mockMvc.perform(post("/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userDto)))
+                .andExpect(status().isBadRequest());
+
+        verify(captchaService, times(1)).validateCaptcha(any(), any());
+        verify(authenticationService, never()).register(any(RegUserDto.class));
+    }
+
+    @Test
+    @DisplayName("Create user - when email busy, should return bad request")
+    void createUser_emailBusy_error() throws Exception {
+        when(captchaService.validateCaptcha(any(), any())).thenReturn(true);
+        RegUserDto userDto = getRegUserDto();
+        userRepository.save(User.builder()
+                .email(userDto.getEmail())
+                .build());
         mockMvc.perform(post("/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDto)))

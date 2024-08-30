@@ -32,7 +32,7 @@ public class NotificationController {
     @PostMapping("/settings")
     public ResponseEntity<NotificationSettingsDto> createNotificationSetting(
             @RequestBody SettingsDto settingsDto, HttpServletRequest request){
-        return ResponseEntity.ok(notificationService.createSettings(settingsDto, request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(notificationService.createSettings(settingsDto, request));
     }
 
 
@@ -46,7 +46,7 @@ public class NotificationController {
     @PostMapping
     public ResponseEntity<NotificationDto> createNotification(
             @RequestBody NotificationInputDto notificationInputDto){
-        return ResponseEntity.ok(notificationService.createNotification(notificationInputDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(notificationService.createNotification(notificationInputDto));
     }
 
     @GetMapping("/count")
