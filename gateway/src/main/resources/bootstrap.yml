@@ -32,7 +32,7 @@ springdoc:
       - name: audit
         url: /api/v1/audit/v3/api-docs
       - name: admin
-        url: /api/v1/admin-console/statistic/v3/api-docs
+        url: /api/v1/admin-console/v3/api-docs
       - name: geo
         url: /api/v1/geo/v3/api-docs
 
