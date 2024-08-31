@@ -16,8 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.skillbox.dialogservice.TestDependenciesContainer;
+import ru.skillbox.dialogservice.model.dto.DialogDto;
 import ru.skillbox.dialogservice.model.dto.JwtRequest;
-import ru.skillbox.dialogservice.repository.DialogRepository;
 import ru.skillbox.dialogservice.service.feign.DialogFeignClient;
 
 import java.util.HashMap;
@@ -29,12 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @Testcontainers
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
 @WithUserDetails(value = "admin@socialnetwork.com")
-class DialogControllerIT {
-
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private DialogRepository dialogRepository;
+class DialogControllerIT extends TestDependenciesContainer {
 
     @MockBean
     private DialogFeignClient feignClient;
@@ -42,19 +38,37 @@ class DialogControllerIT {
     @Value("${app.apiPrefix}")
     private String apiPrefix;
 
+    @Autowired
+    protected MockMvc mockMvc;
+
     @BeforeEach
     public void setUp() {
-        dialogRepository.deleteAll();
-    }
 
-    @Test
-    @DisplayName("test update dialog by id, dialog not exists, bad request")
-    void testPutDialogById_dialogNotExists_badRequest() throws Exception {
         HashMap<String, String> tokenPayload = new HashMap<>();
         tokenPayload.put("id", "1");
         tokenPayload.put("authorities", "ADMIN");
         Mockito.when(feignClient.validateToken(new JwtRequest("token")))
                 .thenReturn(tokenPayload);
+
+    }
+
+    @Test
+    @DisplayName("test update dialog by id, return dialog, ok")
+    void testPutDialogById_returnDialog() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.put(apiPrefix + "/dialogs/{id}", 1L)
+                        .cookie(new Cookie("jwt", "token"))
+                        .header("id", 1L))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @DisplayName("test update dialog by id, dialog not exists, bad request")
+    void testPutDialogById_dialogNotExists_badRequest() throws Exception {
+
+        DialogDto dialogDto = generateTestDialogDto();
+        saveDialogInDbAndGet(dialogDto);
 
         mockMvc.perform(MockMvcRequestBuilders.put(apiPrefix + "/dialogs/{id}", 145145145L)
                         .cookie(new Cookie("jwt", "token"))

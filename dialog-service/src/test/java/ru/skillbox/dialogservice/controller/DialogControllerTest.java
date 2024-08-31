@@ -101,6 +101,7 @@ class DialogControllerTest {
     }
 
     @Test
+    @DisplayName("test get dialogs, return dialogs")
     void testGetDialogs() throws Exception {
         String sort = "unreadCount,desc";
         String[] sorts = sort.split(",");
@@ -122,6 +123,7 @@ class DialogControllerTest {
     }
 
     @Test
+    @DisplayName("test get unread dialogs, return unread count 1")
     void testGetUnread() throws Exception {
 
         Mockito.when(messageService.getUnread(1L))
@@ -139,6 +141,7 @@ class DialogControllerTest {
     }
 
     @Test
+    @DisplayName("test get messages, return message")
     void testGetMessages() throws Exception {
         String sort = "time,asc";
         String[] sorts = sort.split(",");
@@ -160,6 +163,7 @@ class DialogControllerTest {
     }
 
     @Test
+    @DisplayName("test get dialog, return dialog")
     void testGetDialog() throws Exception {
         Mockito.when(dialogService.getDialog(1L, 2L))
                 .thenReturn(dialogDto);
