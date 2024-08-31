@@ -1,5 +1,6 @@
 package ru.skillbox.dialogservice.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import ru.skillbox.dialogservice.service.MessageService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${app.apiPrefix}" + "/dialogs")
+@SecurityRequirement(name = "bearerAuth")
 public class DialogController {
     private final DialogService dialogService;
     private final MessageService messageService;

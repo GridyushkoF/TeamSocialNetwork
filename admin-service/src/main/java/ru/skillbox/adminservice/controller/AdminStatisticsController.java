@@ -1,5 +1,6 @@
 package ru.skillbox.adminservice.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import ru.skillbox.commonlib.dto.statistics.UsersStatisticsDto;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${app.apiPrefix}" + "/admin-console/statistic")
+@SecurityRequirement(name = "bearerAuth")
 public class AdminStatisticsController {
     private final AdminService adminService;
 

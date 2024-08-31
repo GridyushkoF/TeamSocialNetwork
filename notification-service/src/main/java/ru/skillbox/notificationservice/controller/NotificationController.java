@@ -1,6 +1,7 @@
 package ru.skillbox.notificationservice.controller;
 
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import ru.skillbox.notificationservice.service.NotificationService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${app.apiPrefix}")
+@SecurityRequirement(name = "bearerAuth")
 public class NotificationController {
 
     private final NotificationService notificationService;

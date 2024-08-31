@@ -1,5 +1,6 @@
 package ru.skillbox.auditservice.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${app.apiPrefix}" + "/audit")
+@SecurityRequirement(name = "bearerAuth")
 public class AuditLogController {
     private final AuditService auditService;
     @PostMapping("/search")

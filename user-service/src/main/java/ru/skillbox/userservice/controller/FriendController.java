@@ -1,5 +1,6 @@
 package ru.skillbox.userservice.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/friends")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class FriendController {
 
     private final FriendshipService friendshipService;
