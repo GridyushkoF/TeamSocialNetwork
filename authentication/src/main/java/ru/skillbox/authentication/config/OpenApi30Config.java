@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @OpenAPIDefinition(info = @Info(title = "Auth API", version = "v1", description = "Социальная сеть (Skillbox group 48)"),
-        servers = {@Server(url = "http://95.174.92.252/api/v1/auth")}
+        servers = {@Server(url = "http://95.174.92.252:9090/api/v1/auth")}
 )
 @SecurityScheme(
         name = "bearerAuth",

@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @OpenAPIDefinition(info = @Info(title = "Dialogs API", version = "v1", description = "Социальная сеть (Skillbox group 48)"),
-        servers = {@Server(url = "http://95.174.92.252")}
+        servers = {@Server(url = "http://95.174.92.252:9090")}
 )
 @SecurityScheme(
-        name = "Authorization",
+        name = "bearerAuth",
         type = SecuritySchemeType.HTTP,
         bearerFormat = "JWT",
         scheme = "bearer"
