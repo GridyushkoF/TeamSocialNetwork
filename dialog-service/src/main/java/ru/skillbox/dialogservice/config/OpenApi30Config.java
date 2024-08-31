@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
         servers = {@Server(url = "http://95.174.92.252")}
 )
 @SecurityScheme(
-        name = "bearerAuth",
+        name = "Authorization",
         type = SecuritySchemeType.HTTP,
         bearerFormat = "JWT",
         scheme = "bearer"
