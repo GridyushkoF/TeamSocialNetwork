@@ -2,6 +2,7 @@ package ru.skillbox.dialogservice.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,6 +55,7 @@ class MessageServiceTest {
     }
 
     @Test
+    @DisplayName("test get unread message from db, return message")
     void testGetUnread() {
         CountDto unreadMessagesAmount = messageService.getUnread(2L);
         assertNotNull(unreadMessagesAmount);
@@ -61,6 +63,7 @@ class MessageServiceTest {
     }
 
     @Test
+    @DisplayName("test get messages from db, return message with message text")
     void testGetMessages() {
         String sort = "time,asc";
         Page<MessageDto> messageDtoPage = messageService.getMessages(1L, 2L, 0, sort);
@@ -70,6 +73,7 @@ class MessageServiceTest {
     }
 
     @Test
+    @DisplayName("test save message to db, return message with message text")
     void testSaveMessage() {
         List<Message> messageList = messageRepository.findByDialogId(1L);
         assertNotNull(messageList);
@@ -91,6 +95,7 @@ class MessageServiceTest {
     }
 
     @Test
+    @DisplayName("test update messages of dialog to db, return message with message text")
     void testUpdateDialogMessages() {
         Message message = Message.builder()
                 .status(MessageStatus.SENT)

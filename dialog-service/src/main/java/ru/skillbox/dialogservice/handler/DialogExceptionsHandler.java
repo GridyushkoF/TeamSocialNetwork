@@ -1,37 +1,27 @@
-package ru.skillbox.userservice.handler;
+package ru.skillbox.dialogservice.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.skillbox.commonlib.exception.AdminAccessException;
-import ru.skillbox.userservice.exception.BadRequestException;
-import ru.skillbox.userservice.exception.NoSuchAccountException;
-import ru.skillbox.userservice.exception.NotAuthException;
 import ru.skillbox.commonlib.dto.error.ErrorDetail;
+import ru.skillbox.dialogservice.exception.NotAuthException;
+import ru.skillbox.dialogservice.exception.NotFoundException;
 
 import java.time.LocalDateTime;
 
 @ControllerAdvice
-public class UserExceptionsHandler extends ResponseEntityExceptionHandler {
+public class DialogExceptionsHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ErrorDetail> handleBadRequest(BadRequestException exception) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorDetail> handleBadRequest(NotFoundException exception) {
         return buildResponseEntity(exception, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NotAuthException.class)
     public ResponseEntity<ErrorDetail> handleUnauthorized(NotAuthException exception) {
         return buildResponseEntity(exception, HttpStatus.UNAUTHORIZED);
-    }
-    @ExceptionHandler
-    public ResponseEntity<ErrorDetail> handleNoSuchAccountException(NoSuchAccountException exception) {
-        return buildResponseEntity(exception,HttpStatus.BAD_REQUEST);
-    }
-    @ExceptionHandler
-    public ResponseEntity<ErrorDetail> handleAdminAccessException(AdminAccessException exception) {
-        return buildResponseEntity(exception,HttpStatus.UNAUTHORIZED);
     }
 
     private ResponseEntity<ErrorDetail> buildResponseEntity(Exception exception, HttpStatus status) {

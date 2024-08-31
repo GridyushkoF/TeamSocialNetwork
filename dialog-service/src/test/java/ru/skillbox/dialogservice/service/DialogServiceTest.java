@@ -1,6 +1,7 @@
 package ru.skillbox.dialogservice.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,6 +37,7 @@ class DialogServiceTest {
     }
 
     @Test
+    @DisplayName("test get dialogs from db, return list of dialogs")
     void testGetDialogs() {
         String sort = "unreadCount,desc";
         Page<DialogDto> dialogs = dialogService.getDialogs(0, sort, 1L);
@@ -45,12 +47,11 @@ class DialogServiceTest {
         List<DialogDto> dialogContent = dialogs.getContent();
 
         assertEquals(1, dialogContent.get(0).getId());
-        assertThrows(IndexOutOfBoundsException.class, () -> {
-            dialogContent.get(1);
-        });
+        assertThrows(IndexOutOfBoundsException.class, () -> dialogContent.get(1));
     }
 
     @Test
+    @DisplayName("test get dialog from db, return dialog")
     void testGetDialog() {
         DialogDto dialogDto = dialogService.getDialog(1L, 2L);
         assertNotNull(dialogDto);
@@ -61,6 +62,7 @@ class DialogServiceTest {
     }
 
     @Test
+    @DisplayName("test update dialog, return updated dialog")
     void testUpdateDialog() {
         DialogDto dialogDto = dialogService.getDialog(1L, 2L);
         assertEquals(1, dialogDto.getUnreadCount());
