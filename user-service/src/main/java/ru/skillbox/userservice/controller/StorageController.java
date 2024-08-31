@@ -1,5 +1,6 @@
 package ru.skillbox.userservice.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/storage")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class StorageController {
 
     private final StorageService storageService;

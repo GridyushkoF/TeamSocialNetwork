@@ -1,5 +1,6 @@
 package ru.skillbox.postservice.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${app.apiPrefix}/post")
+@SecurityRequirement(name = "bearerAuth")
 public class CommentController {
     private final CommentService commentService;
 

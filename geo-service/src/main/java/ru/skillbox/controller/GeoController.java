@@ -1,6 +1,7 @@
 package ru.skillbox.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/geo")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class GeoController {
     private final GeoService geoService;
 
