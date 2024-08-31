@@ -66,8 +66,8 @@ public class AccountService {
         User user = userRepository.findById(authUserId)
                 .orElseThrow(() -> new NoSuchAccountException("Can't find Account with id:" + authUserId));
         AccountDto existedAccount = userMapper.userToResponse(authUserId, user);
-        BeanUtils.copyProperties(accountDto, existedAccount, ColumnsUtil.getNullPropertyNames(existedAccount));
 
+        ColumnsUtil.copyNonNullProperties(accountDto,existedAccount);
         User newUser = userMapper.requestToUser(authUserId, existedAccount);
         newUser.setFriendsFrom(user.getFriendsFrom());
         newUser.setFriendsTo(user.getFriendsTo());

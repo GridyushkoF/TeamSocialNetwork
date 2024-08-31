@@ -94,6 +94,12 @@ public class User {
 
     private String password;
 
+    @Column(name = "emoji_status")
+    private String emojiStatus;
+
+    @Column(name = "profile_cover")
+    private String profileCover;
+
     @JsonIgnoreProperties("friendsFrom")
     @JsonIgnore
     @ManyToMany(cascade = {PERSIST, MERGE})

@@ -4,10 +4,11 @@ package ru.skillbox.authentication.model.entity.sql;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import ru.skillbox.commonlib.dto.account.Role;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "users")
@@ -36,7 +37,7 @@ public class User implements Serializable {
 
     @CreationTimestamp
     @Column(name = "reg_date")
-    private LocalDateTime regDate;
+    private ZonedDateTime regDate;
 
     @Column(name = "is_online")
     private boolean isOnline;
@@ -46,5 +47,12 @@ public class User implements Serializable {
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
+
+    @Column(name = "last_online_time")
+    private ZonedDateTime lastOnlineTime;
+
+    @UpdateTimestamp
+    @Column(name = "updated_on")
+    private ZonedDateTime updatedOn;
 
 }

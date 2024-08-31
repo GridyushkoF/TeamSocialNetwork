@@ -23,7 +23,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PutMapping("/{id}/comment")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public void updateComment(
             @PathVariable("id") Long postId,
             @RequestBody CommentDto commentDto,

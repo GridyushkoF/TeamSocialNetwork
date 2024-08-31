@@ -20,12 +20,20 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import ru.skillbox.authentication.TestDependenciesContainer;
 import ru.skillbox.authentication.exception.AlreadyExistsException;
+import ru.skillbox.authentication.exception.EntityNotFoundException;
 import ru.skillbox.authentication.exception.IncorrectPasswordException;
 import ru.skillbox.authentication.model.dto.RegUserDto;
+import ru.skillbox.authentication.model.entity.nosql.EmailChangeRequest;
 import ru.skillbox.authentication.model.entity.sql.User;
+import ru.skillbox.authentication.model.security.AppUserDetails;
 import ru.skillbox.authentication.model.web.AuthenticationRequest;
 import ru.skillbox.authentication.model.web.AuthenticationResponse;
+import ru.skillbox.authentication.repository.nosql.EmailChangeRequestRepository;
 import ru.skillbox.authentication.repository.sql.UserRepository;
+import ru.skillbox.authentication.service.security.jwt.JwtService;
+import ru.skillbox.commonlib.dto.auth.IsOnlineRequest;
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,6 +52,10 @@ class AuthenticationServiceIT extends TestDependenciesContainer {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private EmailChangeRequestRepository emailChangeRequestRepository;
+    @Autowired
+    private JwtService jwtService;
 
     @BeforeEach
     void setUp() {
@@ -107,5 +119,59 @@ class AuthenticationServiceIT extends TestDependenciesContainer {
         User testUser = saveTestUserAccountInDbAndGet();
         AuthenticationRequest loginRequest = new AuthenticationRequest(testUser.getEmail(), "invalidPassword");
         assertThrows(IncorrectPasswordException.class, () -> authenticationService.login(loginRequest));
+    }
+    @Test
+    @DisplayName("Register user - email already exists in change request, error")
+    void testRegisterUser_emailChangeRequestExists_error() {
+        String email = "testEmail@x.com";
+        emailChangeRequestRepository.save(EmailChangeRequest.builder()
+                .id(UUID.randomUUID().toString())
+                .currentTempCode("tempCode123")
+                .oldEmail("someOldEmail@x.com")
+                .newEmail(email)
+                .build());
+
+        RegUserDto userDto = new RegUserDto();
+        userDto.setEmail(email);
+        userDto.setPassword1("password123");
+        userDto.setPassword2("password123");
+        userDto.setFirstName("Jane");
+        userDto.setLastName("Doe");
+
+        assertThrows(AlreadyExistsException.class, () -> authenticationService.register(userDto));
+    }
+
+    @Test
+    @DisplayName("Logout user - success")
+    void testLogout_success() {
+        User testUser = saveTestUserAccountInDbAndGet();
+        String jwtToken = jwtService.generateJwtToken(new AppUserDetails(testUser));
+        assertDoesNotThrow(() -> authenticationService.logout("Bearer " + jwtToken));
+        User loggedOutUser = userRepository.findById(testUser.getId()).orElseThrow();
+        assertFalse(loggedOutUser.isOnline());
+    }
+
+    @Test
+    @DisplayName("Logout user - user not found, error")
+    void testLogout_userNotFound_error() {
+        String invalidJwtToken = "Bearer invalid.jwt.token";
+        assertThrows(EntityNotFoundException.class, () -> authenticationService.logout(invalidJwtToken));
+    }
+
+    @Test
+    @DisplayName("Set user online - success")
+    void testSetUserOnline_success() {
+        User testUser = saveTestUserAccountInDbAndGet();
+        IsOnlineRequest onlineRequest = new IsOnlineRequest(testUser.getId(), true);
+        assertDoesNotThrow(() -> authenticationService.setIsOnline(onlineRequest));
+        User updatedUser = userRepository.findById(testUser.getId()).orElseThrow();
+        assertTrue(updatedUser.isOnline());
+    }
+
+    @Test
+    @DisplayName("Set user online - user not found, error")
+    void testSetUserOnline_userNotFound_error() {
+        IsOnlineRequest onlineRequest = new IsOnlineRequest(999L, true);
+        assertThrows(EntityNotFoundException.class, () -> authenticationService.setIsOnline(onlineRequest));
     }
 }

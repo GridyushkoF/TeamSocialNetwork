@@ -23,11 +23,14 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import ru.skillbox.authentication.TestDependenciesContainer;
 import ru.skillbox.authentication.model.dto.RegUserDto;
+import ru.skillbox.authentication.model.entity.sql.User;
+import ru.skillbox.authentication.model.security.AppUserDetails;
 import ru.skillbox.authentication.model.web.AuthenticationRequest;
 import ru.skillbox.authentication.model.web.AuthenticationResponse;
 import ru.skillbox.authentication.repository.nosql.EmailChangeRequestRepository;
 import ru.skillbox.authentication.service.AuthenticationService;
 import ru.skillbox.authentication.service.CaptchaService;
+import ru.skillbox.authentication.service.security.jwt.JwtService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -55,6 +58,8 @@ class UserControllerIT extends TestDependenciesContainer {
 
     @MockBean
     private AuthenticationService authenticationService;
+    @Autowired
+    private JwtService jwtService;
 
     @BeforeEach
     public void setUp() {
@@ -106,7 +111,11 @@ class UserControllerIT extends TestDependenciesContainer {
     @Test
     @DisplayName("Logout - success")
     void logout() throws Exception {
-        mockMvc.perform(post("/logout"))
+        User user = saveTestUserAccountInDbAndGet();
+        AppUserDetails appUserDetails = new AppUserDetails(user);
+        String jwtToken = jwtService.generateJwtToken(appUserDetails);
+        mockMvc.perform(post("/logout")
+                        .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk());
     }
 

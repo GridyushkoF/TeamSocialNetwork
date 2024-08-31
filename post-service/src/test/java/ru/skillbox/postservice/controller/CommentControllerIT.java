@@ -34,7 +34,7 @@ class CommentControllerIT extends TestDependenciesContainer {
     @Test
     @DisplayName("creating a post, comment on that and update it, result expected as correct test")
     void updateComment_CorrectUpdate() throws Exception {
-        getUpdateCommentResultActions(1L).andExpect(status().isCreated());
+        getUpdateCommentResultActions(1L).andExpect(status().isOk());
     }
 
     @Test

@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface EmailChangeRequestRepository extends CrudRepository<EmailChangeRequest,String> {
     Optional<EmailChangeRequest> findByOldEmail(String oldEmail);
+    Optional<EmailChangeRequest> findByNewEmail(String newEmail);
 }

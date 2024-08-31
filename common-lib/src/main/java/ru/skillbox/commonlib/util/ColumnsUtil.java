@@ -1,8 +1,11 @@
 package ru.skillbox.commonlib.util;
 
+
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
+import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +24,18 @@ public class ColumnsUtil {
         }
         return emptyNames.toArray(new String[0]);
     }
-    private ColumnsUtil() {
 
+    public static void copyNonNullProperties(Object source, Object target) {
+        try {
+            for (PropertyDescriptor propertyDescriptor : Introspector.getBeanInfo(source.getClass()).getPropertyDescriptors()) {
+                Object value = propertyDescriptor.getReadMethod().invoke(source);
+                if (value != null) {
+                    BeanUtils.setProperty(target, propertyDescriptor.getName(), value);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+    private ColumnsUtil() {}
 }

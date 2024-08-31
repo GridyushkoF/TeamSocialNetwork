@@ -48,8 +48,8 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/logout")
-    public void logout() {
-        log.info("Пользователь вышел из системы.");
+    public void logout(@RequestHeader("Authorization") String authorizationHeader) {
+        authenticationService.logout(authorizationHeader);
     }
 
     @PostMapping("/login")
