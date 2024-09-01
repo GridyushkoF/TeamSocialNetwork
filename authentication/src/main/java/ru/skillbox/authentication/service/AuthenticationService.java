@@ -18,7 +18,7 @@ import ru.skillbox.authentication.model.dto.RegUserDto;
 import ru.skillbox.authentication.model.entity.sql.User;
 import ru.skillbox.authentication.model.security.AppUserDetails;
 import ru.skillbox.authentication.exception.RefreshTokenException;
-import ru.skillbox.authentication.model.entity.RefreshToken;
+import ru.skillbox.authentication.model.entity.nosql.RefreshToken;
 import ru.skillbox.authentication.model.web.AuthenticationRequest;
 import ru.skillbox.authentication.model.web.AuthenticationResponse;
 import ru.skillbox.authentication.processor.AuditProcessor;
@@ -30,14 +30,9 @@ import ru.skillbox.commonlib.dto.auth.IsOnlineRequest;
 import ru.skillbox.commonlib.event.audit.ActionType;
 
 import java.time.ZonedDateTime;
-import ru.skillbox.authentication.model.dto.RegUserDto;
-import ru.skillbox.authentication.model.entity.Role;
-import ru.skillbox.authentication.model.entity.User;
+
 import ru.skillbox.authentication.model.web.RefreshTokenRequest;
 import ru.skillbox.authentication.model.web.RefreshTokenResponse;
-import ru.skillbox.authentication.repository.UserRepository;
-import ru.skillbox.authentication.service.security.Jwt.JwtService;
-import ru.skillbox.authentication.service.security.AppUserDetails;
 
 @Component
 @RequiredArgsConstructor
@@ -71,14 +66,11 @@ public class AuthenticationService {
             setIsOnline(new IsOnlineRequest(user.getId(), true));
 
             String jwt = jwtService.generateJwtToken(userDetails);
+
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-            User user = userRepository.findByEmail(userDetails.getEmail()).orElseThrow();
-            user.setOnline(true);
-            userRepository.save(user);
-
-
             log.info("Пользователь '{}' успешно прошел аутентификацию.", authenticationRequest.getEmail());
+
             return AuthenticationResponse.builder()
                     .accessToken(jwt)
                     .refreshToken(refreshToken.getToken())
@@ -94,6 +86,7 @@ public class AuthenticationService {
         throwExceptionIfEmailExists(user);
         log.info(emailChangeRequestRepository.findAll().toString());
         User newUser = userRepository.save(user);
+
         auditProcessor.process(newUser, ActionType.CREATE, newUser.getId());
     }
 
@@ -121,6 +114,7 @@ public class AuthenticationService {
                 .isDeleted(false)
                 .build();
     }
+
     @Transactional
     public void logout(String authorizationHeader) {
         String jwtToken = authorizationHeader.substring(BEARER_TOKEN_INDEX);
@@ -130,6 +124,8 @@ public class AuthenticationService {
                     () -> new EntityNotFoundException("User with email: " + email + " not found"));
 
             setIsOnline(new IsOnlineRequest(user.getId(), false));
+
+            refreshTokenService.deleteByUserId(user.getId());
 
             log.info("Пользователь {} вышел из системы.", email);
         } catch (MalformedJwtException e) {
@@ -155,21 +151,12 @@ public class AuthenticationService {
                 .map(userId -> {
                     User tokenOwner = userRepository.findById(userId).orElseThrow(() ->
                             new RefreshTokenException("Неудачная попытка получить токен для userId" + userId));
-                    AppUserDetails userDetails = (AppUserDetails) SecurityContextHolder
-                            .getContext().getAuthentication().getPrincipal();
-                    String token = jwtService.generateJwtToken(userDetails);
+
+                    setIsOnline(new IsOnlineRequest(userId, true));
+
+                    String token = jwtService.generateJwtTokenFromUser(tokenOwner);
+
                     return new RefreshTokenResponse(token, refreshTokenService.createRefreshToken(userId).getToken());
                 }).orElseThrow(() -> new RefreshTokenException(requestRefreshToken, "Refresh токен не найден"));
     }
-
-    public void logout() {
-        var currentPrincipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (currentPrincipal instanceof  AppUserDetails userDetails) {
-            Long userId = userDetails.getId();
-
-            refreshTokenService.deleteByUserId(userId);
-        }
-    }
-
-
 }

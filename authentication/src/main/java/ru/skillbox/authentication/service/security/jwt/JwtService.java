@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.skillbox.authentication.model.entity.sql.User;
 import ru.skillbox.authentication.model.security.AppUserDetails;
 
 import com.auth0.jwt.JWT;
@@ -26,24 +27,26 @@ public class JwtService {
     private final Key key;
     private final Duration tokenExpiration;
 
-    public String generateJwtToken(AppUserDetails user) {
+    public String generateJwtToken(AppUserDetails userDetails) {
         return JWT.create()
                 .withIssuer("http://skillbox.ru")
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(new Date().getTime() + tokenExpiration.toMillis()))
-                .withSubject(user.getEmail())
-                .withClaim("authorities", user.getAuthorities().stream().toList().toString())
-                .withClaim("id", user.getId())
+                .withSubject(userDetails.getEmail())
+                .withClaim("authorities", userDetails.getAuthorities().stream().toList().toString())
+                .withClaim("id", userDetails.getId())
                 .sign(algorithm);
     }
 
 
-    public String generateJwtTokenFromEmail(String email) {
+    public String generateJwtTokenFromUser(User user) {
         return JWT.create()
                 .withIssuer("http://skillbox.ru")
-                .withSubject(email)
+                .withSubject(user.getEmail())
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(new Date().getTime() + tokenExpiration.toMillis()))
+                .withClaim("authorities", user.getRole().toString())
+                .withClaim("id", user.getId())
                 .sign(algorithm);
     }
 

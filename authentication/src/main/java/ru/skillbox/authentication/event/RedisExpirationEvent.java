@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.RedisKeyExpiredEvent;
 import org.springframework.stereotype.Component;
-import ru.skillbox.authentication.model.entity.RefreshToken;
+import ru.skillbox.authentication.model.entity.nosql.RefreshToken;
 
 @Component
 @Slf4j
@@ -18,7 +18,6 @@ public class RedisExpirationEvent {
             throw new RuntimeException("Refresh token is null");
         }
 
-        log.info("Refresh token with key " + expiredRefreshToken.getId() +
-                " has expired. Refresh token is: " + expiredRefreshToken.getToken());
+        log.info("Refresh token with key {} has expired. Refresh token is: {}", expiredRefreshToken.getId(), expiredRefreshToken.getToken());
     }
 }

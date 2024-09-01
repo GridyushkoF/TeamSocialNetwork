@@ -14,6 +14,7 @@ services:
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - PROD_SERVER_URI=http://95.174.92.252
     restart: on-failure
     depends_on:
       - discovery

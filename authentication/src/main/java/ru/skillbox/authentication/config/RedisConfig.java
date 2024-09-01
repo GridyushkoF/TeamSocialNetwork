@@ -10,7 +10,7 @@ import org.springframework.data.redis.core.RedisKeyValueAdapter;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.convert.KeyspaceConfiguration;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
-import ru.skillbox.authentication.model.entity.RefreshToken;
+import ru.skillbox.authentication.model.entity.nosql.RefreshToken;
 
 import java.time.Duration;
 import java.util.Collections;

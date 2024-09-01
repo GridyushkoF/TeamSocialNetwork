@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.skillbox.authentication.exception.RefreshTokenException;
-import ru.skillbox.authentication.model.entity.RefreshToken;
-import ru.skillbox.authentication.repository.RefreshTokenRepository;
+import ru.skillbox.authentication.model.entity.nosql.RefreshToken;
+import ru.skillbox.authentication.repository.nosql.RefreshTokenRepository;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -40,7 +40,7 @@ public class RefreshTokenService {
     }
 
     public RefreshToken checkRefreshToken(RefreshToken token) {
-        if (token.getExpiryDate().compareTo(Instant.now()) > 0) {
+        if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(token);
             log.error("Refresh токен не валиден");
             throw new RefreshTokenException(token.getToken(), "Refresh токен не валиден");
@@ -51,6 +51,4 @@ public class RefreshTokenService {
     public void deleteByUserId(Long userId) {
         refreshTokenRepository.deleteByUserId(userId);
     }
-
-
 }

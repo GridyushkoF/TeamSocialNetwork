@@ -37,6 +37,8 @@ public class UserSecurityDataService {
     private String fromEmail;
     @Value("${app.changeEmailHost}")
     private String changeEmailHost;
+    @Value("${app.apiPrefix}")
+    private String apiPrefix;
 
     @Transactional
     public SimpleResponse sendEmailChangeRequestToEmail(ChangeEmailRequest changeEmailRequest, Long userId) throws NoSuchAlgorithmException {
@@ -56,7 +58,7 @@ public class UserSecurityDataService {
     }
 
     public void sendToEmail(String oldEmail,EmailChangeRequest emailChangeRequest) {
-        String subject = "Смена пароля";
+        String subject = "Смена email адреса";
         String messageBody = getMailBody(oldEmail,emailChangeRequest);
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -65,13 +67,13 @@ public class UserSecurityDataService {
         mailMessage.setSubject(subject);
         mailMessage.setText(messageBody);
         mailSender.send(mailMessage);
-        log.info("Заявка на смену пароля создана и отправлена на почту");
+        log.info("Заявка на смену email адреса создана и отправлена на почту");
     }
 
     private String getMailBody(String oldEmail, EmailChangeRequest emailChangeRequest) {
         var userOpt = userRepository.findByEmail(oldEmail);
         if (userOpt.isPresent()) {
-            return  "Для смены email: " + changeEmailHost + "/api/v1/auth/change-email/verification/" +
+            return  "Для смены email: " + changeEmailHost +  apiPrefix  + "/auth/change-email/verification/" +
                     emailChangeRequest.getOldEmail() + "/" + emailChangeRequest.getCurrentTempCode() + "/confirm";
         }
         log.error("Смена по емаил: {} не удалась. Email не найден в БД", emailChangeRequest.getOldEmail());
