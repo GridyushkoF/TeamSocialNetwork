@@ -110,7 +110,8 @@ class AuthenticationServiceIT extends TestDependenciesContainer {
         AuthenticationResponse response = authenticationService.login(loginRequest);
         assertNotNull(response);
         assertNotNull(response.getAccessToken());
-        assertEquals(response.getAccessToken(), response.getRefreshToken());
+        assertNotNull(response.getRefreshToken());
+        assertNotEquals(response.getAccessToken(), response.getRefreshToken());
     }
 
     @Test

@@ -13,11 +13,6 @@ public class RedisExpirationEvent {
     @EventListener
     public void handleRedisKeyExpiredEvent(RedisKeyExpiredEvent<RefreshToken> event) {
         RefreshToken expiredRefreshToken = (RefreshToken) event.getValue();
-
-        if (expiredRefreshToken == null) {
-            throw new RuntimeException("Refresh token is null");
-        }
-
         log.info("Refresh token with key {} has expired. Refresh token is: {}", expiredRefreshToken.getId(), expiredRefreshToken.getToken());
     }
 }

@@ -26,15 +26,17 @@ spring:
       ddl-auto: create-drop
     show-sql: true
 server:
-  port: 8083
+  servlet:
+    context-path: /api/v1/auth
+
 service:
   recovery:
     salt: hdsllLkjhHvKkjhgxgfdGkLGJfyfXFzsSgrT89JCgfDFtfggGyGFgfc
-    uri: http://95.174.92.252:9090/change-password/{recoveryLink}
+    uri: http://localhost/change-password/{recoveryLink}
 
 security:
   jwt:
-    tokenExpiration: 1h
+    tokenExpiration: 15m
     secret: B9vPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY
 app:
   changeEmailHost: http://localhost
