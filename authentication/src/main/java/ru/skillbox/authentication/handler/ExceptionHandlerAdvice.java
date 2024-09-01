@@ -38,6 +38,6 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(value = CaptchaValidatedExcepction.class)
     public ResponseEntity<ErrorResponseBody> captchaValidatedExcepction(CaptchaValidatedExcepction ex) {
-        return new ResponseEntity<>(new ErrorResponseBody(ex.getMessage()), HttpStatus.valueOf(500));
+        return new ResponseEntity<>(new ErrorResponseBody(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

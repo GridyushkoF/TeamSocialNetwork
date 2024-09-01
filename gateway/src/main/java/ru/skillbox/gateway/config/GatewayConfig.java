@@ -1,23 +1,28 @@
 package ru.skillbox.gateway.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.skillbox.gateway.security.AdminAuthFilter;
 import ru.skillbox.gateway.security.AuthenticationFilter;
 
 @Configuration
 public class GatewayConfig {
 
     private final AuthenticationFilter filter;
+    private final AdminAuthFilter adminFilter;
     @Value("${app.userMicroservicePath}")
     private String pathToUserMicroservice;
 
     @Autowired
-    public GatewayConfig(AuthenticationFilter filter) {
+    public GatewayConfig(@Qualifier("authenticationFilter") AuthenticationFilter filter,
+                         @Qualifier("adminAuthFilter") AdminAuthFilter adminFilter) {
         this.filter = filter;
+        this.adminFilter = adminFilter;
     }
 
     @Bean
@@ -74,9 +79,34 @@ public class GatewayConfig {
                                 .uri("lb://GEO-SERVICE")
                 )
                 .route(
-                        "admin_route", r -> r.path("/api/v1/admin-console/**")
+                        "admin_route_prometheus", r -> r.path("/api/v1/admin-console/actuator/**")
                                 .filters(f -> f.filter(filter))
                                 .uri("lb://ADMIN-CONSOLE")
+                )
+                .route(
+                        "admin_route_swagger", r -> r.path("/api/v1/admin-console/v3/**")
+                                .filters(f -> f.filter(filter))
+                                .uri("lb://ADMIN-CONSOLE")
+                )
+                .route(
+                        "admin_route", r -> r.path("/api/v1/admin-console/statistic/**")
+                                .filters(f -> f.filter(filter).filter(adminFilter))
+                                .uri("lb://ADMIN-CONSOLE")
+                )
+                .route(
+                        "audit-log_route_prometheus", r -> r.path("/api/v1/audit/actuator/**")
+                                .filters(f -> f.filter(filter))
+                                .uri("lb://AUDIT-SERVICE")
+                )
+                .route(
+                        "audit-log_route_swagger", r -> r.path("/api/v1/audit/v3/**")
+                                .filters(f -> f.filter(filter))
+                                .uri("lb://AUDIT-SERVICE")
+                )
+                .route(
+                        "audit-log_route", r -> r.path("/api/v1/audit/search/**")
+                                .filters(f -> f.filter(filter).filter(adminFilter))
+                                .uri("lb://AUDIT-SERVICE")
                 )
                 .build();
     }

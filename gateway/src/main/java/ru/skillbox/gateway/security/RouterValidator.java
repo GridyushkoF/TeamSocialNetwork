@@ -9,8 +9,9 @@ import java.util.regex.Pattern;
 public class RouterValidator {
 
     public static final List<Pattern> openEndpoints = List.of(
-            Pattern.compile("/api/v1/auth/([-/0-9a-zA-Z]*)"),
+            Pattern.compile("/api/v1/auth/(.*)"),
             Pattern.compile("/api/v1/streaming/ws"),
+            Pattern.compile("([-/0-9a-zA-Z]*)/v3/api-docs.*"),
             Pattern.compile("([-/0-9a-zA-Z]*)/actuator/prometheus")
     );
 

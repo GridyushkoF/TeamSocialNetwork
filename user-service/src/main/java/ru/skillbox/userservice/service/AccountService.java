@@ -21,6 +21,7 @@ import ru.skillbox.commonlib.dto.statistics.AgeCountDto;
 import ru.skillbox.commonlib.dto.statistics.DateCountPointDto;
 import ru.skillbox.commonlib.dto.statistics.PeriodRequestDto;
 import ru.skillbox.commonlib.dto.statistics.UsersStatisticsDto;
+import ru.skillbox.commonlib.event.audit.ActionType;
 import ru.skillbox.commonlib.util.ColumnsUtil;
 import ru.skillbox.commonlib.util.admin.AdminStatisticsRepository;
 import ru.skillbox.userservice.exception.AccountAlreadyExistsException;
@@ -28,6 +29,7 @@ import ru.skillbox.userservice.exception.NoSuchAccountException;
 import ru.skillbox.userservice.exception.NotAuthException;
 import ru.skillbox.userservice.mapper.v1.UserMapperV1;
 import ru.skillbox.userservice.model.entity.User;
+import ru.skillbox.userservice.processor.AuditProcessor;
 import ru.skillbox.userservice.repository.UserRepository;
 import ru.skillbox.userservice.service.specifiaction_api.AccountPredicate;
 
@@ -44,6 +46,7 @@ public class AccountService {
     private final UserMapperV1 userMapper;
     private final AdminStatisticsRepository adminStatisticsRepository;
     private final MeterRegistry meterRegistry;
+    private final AuditProcessor auditProcessor;
 
     @Scheduled(fixedRate = 5000)
     public void updateBlockedUsersAmountMetrics() {
@@ -63,11 +66,13 @@ public class AccountService {
         User user = userRepository.findById(authUserId)
                 .orElseThrow(() -> new NoSuchAccountException("Can't find Account with id:" + authUserId));
         AccountDto existedAccount = userMapper.userToResponse(authUserId, user);
-        BeanUtils.copyProperties(accountDto, existedAccount, ColumnsUtil.getNullPropertyNames(existedAccount));
 
+        ColumnsUtil.copyNonNullProperties(accountDto,existedAccount);
         User newUser = userMapper.requestToUser(authUserId, existedAccount);
         newUser.setFriendsFrom(user.getFriendsFrom());
         newUser.setFriendsTo(user.getFriendsTo());
+
+        auditProcessor.process(newUser, ActionType.UPDATE, authUserId);
 
         return userMapper.userToResponse(authUserId, userRepository.save(newUser));
     }
@@ -81,6 +86,8 @@ public class AccountService {
         user.setDeleted(true);
         userRepository.save(user);
 
+        auditProcessor.process(user, ActionType.DELETE, userId);
+
         return "Account with id: " + userId + " deleted";
     }
 
@@ -89,6 +96,7 @@ public class AccountService {
         userRepository.findById(id).ifPresent(user -> {
             user.setBlocked(block);
             userRepository.save(user);
+            auditProcessor.process(user, ActionType.UPDATE, id);
         });
         return "Block or unblock ready!";
     }
@@ -105,6 +113,9 @@ public class AccountService {
             throw new AccountAlreadyExistsException("Account with such email already registered!");
         }
         User user = userMapper.requestToUser(authUserId, accountDto);
+
+        auditProcessor.process(user, ActionType.CREATE, authUserId);
+
         return userRepository.save(user).getId();
     }
 

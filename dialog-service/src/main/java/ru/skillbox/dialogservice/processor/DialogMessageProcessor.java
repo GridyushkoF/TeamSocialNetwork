@@ -2,11 +2,10 @@ package ru.skillbox.dialogservice.processor;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Sinks;
-import ru.skillbox.commonlib.notification.NotificationEvent;
-import ru.skillbox.commonlib.notification.NotificationType;
+import ru.skillbox.commonlib.event.notification.NotificationEvent;
+import ru.skillbox.commonlib.event.notification.NotificationType;
 
 @Component
 @Log4j2

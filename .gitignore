@@ -55,3 +55,4 @@ build/
 /docker/prometheus/wal/00000025
 /docker/prometheus/wal/00000026
 /docker/prometheus/
+/frontend/

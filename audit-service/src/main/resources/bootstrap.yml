@@ -20,8 +20,10 @@ eureka:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
   instance:
     preferIpAddress: true
-app:
-  apiPreifx: /api/v1
+
+springdoc:
+  api-docs:
+    path: /api/v1/audit/v3/api-docs
 
 
 # could be used for debugging

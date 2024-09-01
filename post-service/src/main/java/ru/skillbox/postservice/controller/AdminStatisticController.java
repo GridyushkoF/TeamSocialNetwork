@@ -1,5 +1,6 @@
 package ru.skillbox.postservice.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import ru.skillbox.postservice.service.admin.AdminStatisticsService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${app.apiPrefix}" + "/post")
+@SecurityRequirement(name = "bearerAuth")
 public class AdminStatisticController {
     private final AdminStatisticsService adminStatisticsService;
 

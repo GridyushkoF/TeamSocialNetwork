@@ -1,6 +1,7 @@
 package ru.skillbox.dialogservice.controller;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import ru.skillbox.commonlib.dto.statistics.CountDto;
 import ru.skillbox.dialogservice.model.dto.DialogDto;
-import ru.skillbox.dialogservice.model.dto.DialogRs;
 import ru.skillbox.dialogservice.model.dto.MessageDto;
 import ru.skillbox.dialogservice.model.enums.MessageStatus;
 import ru.skillbox.dialogservice.service.DialogService;
@@ -83,6 +83,7 @@ class DialogControllerTest {
 
 
     @Test
+    @DisplayName("test update dialog by id, dialog is updated")
     void testUpdateDialog() throws Exception {
         Mockito.when(dialogService.updateDialog(1L, 1L))
                 .thenReturn(dialogDto);
@@ -100,6 +101,7 @@ class DialogControllerTest {
     }
 
     @Test
+    @DisplayName("test get dialogs, return dialogs")
     void testGetDialogs() throws Exception {
         String sort = "unreadCount,desc";
         String[] sorts = sort.split(",");
@@ -121,6 +123,7 @@ class DialogControllerTest {
     }
 
     @Test
+    @DisplayName("test get unread dialogs, return unread count 1")
     void testGetUnread() throws Exception {
 
         Mockito.when(messageService.getUnread(1L))
@@ -138,6 +141,7 @@ class DialogControllerTest {
     }
 
     @Test
+    @DisplayName("test get messages, return message")
     void testGetMessages() throws Exception {
         String sort = "time,asc";
         String[] sorts = sort.split(",");
@@ -159,6 +163,7 @@ class DialogControllerTest {
     }
 
     @Test
+    @DisplayName("test get dialog, return dialog")
     void testGetDialog() throws Exception {
         Mockito.when(dialogService.getDialog(1L, 2L))
                 .thenReturn(dialogDto);

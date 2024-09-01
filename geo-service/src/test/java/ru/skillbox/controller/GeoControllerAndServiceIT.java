@@ -30,8 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Testcontainers
 class GeoControllerAndServiceIT {
     private static final int RUSSIA_ID = 113;
-    private static final String allCountriesUrl = "/api/v1/geo/country";
-    private static final String citiesUrl = "/api/v1/geo/country/{0}/city";
+    private static final String ALL_COUNTRIES_URL = "/api/v1/geo/country";
+    private static final String CITIES_URL = "/api/v1/geo/country/{0}/city";
 
     @Container
     private static final RedisContainer redisContainer =
@@ -53,12 +53,12 @@ class GeoControllerAndServiceIT {
     void getCountriesTest() {
 
         long startTime = System.currentTimeMillis();
-        performAllCountriesAndCheckCorrectness(allCountriesUrl);
+        performAllCountriesAndCheckCorrectness(ALL_COUNTRIES_URL);
         long firstResponseTime = System.currentTimeMillis() - startTime;
         System.out.println("Первый запрос занял: " + firstResponseTime + " мс");
 
         startTime = System.currentTimeMillis();
-        performAllCountriesAndCheckCorrectness(allCountriesUrl);
+        performAllCountriesAndCheckCorrectness(ALL_COUNTRIES_URL);
         long secondResponseTime = System.currentTimeMillis() - startTime;
         System.out.println("Второй запрос занял: " + secondResponseTime + " мс");
 
@@ -69,7 +69,7 @@ class GeoControllerAndServiceIT {
     @Test
     @DisplayName("2 requests sending, checking correctness of responses and speed of second requests. Speed must be really faster")
     void getCitiesByCountryIdTest() {
-        String russiaCitiesUrl = MessageFormat.format(citiesUrl, RUSSIA_ID);
+        String russiaCitiesUrl = MessageFormat.format(CITIES_URL, RUSSIA_ID);
         long firstResponseTime = measureSpeed(() -> {
             performAllCountriesAndCheckCorrectness(russiaCitiesUrl);
         });

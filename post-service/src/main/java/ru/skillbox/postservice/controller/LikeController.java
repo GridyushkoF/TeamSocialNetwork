@@ -1,5 +1,6 @@
 package ru.skillbox.postservice.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import ru.skillbox.postservice.service.LikeService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${app.apiPrefix}/post")
+@SecurityRequirement(name = "bearerAuth")
 public class LikeController {
     private final LikeService likeService;
 

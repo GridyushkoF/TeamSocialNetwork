@@ -2,9 +2,9 @@ spring:
   application:
     name: audit-service
   datasource:
-    url: jdbc:postgresql://${POSTGRESQL:localhost}:5432/global_db
-    username: postgres
-    password: postgres
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/global_db}
+    username: ${DATABASE_USER:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -20,6 +20,10 @@ spring:
   web:
     resources:
       add-mappings: true
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
+    topic: audit
+
 eureka:
   client:
     serviceUrl:
@@ -28,7 +32,7 @@ eureka:
 management:
   endpoints:
     web:
-      base-path: /api/v1/account/actuator
+      base-path: /api/v1/audit/actuator
       exposure:
         include: "*"
   metrics:
@@ -57,3 +61,5 @@ management:
                 - 0.99
 server:
   port: 0
+app:
+  apiPrefix: /api/v1

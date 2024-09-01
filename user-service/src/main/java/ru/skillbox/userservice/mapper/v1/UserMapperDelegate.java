@@ -1,6 +1,5 @@
 package ru.skillbox.userservice.mapper.v1;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.skillbox.commonlib.dto.account.AccountDto;
@@ -40,6 +39,8 @@ public abstract class UserMapperDelegate implements UserMapperV1 {
                 .statusCode(getStatusCode(authUserId, user.getId()))
                 .lastOnlineTime(user.getLastOnlineTime())
                 .password(user.getPassword())
+                .emojiStatus(user.getEmojiStatus())
+                .profileCover(user.getProfileCover())
                 .build();
     }
 

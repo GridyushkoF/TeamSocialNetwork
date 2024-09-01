@@ -1,0 +1,44 @@
+spring:
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    protocol: smtps
+    username: ru.kirill.service@yandex.ru
+    password: kfixqwdiisdphnuq
+  cloud:
+    config:
+      enabled: false
+  liquibase:
+    enabled: false
+  application:
+    name: authentication
+  datasource:
+    url: jdbc:h2:mem:test_db
+    driver-class-name: org.h2.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        temp:
+          use_jdbc_metadata_defaults: false
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+server:
+  port: 8083
+service:
+  recovery:
+    salt: hdsllLkjhHvKkjhgxgfdGkLGJfyfXFzsSgrT89JCgfDFtfggGyGFgfc
+    uri: http://95.174.92.252:9090/change-password/{recoveryLink}
+
+security:
+  jwt:
+    tokenExpiration: 1h
+    secret: B9vPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY
+app:
+  changeEmailHost: http://localhost
+  apiPrefix: /api/v1
+eureka:
+  client:
+    enabled: false

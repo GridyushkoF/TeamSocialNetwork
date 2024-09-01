@@ -6,7 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <changeSet id="create-message-table" author="Gridyushko Fedor">
-        <createTable tableName="message">
+        <createTable tableName="messages">
             <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true"/>
             </column>
@@ -20,7 +20,7 @@
     </changeSet>
 
     <changeSet id="create-dialog-table" author="Gridyushko Fedor">
-        <createTable tableName="dialog">
+        <createTable tableName="dialogs">
             <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true"/>
             </column>
