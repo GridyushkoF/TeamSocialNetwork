@@ -4,6 +4,11 @@ services:
     ports:
       - "8761:8761"
     restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761"]
+      interval: 30s
+      timeout: 120s
+      retries: 5
 
   authentication:
     image: skillboxgroup/authentication:0.0.1-SNAPSHOT
@@ -14,11 +19,12 @@ services:
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - PROD_SERVER_URI=http://95.174.92.252
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     restart: on-failure
     depends_on:
+      - discovery
+    links:
       - discovery
 
   dialog-service:
@@ -34,6 +40,8 @@ services:
     restart: on-failure
     depends_on:
       - discovery
+    links:
+      - discovery
 
   notification-service:
     image: skillboxgroup/notification-service:0.0.1-SNAPSHOT
@@ -46,6 +54,8 @@ services:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     restart: on-failure
     depends_on:
+      - discovery
+    links:
       - discovery
 
   post-service:
@@ -60,6 +70,8 @@ services:
     restart: on-failure
     depends_on:
       - discovery
+    links:
+      - discovery
 
   user-service:
     image: skillboxgroup/user-service:0.0.1-SNAPSHOT
@@ -73,6 +85,8 @@ services:
     restart: on-failure
     depends_on:
       - discovery
+    links:
+      - discovery
 
   admin-service:
     image: skillboxgroup/admin-service:0.0.1-SNAPSHOT
@@ -82,6 +96,8 @@ services:
       - GATEWAY_URI=http://gateway:9090
     restart: on-failure
     depends_on:
+      - discovery
+    links:
       - discovery
 
   geo-service:
@@ -93,6 +109,8 @@ services:
       - REDIS_PORT=6379
     restart: on-failure
     depends_on:
+      - discovery
+    links:
       - discovery
 
   audit-service:
@@ -106,6 +124,8 @@ services:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     restart: on-failure
     depends_on:
+      - discovery
+    links:
       - discovery
 
   gateway:
@@ -126,12 +146,5 @@ services:
       - admin-service
       - geo-service
       - audit-service
-
-  frontend:
-    image: skillboxgroup/frontend
-    ports:
-      - "80:80"
-    tty: true
-    restart: on-failure
-    volumes:
-      - ./nginx-config:/etc/nginx/conf.d
+    links:
+      - discovery

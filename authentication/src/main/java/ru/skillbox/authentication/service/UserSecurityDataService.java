@@ -1,10 +1,10 @@
 package ru.skillbox.authentication.service;
 
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,11 +41,12 @@ public class UserSecurityDataService {
     private String apiPrefix;
 
     @Transactional
-    public SimpleResponse sendEmailChangeRequestToEmail(ChangeEmailRequest changeEmailRequest, Long userId) throws NoSuchAlgorithmException {
+    public SimpleResponse sendEmailChangeRequestToEmail(ChangeEmailRequest changeEmailRequest, Long userId)
+            throws MailSendException, NoSuchAlgorithmException {
         if (userRepository.existsByEmail(changeEmailRequest.getEmail().getEmail())) {
             throw new AlreadyExistsException("this email already exists in database");
         }
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("user not found"));
+        User user = userRepository.findByIdAndIsDeletedFalse(userId).orElseThrow(() -> new EntityNotFoundException("user not found"));
         emailChangeRequestRepository.findByOldEmail(user.getEmail()).ifPresent(emailChangeRequestRepository::delete);
         EmailChangeRequest emailChangeRequest = emailChangeRequestRepository.save(EmailChangeRequest.builder()
                 .id(UUID.randomUUID().toString())
@@ -57,7 +58,7 @@ public class UserSecurityDataService {
         return new SimpleResponse("created request to change email");
     }
 
-    public void sendToEmail(String oldEmail,EmailChangeRequest emailChangeRequest) {
+    public void sendToEmail(String oldEmail,EmailChangeRequest emailChangeRequest) throws MailSendException {
         String subject = "Смена email адреса";
         String messageBody = getMailBody(oldEmail,emailChangeRequest);
 
@@ -106,7 +107,7 @@ public class UserSecurityDataService {
     }
     @Transactional
     public void changePassword(ChangePasswordRequest changePasswordRequest, Long currentAuthUserId) {
-        User user = userRepository.findById(currentAuthUserId).orElseThrow();
+        User user = userRepository.findByIdAndIsDeletedFalse(currentAuthUserId).orElseThrow();
         if(!changePasswordRequest.getNewPassword1().equals(changePasswordRequest.getNewPassword2())) {
             throw new IncorrectPasswordException("passwords not match");
         }

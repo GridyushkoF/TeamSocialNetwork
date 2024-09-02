@@ -80,7 +80,7 @@ class PasswordServiceImplIT extends TestDependenciesContainer {
         SimpleResponse response = passwordServiceImpl.setNewPassword(recoveryLink, request);
         assertEquals("Пароль успешно изменён", response.getMessage());
 
-        User updatedUser = userRepository.findById(testUser.getId()).orElseThrow();
+        User updatedUser = userRepository.findByIdAndIsDeletedFalse(testUser.getId()).orElseThrow();
         assertTrue(passwordEncoder.matches("newPassword123", updatedUser.getPassword()));
     }
 

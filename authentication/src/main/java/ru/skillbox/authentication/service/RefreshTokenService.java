@@ -29,7 +29,7 @@ public class RefreshTokenService {
     }
 
     public RefreshToken createRefreshToken(Long userId) {
-        var refreshToken = RefreshToken.builder()
+        RefreshToken refreshToken = RefreshToken.builder()
                 .userId(userId)
                 .expiryDate(Instant.now().plusMillis(tokenExpiration.toMillis()))
                 .token(UUID.randomUUID().toString())

@@ -75,7 +75,7 @@ public class AuthenticationService {
                     .accessToken(jwt)
                     .refreshToken(refreshToken.getToken())
                     .build();
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             throw new IncorrectPasswordException("Для пользователя с e-mail " + authenticationRequest.getEmail() + " указан неверный пароль!");
         }
     }
@@ -134,7 +134,7 @@ public class AuthenticationService {
     }
 
     public void setIsOnline(IsOnlineRequest request) {
-        User user = userRepository.findById(request.getUserId()).orElseThrow(
+        User user = userRepository.findByIdAndIsDeletedFalse(request.getUserId()).orElseThrow(
                 () -> new EntityNotFoundException("User with id: " + request.getUserId() + " not found"));
         user.setOnline(request.getIsOnline());
         user.setLastOnlineTime(ZonedDateTime.now());
@@ -142,14 +142,14 @@ public class AuthenticationService {
     }
 
 
-    public RefreshTokenResponse refreshToken(RefreshTokenRequest request) {
+    public RefreshTokenResponse getRefreshToken(RefreshTokenRequest request) {
         String requestRefreshToken = request.getRefreshToken();
 
         return refreshTokenService.findByRefreshToken(requestRefreshToken)
                 .map(refreshTokenService::checkRefreshToken)
                 .map(RefreshToken::getUserId)
                 .map(userId -> {
-                    User tokenOwner = userRepository.findById(userId).orElseThrow(() ->
+                    User tokenOwner = userRepository.findByIdAndIsDeletedFalse(userId).orElseThrow(() ->
                             new RefreshTokenException("Неудачная попытка получить токен для userId" + userId));
 
                     setIsOnline(new IsOnlineRequest(userId, true));

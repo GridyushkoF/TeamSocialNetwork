@@ -23,7 +23,7 @@ spring:
           use_jdbc_metadata_defaults: false
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     show-sql: true
 server:
   servlet:

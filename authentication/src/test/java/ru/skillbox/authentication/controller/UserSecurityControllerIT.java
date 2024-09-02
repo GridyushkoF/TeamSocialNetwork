@@ -2,6 +2,7 @@ package ru.skillbox.authentication.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redis.testcontainers.RedisContainer;
+import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,12 +23,15 @@ import org.testcontainers.utility.DockerImageName;
 import ru.skillbox.authentication.TestDependenciesContainer;
 import ru.skillbox.authentication.model.entity.nosql.EmailChangeRequest;
 import ru.skillbox.authentication.model.entity.sql.User;
+import ru.skillbox.authentication.model.web.ChangeEmailRequest;
+import ru.skillbox.authentication.model.web.ChangeEmailRequestWrapper;
 import ru.skillbox.authentication.model.web.ChangePasswordRequest;
 import ru.skillbox.authentication.repository.nosql.EmailChangeRequestRepository;
 import ru.skillbox.authentication.repository.sql.UserRepository;
 
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -68,8 +72,8 @@ class UserSecurityControllerIT extends TestDependenciesContainer {
 
     @DynamicPropertySource
     static void redisProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.redis.host", redisContainer::getHost);
-        registry.add("spring.redis.port", redisContainer::getFirstMappedPort);
+        registry.add("spring.data.redis.host", redisContainer::getHost);
+        registry.add("spring.data.redis.port", redisContainer::getFirstMappedPort);
     }
 
     @Test
@@ -96,19 +100,21 @@ class UserSecurityControllerIT extends TestDependenciesContainer {
                 .content(objectMapper.writeValueAsString(changePasswordRequest)));
     }
 
-//    @Test
-//    @DisplayName("Send change email request - correct data, success")
-//    void testSendChangeEmailRequest_correct_success() throws Exception {
-//        ChangeEmailRequest changeEmailRequest = ChangeEmailRequest.builder()
-//                .email(ChangeEmailRequestWrapper.builder().email("newmail@gmail.com").build())
-//                .build();
-//        mockMvc.perform(post("/change-email-link")
-//                        .header("id", user.getId())
-//                        .contentType("application/json")
-//                        .content(objectMapper.writeValueAsString(changeEmailRequest)))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.message").value("created request to change email"));
-//    }
+    @Test
+    @DisplayName("Send change email request - correct data, success")
+    void testSendChangeEmailRequest_correct_success() throws Exception {
+
+        ChangeEmailRequest changeEmailRequest = ChangeEmailRequest.builder()
+                .email(ChangeEmailRequestWrapper.builder().email("newmail@gmail.com").build())
+                .build();
+        assertThrows(ServletException.class, () ->
+                mockMvc.perform(post("/change-email-link")
+                        .header("id", user.getId())
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(changeEmailRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("created request to change email")));
+    }
 
     @Test
     @DisplayName("Accept email changing - valid key, success")
