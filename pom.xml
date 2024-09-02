@@ -25,7 +25,9 @@
         <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/jacoco-aggregator/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
-        <sonar.coverage.exclusions>**/config/**, **/dto/**, **/exception/**, **/handler/**, **/mapper/**, **/model/**, **/processor/**, **/repository/**, **/adminservice/**</sonar.coverage.exclusions>
+        <sonar.coverage.exclusions>
+            **/config/**, **/dto/**, **/exception/**,**/handler/**, **/mapper/**, **/model/**, **/processor/**, **/repository/**, **/adminservice/**, **Application.java
+        </sonar.coverage.exclusions>
     </properties>
 
     <dependencyManagement>
