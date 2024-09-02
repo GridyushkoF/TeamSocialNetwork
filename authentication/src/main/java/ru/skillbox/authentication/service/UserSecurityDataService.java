@@ -58,7 +58,7 @@ public class UserSecurityDataService {
         return new SimpleResponse("created request to change email");
     }
 
-    public void sendToEmail(String oldEmail,EmailChangeRequest emailChangeRequest) throws MailSendException {
+    public void sendToEmail(String oldEmail,EmailChangeRequest emailChangeRequest) {
         String subject = "Смена email адреса";
         String messageBody = getMailBody(oldEmail,emailChangeRequest);
 
@@ -67,8 +67,12 @@ public class UserSecurityDataService {
         mailMessage.setTo(oldEmail);
         mailMessage.setSubject(subject);
         mailMessage.setText(messageBody);
-        mailSender.send(mailMessage);
-        log.info("Заявка на смену email адреса создана и отправлена на почту");
+        try {
+            mailSender.send(mailMessage);
+            log.info("Заявка на смену email адреса создана и отправлена на почту");
+        } catch (MailSendException e) {
+            log.info("Возникли проблемы с отправкой email {}", e.getMessage());
+        }
     }
 
     private String getMailBody(String oldEmail, EmailChangeRequest emailChangeRequest) {

@@ -73,7 +73,7 @@ class UserSecurityDataServiceIT extends TestDependenciesContainer {
         User testUser = saveTestUserAccountInDbAndGet();
         ChangeEmailRequest changeEmailRequest = ChangeEmailRequest.builder()
                 .email(new ChangeEmailRequestWrapper("newmail@gmail.com")).build();
-        assertThrows(MailSendException.class, () ->
+        assertDoesNotThrow(() ->
                     userSecurityDataService.sendEmailChangeRequestToEmail(changeEmailRequest, testUser.getId())
                 );
     }
@@ -110,7 +110,7 @@ class UserSecurityDataServiceIT extends TestDependenciesContainer {
                 .newEmail("new@mail.ru")
                 .currentTempCode("tempCode")
                 .build();
-        assertThrows(MailSendException.class, () ->
+        assertDoesNotThrow(() ->
             userSecurityDataService.sendToEmail(user.getEmail(), emailChangeRequest)
         );
     }
@@ -130,7 +130,7 @@ class UserSecurityDataServiceIT extends TestDependenciesContainer {
         ChangeEmailRequest changeEmailRequest = ChangeEmailRequest.builder()
                 .email(new ChangeEmailRequestWrapper("newmail@gmail.com")).build();
 
-        assertThrows(MailSendException.class, () ->
+        assertDoesNotThrow(() ->
             userSecurityDataService.sendEmailChangeRequestToEmail(changeEmailRequest, testUser.getId())
         );
 
