@@ -10,9 +10,10 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
-  redis:
-    host: localhost
-    port: 6379
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
   liquibase:
     change-log: classpath://db/changelog/db.changelog-master.xml
     enabled: true
@@ -44,12 +45,12 @@ eureka:
 service:
   recovery:
     salt: hdsllLkjhHvKkjhgxgfdGkLGJfyfXFzsSgrT89JCgfDFtfggGyGFgfc
-    uri: http://95.174.92.252:9090/change-password/{recoveryLink}
+    uri: ${PROD_SERVER_URI:http://localhost}/change-password/{recoveryLink}
 
 
 security:
   jwt:
-    tokenExpiration: 1h
+    tokenExpiration: 15m
     secret: B9vPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY
 
 management:
@@ -85,5 +86,5 @@ management:
 server:
   port: 0
 app:
-  changeEmailHost: http://localhost
+  changeEmailHost: ${PROD_SERVER_URI:http://localhost}
   apiPrefix: /api/v1

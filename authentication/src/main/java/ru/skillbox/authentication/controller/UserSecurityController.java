@@ -14,7 +14,6 @@ import java.security.NoSuchAlgorithmException;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("${app.apiPrefix}/auth")
 public class UserSecurityController {
     private final UserSecurityDataService userSecurityDataService;
     @PostMapping("/change-password-link")

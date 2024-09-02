@@ -26,4 +26,3 @@ eureka:
     enabled: false
 app:
   apiPrefix: /api/v1
-  gatewayPort: 9090
