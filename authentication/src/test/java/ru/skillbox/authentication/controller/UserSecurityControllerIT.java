@@ -30,7 +30,6 @@ import ru.skillbox.authentication.repository.sql.UserRepository;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -102,17 +101,15 @@ class UserSecurityControllerIT extends TestDependenciesContainer {
     @Test
     @DisplayName("Send change email request - correct data, success")
     void testSendChangeEmailRequest_correct_success() throws Exception {
-
         ChangeEmailRequest changeEmailRequest = ChangeEmailRequest.builder()
                 .email(ChangeEmailRequestWrapper.builder().email("newmail@gmail.com").build())
                 .build();
-        assertDoesNotThrow(() ->
-                mockMvc.perform(post("/change-email-link")
+        mockMvc.perform(post("/change-email-link")
                         .header("id", user.getId())
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(changeEmailRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("created request to change email")));
+                .andExpect(jsonPath("$.message").value("created request to change email"));
     }
 
     @Test

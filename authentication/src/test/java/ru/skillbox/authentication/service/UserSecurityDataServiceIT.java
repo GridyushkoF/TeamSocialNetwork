@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.mail.MailSendException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -69,13 +68,12 @@ class UserSecurityDataServiceIT extends TestDependenciesContainer {
 
     @Test
     @DisplayName("Send email change request to email - success")
-    void testSendEmailChangeRequestToEmail_correct_success() throws MailSendException {
+    void testSendEmailChangeRequestToEmail_correct_success() throws NoSuchAlgorithmException {
         User testUser = saveTestUserAccountInDbAndGet();
         ChangeEmailRequest changeEmailRequest = ChangeEmailRequest.builder()
                 .email(new ChangeEmailRequestWrapper("newmail@gmail.com")).build();
-        assertDoesNotThrow(() ->
-                    userSecurityDataService.sendEmailChangeRequestToEmail(changeEmailRequest, testUser.getId())
-                );
+        userSecurityDataService.sendEmailChangeRequestToEmail(changeEmailRequest, testUser.getId());
+        assertEquals(1, emailChangeRequestRepository.count());
     }
 
     @Test
@@ -84,8 +82,7 @@ class UserSecurityDataServiceIT extends TestDependenciesContainer {
         ChangeEmailRequest changeEmailRequest = ChangeEmailRequest.builder()
                 .email(new ChangeEmailRequestWrapper("randomMail@mail.ru")).build();
 
-        assertThrows(EntityNotFoundException.class, () ->
-                userSecurityDataService.sendEmailChangeRequestToEmail(changeEmailRequest, 210L));
+        assertThrows(EntityNotFoundException.class, () -> userSecurityDataService.sendEmailChangeRequestToEmail(changeEmailRequest, 210L));
         assertEquals(0, emailChangeRequestRepository.count());
     }
 
@@ -96,8 +93,7 @@ class UserSecurityDataServiceIT extends TestDependenciesContainer {
         ChangeEmailRequest changeEmailRequest = ChangeEmailRequest.builder()
                 .email(new ChangeEmailRequestWrapper(user.getEmail())).build();
 
-        assertThrows(AlreadyExistsException.class, () ->
-                userSecurityDataService.sendEmailChangeRequestToEmail(changeEmailRequest, 210L));
+        assertThrows(AlreadyExistsException.class, () -> userSecurityDataService.sendEmailChangeRequestToEmail(changeEmailRequest, 210L));
         assertEquals(0, emailChangeRequestRepository.count());
     }
 
@@ -110,9 +106,7 @@ class UserSecurityDataServiceIT extends TestDependenciesContainer {
                 .newEmail("new@mail.ru")
                 .currentTempCode("tempCode")
                 .build();
-        assertDoesNotThrow(() ->
-            userSecurityDataService.sendToEmail(user.getEmail(), emailChangeRequest)
-        );
+        assertDoesNotThrow(() -> userSecurityDataService.sendToEmail(user.getEmail(), emailChangeRequest));
     }
 
     @Test
@@ -130,14 +124,12 @@ class UserSecurityDataServiceIT extends TestDependenciesContainer {
         ChangeEmailRequest changeEmailRequest = ChangeEmailRequest.builder()
                 .email(new ChangeEmailRequestWrapper("newmail@gmail.com")).build();
 
-        assertDoesNotThrow(() ->
-            userSecurityDataService.sendEmailChangeRequestToEmail(changeEmailRequest, testUser.getId())
-        );
+        assertDoesNotThrow(() -> {
+            userSecurityDataService.sendEmailChangeRequestToEmail(changeEmailRequest, testUser.getId());
+        });
 
         EmailChangeRequest emailChangeRequest = emailChangeRequestRepository.findByOldEmail(testUser.getEmail()).orElseThrow();
-
-        userSecurityDataService.changeEmail(testUser.getEmail(), emailChangeRequest.getCurrentTempCode());
-
+        assertDoesNotThrow(() -> userSecurityDataService.changeEmail(testUser.getEmail(), emailChangeRequest.getCurrentTempCode()));
         User updatedUser = userRepository.findById(testUser.getId()).orElseThrow();
         assertEquals("newmail@gmail.com", updatedUser.getEmail());
     }
@@ -156,7 +148,7 @@ class UserSecurityDataServiceIT extends TestDependenciesContainer {
         changePasswordRequest.setNewPassword1(newPassword);
         changePasswordRequest.setNewPassword2(newPassword);
         assertDoesNotThrow(() -> userSecurityDataService.changePassword(changePasswordRequest, testUser.getId()));
-        User updatedUser = userRepository.findByIdAndIsDeletedFalse(testUser.getId()).orElseThrow();
+        User updatedUser = userRepository.findById(testUser.getId()).orElseThrow();
         assertTrue(passwordEncoder.matches(newPassword, updatedUser.getPassword()));
     }
 }
