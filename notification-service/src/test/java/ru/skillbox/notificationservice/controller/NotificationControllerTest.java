@@ -1,7 +1,6 @@
 package ru.skillbox.notificationservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +25,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
@@ -43,17 +43,17 @@ class NotificationControllerTest {
 
     @Test
     void getNotificationSetting() throws Exception {
-        Long userId = 1L;
+        long userId = 1L;
         NotificationSettingsDto expectedDto = new NotificationSettingsDto();
-        when(notificationService.getSettings(any(HttpServletRequest.class))).thenReturn(expectedDto);
+        when(notificationService.getSettings(any(Long.class))).thenReturn(expectedDto);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/notifications/settings")
-                        .header("id", userId.toString())
+                        .header("id", Long.toString(userId))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedDto)));
 
-        verify(notificationService).getSettings(any(HttpServletRequest.class));
+        verify(notificationService).getSettings(any(Long.class));
     }
 
     @Test
@@ -61,29 +61,31 @@ class NotificationControllerTest {
         SettingsDto settingsDto = new SettingsDto();
         NotificationSettingsDto expectedSettingsDto = new NotificationSettingsDto();
 
-        when(notificationService.createSettings(any(SettingsDto.class), any(HttpServletRequest.class)))
+        when(notificationService.createSettings(any(SettingsDto.class), any(Long.class)))
                 .thenReturn(expectedSettingsDto);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/notifications/settings")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("id", Long.toString(1L))
                         .content(objectMapper.writeValueAsString(settingsDto)))
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedSettingsDto)));
 
         ArgumentCaptor<SettingsDto> settingsCaptor = ArgumentCaptor.forClass(SettingsDto.class);
-        verify(notificationService).createSettings(settingsCaptor.capture(), any(HttpServletRequest.class));
+        verify(notificationService).createSettings(settingsCaptor.capture(), any(Long.class));
     }
+
     @Test
     void getNotification() throws Exception {
         Long userId = 1L;
         NotificationSentDto expectedResponse = new NotificationSentDto();
-        when(notificationService.getNotifications(any(HttpServletRequest.class))).thenReturn(expectedResponse);
+        when(notificationService.getNotifications(any(Long.class))).thenReturn(expectedResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/notifications")
-                        .header("id", userId.toString())
-                        .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+                .header("id", userId.toString())
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
-        verify(notificationService).getNotifications(any(HttpServletRequest.class));
+        verify(notificationService).getNotifications(any(Long.class));
     }
 
     @Test
@@ -100,12 +102,13 @@ class NotificationControllerTest {
                         .content(objectMapper.writeValueAsString(notification)))
                 .andExpect(status().isCreated());
     }
+
     @Test
     void getNotificationCount() throws Exception {
         long userId = 1L;
         NotificationCountRs expectedResponse = new NotificationCountRs();
 
-        when(notificationService.getCount(any(HttpServletRequest.class))).thenReturn(expectedResponse);
+        when(notificationService.getCount(any(Long.class))).thenReturn(expectedResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/notifications/count")
                         .header("id", userId)
@@ -113,7 +116,7 @@ class NotificationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedResponse)));
 
-        verify(notificationService).getCount(any(HttpServletRequest.class));
+        verify(notificationService).getCount(any(Long.class));
     }
 
     @Test

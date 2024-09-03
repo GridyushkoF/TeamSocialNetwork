@@ -5,7 +5,7 @@ spring:
   liquibase:
     enabled: false
   application:
-    name: post-service
+    name: notification-service
   profiles:
     active: test
   datasource:
