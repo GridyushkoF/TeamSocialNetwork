@@ -11,17 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.skillbox.authentication.exception.AlreadyExistsException;
 import ru.skillbox.authentication.exception.CaptchaValidatedExcepction;
 import ru.skillbox.authentication.model.dto.RegUserDto;
-import ru.skillbox.authentication.model.dto.SimpleResponse;
-import ru.skillbox.authentication.model.web.AuthenticationRequest;
-import ru.skillbox.authentication.model.web.AuthenticationResponse;
-import ru.skillbox.authentication.model.web.ChangeEmailRequest;
-import ru.skillbox.authentication.model.web.ChangePasswordRequest;
+import ru.skillbox.authentication.model.web.*;
 import ru.skillbox.authentication.repository.sql.UserRepository;
 import ru.skillbox.authentication.service.AuthenticationService;
 import ru.skillbox.authentication.service.CaptchaService;
-import ru.skillbox.authentication.service.UserSecurityDataService;
-
-import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequiredArgsConstructor
@@ -62,5 +55,11 @@ public class UserController {
     public ResponseEntity<AuthenticationResponse> loginUser(
             @RequestBody AuthenticationRequest authenticationRequest) {
         return ResponseEntity.ok(authenticationService.login(authenticationRequest));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshTokenResponse> refreshToken(
+            @RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return ResponseEntity.ok(authenticationService.getRefreshToken(refreshTokenRequest));
     }
 }

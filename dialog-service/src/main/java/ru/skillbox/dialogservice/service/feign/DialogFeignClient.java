@@ -8,7 +8,7 @@ import ru.skillbox.dialogservice.model.dto.JwtRequest;
 
 import java.util.Map;
 
-@FeignClient(name = "dialog", url = "${app.gateway.url}" + "${app.apiPrefix}")
+@FeignClient(name = "dialog", url = "${app.gatewayUrl}" + "${app.apiPrefix}")
 public interface DialogFeignClient {
 
     @PostMapping("/auth/getclaims")

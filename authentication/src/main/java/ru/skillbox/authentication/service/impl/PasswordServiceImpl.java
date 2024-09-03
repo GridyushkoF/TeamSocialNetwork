@@ -79,7 +79,7 @@ public class PasswordServiceImpl implements PasswordService {
                 log.error("Действие ссылки восстановления пароля истекло");
                 throw new IncorrectRecoveryLinkException("Действие ссылки истекло");
             }
-            Optional<User> userOptional = userRepository.findById(id);
+            Optional<User> userOptional = userRepository.findByIdAndIsDeletedFalse(id);
             User user = userOptional.get();
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             userRepository.save(user);
