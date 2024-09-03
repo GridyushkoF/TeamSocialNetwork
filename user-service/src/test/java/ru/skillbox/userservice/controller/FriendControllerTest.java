@@ -115,7 +115,6 @@ class FriendControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get(API_PREFIX + "/friends/recommendations")
                         .header("id", "1")
-                        .param("mock", "")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

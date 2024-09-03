@@ -74,10 +74,15 @@ public class FriendController {
 
     @GetMapping("/recommendations")
     public ResponseEntity<List<RecommendedFriendDto>> getByRecommendation(
-            @RequestParam String mock,
             HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
         return ResponseEntity.ok(friendshipService.getFriendRecommendations(currentAuthUserId));
+    }
+
+    @GetMapping("/recommendations?")
+    public ResponseEntity<List<RecommendedFriendDto>> getByRecommendation2(
+            HttpServletRequest request) {
+        return getByRecommendation(request);
     }
 
     @GetMapping("/count")
