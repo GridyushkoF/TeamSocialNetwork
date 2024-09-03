@@ -5,10 +5,11 @@ services:
       - "5432:5432"
     restart: always
     environment:
-      - POSTGRES_DB=global_db
+      - POSTGRES_MULTIPLE_DATABASES="user_db","dialog_db","notification_db","post_db","audit_db"
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
+      - ./pg-init-scripts:/docker-entrypoint-initdb.d
       - database-data:/var/lib/postgresql/data/
   pgadmin:
     image: dpage/pgadmin4

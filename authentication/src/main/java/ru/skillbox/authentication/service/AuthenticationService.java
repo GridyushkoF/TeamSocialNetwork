@@ -17,6 +17,8 @@ import ru.skillbox.authentication.exception.IncorrectPasswordException;
 import ru.skillbox.authentication.model.dto.RegUserDto;
 import ru.skillbox.authentication.model.entity.sql.User;
 import ru.skillbox.authentication.model.security.AppUserDetails;
+import ru.skillbox.authentication.exception.RefreshTokenException;
+import ru.skillbox.authentication.model.entity.nosql.RefreshToken;
 import ru.skillbox.authentication.model.web.AuthenticationRequest;
 import ru.skillbox.authentication.model.web.AuthenticationResponse;
 import ru.skillbox.authentication.processor.AuditProcessor;
@@ -29,6 +31,9 @@ import ru.skillbox.commonlib.event.audit.ActionType;
 
 import java.time.ZonedDateTime;
 
+import ru.skillbox.authentication.model.web.RefreshTokenRequest;
+import ru.skillbox.authentication.model.web.RefreshTokenResponse;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -39,7 +44,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuditProcessor auditProcessor;
     private final EmailChangeRequestRepository emailChangeRequestRepository;
-
+    private final RefreshTokenService refreshTokenService;
     private static final int BEARER_TOKEN_INDEX = 7;
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
@@ -61,12 +66,16 @@ public class AuthenticationService {
             setIsOnline(new IsOnlineRequest(user.getId(), true));
 
             String jwt = jwtService.generateJwtToken(userDetails);
+
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
             log.info("Пользователь '{}' успешно прошел аутентификацию.", authenticationRequest.getEmail());
+
             return AuthenticationResponse.builder()
                     .accessToken(jwt)
-                    .refreshToken(jwt)
+                    .refreshToken(refreshToken.getToken())
                     .build();
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             throw new IncorrectPasswordException("Для пользователя с e-mail " + authenticationRequest.getEmail() + " указан неверный пароль!");
         }
     }
@@ -77,6 +86,7 @@ public class AuthenticationService {
         throwExceptionIfEmailExists(user);
         log.info(emailChangeRequestRepository.findAll().toString());
         User newUser = userRepository.save(user);
+
         auditProcessor.process(newUser, ActionType.CREATE, newUser.getId());
     }
 
@@ -104,6 +114,7 @@ public class AuthenticationService {
                 .isDeleted(false)
                 .build();
     }
+
     @Transactional
     public void logout(String authorizationHeader) {
         String jwtToken = authorizationHeader.substring(BEARER_TOKEN_INDEX);
@@ -114,6 +125,8 @@ public class AuthenticationService {
 
             setIsOnline(new IsOnlineRequest(user.getId(), false));
 
+            refreshTokenService.deleteByUserId(user.getId());
+
             log.info("Пользователь {} вышел из системы.", email);
         } catch (MalformedJwtException e) {
             throw new EntityNotFoundException("token " + authorizationHeader + "not valid");
@@ -121,10 +134,29 @@ public class AuthenticationService {
     }
 
     public void setIsOnline(IsOnlineRequest request) {
-        User user = userRepository.findById(request.getUserId()).orElseThrow(
+        User user = userRepository.findByIdAndIsDeletedFalse(request.getUserId()).orElseThrow(
                 () -> new EntityNotFoundException("User with id: " + request.getUserId() + " not found"));
         user.setOnline(request.getIsOnline());
         user.setLastOnlineTime(ZonedDateTime.now());
         userRepository.save(user);
+    }
+
+
+    public RefreshTokenResponse getRefreshToken(RefreshTokenRequest request) {
+        String requestRefreshToken = request.getRefreshToken();
+
+        return refreshTokenService.findByRefreshToken(requestRefreshToken)
+                .map(refreshTokenService::checkRefreshToken)
+                .map(RefreshToken::getUserId)
+                .map(userId -> {
+                    User tokenOwner = userRepository.findByIdAndIsDeletedFalse(userId).orElseThrow(() ->
+                            new RefreshTokenException("Неудачная попытка получить токен для userId" + userId));
+
+                    setIsOnline(new IsOnlineRequest(userId, true));
+
+                    String token = jwtService.generateJwtTokenFromUser(tokenOwner);
+
+                    return new RefreshTokenResponse(token, refreshTokenService.createRefreshToken(userId).getToken());
+                }).orElseThrow(() -> new RefreshTokenException(requestRefreshToken, "Refresh токен не найден"));
     }
 }

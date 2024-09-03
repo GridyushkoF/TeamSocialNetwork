@@ -1,8 +1,7 @@
 stages:
   - compile
   - sonarqube-check
-  - deploy_docker_frontend
-  - deploy_docker_services
+  - deploy_docker
   - deploy_prod
 
 cache:
@@ -33,19 +32,8 @@ sonarqube-check-job:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH == 'develop'
 
-deploy_docker_frontend-job:
-  stage: deploy_docker_frontend
-  script:
-    - echo "Deploying frontend..."
-    - docker build --no-cache -f ./frontend/Dockerfile -t "skillboxgroup/frontend" ./frontend
-    - echo "Pushing frontend image to docker hub..."
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin
-    - docker push "skillboxgroup/frontend" --all-tags
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'develop'
-
-deploy_docker_services-job:
-  stage: deploy_docker_services
+deploy_docker-job:
+  stage: deploy_docker
   script:
     - echo "Pushing service images to docker hub..."
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin

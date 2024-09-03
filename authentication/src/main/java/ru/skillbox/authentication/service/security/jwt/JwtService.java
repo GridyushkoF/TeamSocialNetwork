@@ -1,10 +1,13 @@
 package ru.skillbox.authentication.service.security.jwt;
 
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.skillbox.authentication.model.entity.sql.User;
 import ru.skillbox.authentication.model.security.AppUserDetails;
 
 import com.auth0.jwt.JWT;
@@ -23,19 +26,41 @@ public class JwtService {
     private final Algorithm algorithm;
     private final Key key;
     private final Duration tokenExpiration;
+    private static final String ISSUER = "http://skillbox.ru";
 
-    public String generateJwtToken(AppUserDetails user) {
+    public String generateJwtToken(AppUserDetails userDetails) {
         return JWT.create()
-                .withIssuer("http://skillbox.ru")
+                .withIssuer(ISSUER)
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(new Date().getTime() + tokenExpiration.toMillis()))
+                .withSubject(userDetails.getEmail())
+                .withClaim("authorities", userDetails.getAuthorities().stream().toList().toString())
+                .withClaim("id", userDetails.getId())
+                .sign(algorithm);
+    }
+
+
+    public String generateJwtTokenFromUser(User user) {
+        return JWT.create()
+                .withIssuer(ISSUER)
                 .withSubject(user.getEmail())
-                .withClaim("authorities", user.getAuthorities().stream().toList().toString())
+                .withIssuedAt(new Date())
+                .withExpiresAt(new Date(new Date().getTime() + tokenExpiration.toMillis()))
+                .withClaim("authorities", user.getRole().toString())
                 .withClaim("id", user.getId())
                 .sign(algorithm);
     }
 
     public Claims getAllClaimsFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    }
+
+    public String getEmail(String token) {
+        JWTVerifier verifier = JWT.require(algorithm)
+                .withIssuer(ISSUER)
+                .build();
+
+        DecodedJWT jwt = verifier.verify(token);
+        return jwt.getSubject();
     }
 }

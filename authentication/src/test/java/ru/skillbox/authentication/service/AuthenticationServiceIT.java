@@ -70,8 +70,8 @@ class AuthenticationServiceIT extends TestDependenciesContainer {
 
     @DynamicPropertySource
     static void redisProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.redis.host", redisContainer::getHost);
-        registry.add("spring.redis.port", redisContainer::getFirstMappedPort);
+        registry.add("spring.data.redis.host", redisContainer::getHost);
+        registry.add("spring.data.redis.port", redisContainer::getFirstMappedPort);
     }
 
     @Test
@@ -110,7 +110,8 @@ class AuthenticationServiceIT extends TestDependenciesContainer {
         AuthenticationResponse response = authenticationService.login(loginRequest);
         assertNotNull(response);
         assertNotNull(response.getAccessToken());
-        assertEquals(response.getAccessToken(), response.getRefreshToken());
+        assertNotNull(response.getRefreshToken());
+        assertNotEquals(response.getAccessToken(), response.getRefreshToken());
     }
 
     @Test
@@ -147,7 +148,7 @@ class AuthenticationServiceIT extends TestDependenciesContainer {
         User testUser = saveTestUserAccountInDbAndGet();
         String jwtToken = jwtService.generateJwtToken(new AppUserDetails(testUser));
         assertDoesNotThrow(() -> authenticationService.logout("Bearer " + jwtToken));
-        User loggedOutUser = userRepository.findById(testUser.getId()).orElseThrow();
+        User loggedOutUser = userRepository.findByIdAndIsDeletedFalse(testUser.getId()).orElseThrow();
         assertFalse(loggedOutUser.isOnline());
     }
 
@@ -164,7 +165,7 @@ class AuthenticationServiceIT extends TestDependenciesContainer {
         User testUser = saveTestUserAccountInDbAndGet();
         IsOnlineRequest onlineRequest = new IsOnlineRequest(testUser.getId(), true);
         assertDoesNotThrow(() -> authenticationService.setIsOnline(onlineRequest));
-        User updatedUser = userRepository.findById(testUser.getId()).orElseThrow();
+        User updatedUser = userRepository.findByIdAndIsDeletedFalse(testUser.getId()).orElseThrow();
         assertTrue(updatedUser.isOnline());
     }
 
