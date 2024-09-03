@@ -9,7 +9,7 @@ import ru.skillbox.commonlib.exception.AdminAccessException;
 import ru.skillbox.userservice.exception.BadRequestException;
 import ru.skillbox.userservice.exception.NoSuchAccountException;
 import ru.skillbox.userservice.exception.NotAuthException;
-import ru.skillbox.commonlib.dto.error.ErrorDetail;
+import ru.skillbox.commonlib.dto.ErrorDetail;
 
 import java.time.LocalDateTime;
 

@@ -1,6 +1,5 @@
 package ru.skillbox.notificationservice.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
