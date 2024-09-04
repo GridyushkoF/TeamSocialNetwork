@@ -23,6 +23,6 @@ public class AccountSearchDto {
     String country;
     boolean isBlocked;
     boolean isDeleted;
-    int ageTo;
-    int ageFrom;
+    Integer ageTo;
+    Integer ageFrom;
 }

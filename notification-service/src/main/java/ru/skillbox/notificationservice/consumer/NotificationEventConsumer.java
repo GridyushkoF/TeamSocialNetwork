@@ -28,17 +28,8 @@ public class NotificationEventConsumer implements EventConsumer<NotificationEven
     private void createNotifications(NotificationEvent event) {
         for (Settings settings : settingsRepository.findAll()) {
             if (event.getAuthorId().equals(settings.getUserId())) continue;
-            boolean haveToSendNotification = false;
-            switch (event.getNotificationType()) {
-                case POST -> haveToSendNotification = settings.isPost();
-                case POST_COMMENT -> haveToSendNotification = settings.isPostComment();
-                case COMMENT_COMMENT -> haveToSendNotification = settings.isCommentComment();
-                case MESSAGE -> haveToSendNotification = settings.isMessage();
-                case SEND_EMAIL_MESSAGE -> haveToSendNotification = settings.isSendEmailMessage();
-                case FRIEND_BIRTHDAY -> haveToSendNotification = settings.isFriendBirthday();
-                case FRIEND_REQUEST -> haveToSendNotification = settings.isFriendRequest();
-            }
-            if (haveToSendNotification) {
+            boolean haveToSendNotification = isHaveToSendNotification(event, settings);
+            if (haveToSendNotification && (event.getUserId() == null || event.getUserId().equals(settings.getUserId()))) {
                 NotificationInputDto notificationDto = NotificationInputDto.builder()
                         .notificationType(event.getNotificationType())
                         .content(event.getContent())
@@ -48,5 +39,19 @@ public class NotificationEventConsumer implements EventConsumer<NotificationEven
                 notificationService.createNotification(notificationDto);
             }
         }
+    }
+
+    private boolean isHaveToSendNotification(NotificationEvent event, Settings settings) {
+        boolean haveToSendNotification = false;
+        switch (event.getNotificationType()) {
+            case POST -> haveToSendNotification = settings.isPost();
+            case POST_COMMENT -> haveToSendNotification = settings.isPostComment();
+            case COMMENT_COMMENT -> haveToSendNotification = settings.isCommentComment();
+            case MESSAGE -> haveToSendNotification = settings.isMessage();
+            case SEND_EMAIL_MESSAGE -> haveToSendNotification = settings.isSendEmailMessage();
+            case FRIEND_BIRTHDAY -> haveToSendNotification = settings.isFriendBirthday();
+            case FRIEND_REQUEST -> haveToSendNotification = settings.isFriendRequest();
+        }
+        return haveToSendNotification;
     }
 }
