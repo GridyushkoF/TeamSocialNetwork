@@ -94,9 +94,17 @@ public class AccountController {
     @Operation(summary = "Search user account")
     public ResponseEntity<Page<AccountDto>> searchAccount(
             @RequestParam boolean isDeleted,
+            @RequestParam(defaultValue = "100") Integer size,
+            @RequestParam(required = false) List<Long> ids,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) Integer ageFrom,
+            @RequestParam(required = false) Integer ageTo,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String city,
           HttpServletRequest request) {
         return ResponseEntity.ok(accountService
-                .searchAccount(isDeleted,
+                .searchAccountByFilterParams(isDeleted, size, ids, firstName, lastName, ageFrom, ageTo, country, city,
                         Long.parseLong(request.getHeader("id"))));
     }
 

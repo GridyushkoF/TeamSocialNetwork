@@ -7,10 +7,9 @@ stages:
 cache:
   paths:
     - .m2/repository
-  key: "$CI_COMMIT_SHA"
 
 variables:
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
   MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
