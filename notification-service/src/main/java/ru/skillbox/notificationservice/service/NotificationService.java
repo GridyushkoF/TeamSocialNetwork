@@ -1,10 +1,10 @@
 package ru.skillbox.notificationservice.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skillbox.commonlib.event.notification.NotificationStatus;
+import ru.skillbox.notificationservice.exception.SettingsAlreadyExistsException;
 import ru.skillbox.notificationservice.mapper.v1.NotificationMapperV1;
 import ru.skillbox.notificationservice.mapper.v1.SettingsMapperV1;
 import ru.skillbox.notificationservice.model.dto.*;
@@ -28,14 +28,13 @@ public class NotificationService {
 
 
     @Transactional
-    public NotificationSettingsDto getSettings(HttpServletRequest request) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+    public NotificationSettingsDto getSettings(Long currentAuthUserId) {
         Settings settings;
         Optional<Settings> settingsOptional =
                 settingsRepository.findByUserId(currentAuthUserId);
         settings = settingsOptional.orElseGet(() -> createNewSettings(currentAuthUserId));
         return settingsMapper.toDto(settings);
-        }
+    }
 
     private Settings createNewSettings(Long currentAuthUserId) {
         Settings newSettings = Settings.builder()
@@ -52,22 +51,17 @@ public class NotificationService {
     }
 
     @Transactional
-    public NotificationSettingsDto createSettings(SettingsDto dto, HttpServletRequest request) {
-
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-        Settings existedSettings = settingsRepository.findByUserId(currentAuthUserId).orElse(
-                createNewSettings(currentAuthUserId));
-
-        Settings newSettings = settingsMapper.toEntity(currentAuthUserId, dto);
-        newSettings.setId(existedSettings.getId());
-
+    public NotificationSettingsDto createSettings(SettingsDto settingsDto, Long currentAuthUserId) {
+        if (settingsRepository.findByUserId(currentAuthUserId).isPresent()) {
+            throw new SettingsAlreadyExistsException(currentAuthUserId);
+        }
+        Settings newSettings = settingsMapper.toEntity(currentAuthUserId, settingsDto);
         return settingsMapper.toDto(settingsRepository.save(newSettings));
-}
+    }
 
     @Transactional
-    public NotificationSettingsDto updateSettings(SettingRq settingRq, HttpServletRequest request) {
-
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+    public NotificationSettingsDto updateSettings(SettingRq settingRq,
+                                                  Long currentAuthUserId) {
         Settings settings =
                 settingsRepository.findByUserId(currentAuthUserId).orElseThrow(
                         () -> new NoSuchElementException("No such notification settings existed!")
@@ -87,31 +81,26 @@ public class NotificationService {
     }
 
     @Transactional
-    public NotificationDto createNotification(NotificationInputDto dto) {
-        Notification notification = notificationMapper.toEntity(dto);
+    public NotificationDto createNotification(NotificationInputDto notificationInputDto) {
+        Notification notification = notificationMapper.toEntity(notificationInputDto);
         notification.setNotificationStatus(NotificationStatus.SENT);
 
         return notificationMapper.toNotificationDto(notificationRepository.save(notification));
     }
 
-    public NotificationSentDto getNotifications(HttpServletRequest request) {
-        long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-
+    public NotificationSentDto getNotifications(long currentAuthUserId) {
         return notificationMapper.toResponse(
                 notificationRepository.findAllByUserIdAndNotificationStatus(currentAuthUserId, NotificationStatus.SENT));
     }
 
-    public NotificationCountRs getCount(HttpServletRequest request) {
-        long currentAuthUserId = Long.parseLong(request.getHeader("id"));
-
+    public NotificationCountRs getCount(long currentAuthUserId) {
         return notificationMapper.toCountResponse(
                 notificationRepository.
                         findAllByUserIdAndNotificationStatus(currentAuthUserId, NotificationStatus.SENT).size());
     }
 
     @Transactional
-    public void setReaded(HttpServletRequest request) {
-        long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+    public void setReaded(long currentAuthUserId) {
         notificationRepository
                 .findAllByUserIdAndNotificationStatus(currentAuthUserId, NotificationStatus.SENT)
                 .forEach(notification -> {

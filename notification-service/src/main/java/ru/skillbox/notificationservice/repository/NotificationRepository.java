@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     List<Notification> findAllByAuthorId(long authorId);
+
     List<Notification> findAllByUserIdAndNotificationStatus(long authorId, NotificationStatus status);
 }
