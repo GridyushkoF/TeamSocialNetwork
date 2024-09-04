@@ -11,7 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.skillbox.authentication.exception.AccessException;
 import ru.skillbox.authentication.exception.AlreadyExistsException;
 import ru.skillbox.authentication.exception.EntityNotFoundException;
 import ru.skillbox.authentication.exception.IncorrectPasswordException;
@@ -58,10 +57,7 @@ public class AuthenticationService {
             User user = userRepository.findByEmail(userDetails.getEmail()).orElseThrow(() -> new EntityNotFoundException(
                     "Пользователь с email: " + userDetails.getEmail() + " не найден"
             ));
-            if(user.isBlocked() || user.isDeleted()) {
-                throw new AccessException("This account blocked or deleted." +
-                        " If you think that it is mistake, please connect with administrators");
-            }
+
             setIsOnline(new IsOnlineRequest(user.getId(), true));
 
             String jwt = jwtService.generateJwtToken(userDetails);

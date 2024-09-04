@@ -27,6 +27,7 @@ import ru.skillbox.authentication.model.entity.sql.User;
 import ru.skillbox.authentication.model.security.AppUserDetails;
 import ru.skillbox.authentication.model.web.AuthenticationRequest;
 import ru.skillbox.authentication.model.web.AuthenticationResponse;
+import ru.skillbox.authentication.repository.nosql.EmailChangeRequestRepository;
 import ru.skillbox.authentication.repository.sql.UserRepository;
 import ru.skillbox.authentication.service.AuthenticationService;
 import ru.skillbox.authentication.service.CaptchaService;
@@ -63,6 +64,7 @@ class UserControllerIT extends TestDependenciesContainer {
 
     @BeforeEach
     public void setUp() {
+        userRepository.deleteAll();
         reset(captchaService, authenticationService);
     }
 

@@ -1,23 +1,31 @@
-package ru.skillbox.notificationservice.handler.exception;
+package ru.skillbox.dialogservice.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.skillbox.commonlib.dto.error.ErrorDetail;
-import ru.skillbox.notificationservice.exception.SettingsAlreadyExistsException;
+import ru.skillbox.dialogservice.exception.NotAuthException;
+import ru.skillbox.dialogservice.exception.NotFoundException;
 
 import java.time.LocalDateTime;
 
 @ControllerAdvice
-public class ExceptionsHandler {
-    @ExceptionHandler(SettingsAlreadyExistsException.class)
-    public ResponseEntity<ErrorDetail> handleBadRequest(SettingsAlreadyExistsException exception) {
+public class DialogExceptionsHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorDetail> handleBadRequest(NotFoundException exception) {
         return buildResponseEntity(exception, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NotAuthException.class)
+    public ResponseEntity<ErrorDetail> handleUnauthorized(NotAuthException exception) {
+        return buildResponseEntity(exception, HttpStatus.UNAUTHORIZED);
+    }
+
     private ResponseEntity<ErrorDetail> buildResponseEntity(Exception exception, HttpStatus status) {
-        ErrorDetail errorDetail = new ErrorDetail()
+        var errorDetail = new ErrorDetail()
                 .setTitle(exception.getMessage())
                 .setStatus(status.value())
                 .setTimeStamp(LocalDateTime.now())

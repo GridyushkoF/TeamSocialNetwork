@@ -45,9 +45,6 @@ class NotificationServiceIT {
     private SettingsRepository settingsRepository;
     @Autowired
     private SettingsMapperV1 settingsMapperV1;
-
-    private HttpServletRequest request;
-
     @NonNull
     private static SettingsDto getTestSettingsDto() {
         SettingsDto settingsDto = new SettingsDto();

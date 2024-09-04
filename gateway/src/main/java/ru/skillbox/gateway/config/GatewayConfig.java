@@ -79,12 +79,32 @@ public class GatewayConfig {
                                 .uri("lb://GEO-SERVICE")
                 )
                 .route(
-                        "admin_route", r -> r.path("/api/v1/admin-console/**")
+                        "admin_route_prometheus", r -> r.path("/api/v1/admin-console/actuator/**")
+                                .filters(f -> f.filter(filter))
+                                .uri("lb://ADMIN-CONSOLE")
+                )
+                .route(
+                        "admin_route_swagger", r -> r.path("/api/v1/admin-console/v3/**")
+                                .filters(f -> f.filter(filter))
+                                .uri("lb://ADMIN-CONSOLE")
+                )
+                .route(
+                        "admin_route", r -> r.path("/api/v1/admin-console/statistic/**")
                                 .filters(f -> f.filter(filter).filter(adminFilter))
                                 .uri("lb://ADMIN-CONSOLE")
                 )
                 .route(
-                        "audit-log_route", r -> r.path("/api/v1/audit/**")
+                        "audit-log_route_prometheus", r -> r.path("/api/v1/audit/actuator/**")
+                                .filters(f -> f.filter(filter))
+                                .uri("lb://AUDIT-SERVICE")
+                )
+                .route(
+                        "audit-log_route_swagger", r -> r.path("/api/v1/audit/v3/**")
+                                .filters(f -> f.filter(filter))
+                                .uri("lb://AUDIT-SERVICE")
+                )
+                .route(
+                        "audit-log_route", r -> r.path("/api/v1/audit/search/**")
                                 .filters(f -> f.filter(filter).filter(adminFilter))
                                 .uri("lb://AUDIT-SERVICE")
                 )
