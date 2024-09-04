@@ -80,7 +80,7 @@ public class FriendController {
     }
 
     @GetMapping("/recommendations?")
-    public ResponseEntity<List<RecommendedFriendDto>> getByRecommendation2(
+    public ResponseEntity<List<RecommendedFriendDto>> getByRecommendationWithQuestionMark(
             HttpServletRequest request) {
         return getByRecommendation(request);
     }
