@@ -9,7 +9,7 @@ import ru.skillbox.commonlib.exception.AdminAccessException;
 import ru.skillbox.userservice.exception.BadRequestException;
 import ru.skillbox.userservice.exception.NoSuchAccountException;
 import ru.skillbox.userservice.exception.NotAuthException;
-import ru.skillbox.commonlib.dto.error.ErrorDetail;
+import ru.skillbox.commonlib.dto.ErrorDetail;
 
 import java.time.LocalDateTime;
 
@@ -35,7 +35,7 @@ public class UserExceptionsHandler extends ResponseEntityExceptionHandler {
     }
 
     private ResponseEntity<ErrorDetail> buildResponseEntity(Exception exception, HttpStatus status) {
-        var errorDetail = new ErrorDetail()
+        ErrorDetail errorDetail = new ErrorDetail()
                 .setTitle(exception.getMessage())
                 .setStatus(status.value())
                 .setTimeStamp(LocalDateTime.now())

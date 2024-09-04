@@ -1,0 +1,28 @@
+spring:
+  cloud:
+    config:
+      enabled: false
+  liquibase:
+    enabled: false
+  application:
+    name: gateway
+  profiles:
+    active: test
+security:
+  user:
+    name: admin@socialnetwork.com
+    password: admin
+  jwt:
+    secret: B9vPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY
+
+eureka:
+  client:
+    enabled: false
+
+app:
+  userMicroservicePath: lb://USER-SERVICE
+  gateway:
+    url: http://localhost:9090
+  apiPrefix: /api/v1
+server:
+  port: 9090

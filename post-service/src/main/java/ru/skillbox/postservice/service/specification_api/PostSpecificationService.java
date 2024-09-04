@@ -9,40 +9,21 @@ import ru.skillbox.postservice.model.entity.Post;
 import ru.skillbox.postservice.model.entity.Tag;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
 public class PostSpecificationService {
     private static final String AUTHOR_ID = "authorId";
-    public Specification<Post> getSpecificationByDto(PostSearchDto postSearchDto, Long currenAuthUserID) {
-        return (root, query, builder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            predicates.add(builder.or(builder.equal(root.get("type"), PostType.POSTED),
-                    builder.equal(root.get(AUTHOR_ID), currenAuthUserID)));
-            addIdPredicate(postSearchDto, root, predicates);
-            addAccountsPredicate(postSearchDto, root, predicates);
-            addAuthorIdPredicate(postSearchDto, root, builder, predicates);
-            addTitlePredicate(postSearchDto, root, builder, predicates);
-            addPostTextPredicate(postSearchDto, root, builder, predicates);
-            addFriendsPredicate(postSearchDto);
-            addIsDeletePredicate(postSearchDto, root, builder, predicates);
-            addTagsPredicate(postSearchDto, root, predicates);
-            addFromDatePredicate(postSearchDto, root, builder, predicates);
-            addToDatePredicate(postSearchDto, root, builder, predicates);
-            return builder.and(predicates.toArray(new Predicate[0]));
-        };
-    }
 
     private static void addToDatePredicate(PostSearchDto postSearchDto, Root<Post> root, CriteriaBuilder builder, List<Predicate> predicates) {
         if (postSearchDto.getDateTo() != null) {
-            predicates.add(builder.lessThanOrEqualTo(root.get("publishDate"), new Date(postSearchDto.getDateTo())));
+            predicates.add(builder.lessThanOrEqualTo(root.get("publishDate"), postSearchDto.getDateTo()));
         }
     }
 
     private static void addFromDatePredicate(PostSearchDto postSearchDto, Root<Post> root, CriteriaBuilder builder, List<Predicate> predicates) {
         if (postSearchDto.getDateFrom() != null) {
-            predicates.add(builder.greaterThanOrEqualTo(root.get("publishDate"), new Date(postSearchDto.getDateFrom())));
+            predicates.add(builder.greaterThanOrEqualTo(root.get("publishDate"), postSearchDto.getDateFrom()));
         }
     }
 
@@ -91,5 +72,24 @@ public class PostSpecificationService {
         if (postSearchDto.getIds() != null && !postSearchDto.getIds().isEmpty()) {
             predicates.add(root.get("id").in(postSearchDto.getIds()));
         }
+    }
+
+    public Specification<Post> getSpecificationByDto(PostSearchDto postSearchDto, Long currenAuthUserID) {
+        return (root, query, builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(builder.or(builder.equal(root.get("type"), PostType.POSTED),
+                    builder.equal(root.get(AUTHOR_ID), currenAuthUserID)));
+            addIdPredicate(postSearchDto, root, predicates);
+            addAccountsPredicate(postSearchDto, root, predicates);
+            addAuthorIdPredicate(postSearchDto, root, builder, predicates);
+            addTitlePredicate(postSearchDto, root, builder, predicates);
+            addPostTextPredicate(postSearchDto, root, builder, predicates);
+            addFriendsPredicate(postSearchDto);
+            addIsDeletePredicate(postSearchDto, root, builder, predicates);
+            addTagsPredicate(postSearchDto, root, predicates);
+            addFromDatePredicate(postSearchDto, root, builder, predicates);
+            addToDatePredicate(postSearchDto, root, builder, predicates);
+            return builder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 }

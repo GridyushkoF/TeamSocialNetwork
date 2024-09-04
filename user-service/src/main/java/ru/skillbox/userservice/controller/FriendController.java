@@ -14,6 +14,7 @@ import ru.skillbox.userservice.model.dto.RecommendedFriendDto;
 import ru.skillbox.userservice.service.FriendshipService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/friends")

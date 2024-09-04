@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
@@ -21,6 +22,6 @@ public class PostSearchDto {
     private boolean withFriends;
     private boolean isDelete;
     private List<String> tags;
-    private Long dateFrom;
-    private Long dateTo;
+    private ZonedDateTime dateFrom;
+    private ZonedDateTime dateTo;
 }

@@ -40,4 +40,8 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity<ErrorResponseBody> captchaValidatedExcepction(CaptchaValidatedExcepction ex) {
         return new ResponseEntity<>(new ErrorResponseBody(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(value = AccessException.class)
+    public ResponseEntity<ErrorResponseBody> accessException(AccessException ex) {
+        return new ResponseEntity<>(new ErrorResponseBody(ex.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
 }
