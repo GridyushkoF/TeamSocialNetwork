@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.skillbox.commonlib.dto.error.ErrorDetail;
+import ru.skillbox.commonlib.dto.ErrorDetail;
 import ru.skillbox.dialogservice.exception.NotAuthException;
 import ru.skillbox.dialogservice.exception.NotFoundException;
 
