@@ -37,8 +37,9 @@ public class NotificationService {
     }
 
     private Settings createNewSettings(Long currentAuthUserId) {
-        Settings newSettings = new Settings();
-        newSettings.setUserId(currentAuthUserId);
+        Settings newSettings = Settings.builder()
+                .userId(currentAuthUserId)
+                .build();
         return settingsRepository.saveAndFlush(newSettings);
     }
 

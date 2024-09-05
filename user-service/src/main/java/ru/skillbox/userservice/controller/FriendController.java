@@ -1,7 +1,6 @@
 package ru.skillbox.userservice.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -26,41 +25,48 @@ public class FriendController {
 
     @PostMapping("/{id}/request")
     @ResponseStatus(HttpStatus.OK)
-    public void addFriend(@PathVariable("id") Long accountId, HttpServletRequest request) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+    public void addFriend(
+            @PathVariable("id") Long accountId,
+            @RequestHeader("id") Long currentAuthUserId) {
         friendshipService.requestFriendship(currentAuthUserId, accountId);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteFriendship(@PathVariable("id") Long accountId, HttpServletRequest request) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+    public void deleteFriendship(
+            @PathVariable("id") Long accountId,
+            @RequestHeader("id") Long currentAuthUserId) {
         friendshipService.deleteFriendship(currentAuthUserId, accountId);
     }
 
     @PutMapping("/{id}/approve")
-    public void approveFriend(@PathVariable("id") Long accountId, HttpServletRequest request) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+    public void approveFriend(
+            @PathVariable("id") Long accountId,
+            @RequestHeader("id") Long currentAuthUserId) {
         friendshipService.approveFriendship(currentAuthUserId, accountId);
     }
 
     @PutMapping("/block/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void blockFriend(@PathVariable("id") Long accountId, HttpServletRequest request) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+    public void blockFriend(
+            @PathVariable("id") Long accountId,
+            @RequestHeader("id") Long currentAuthUserId) {
         friendshipService.blockAccount(currentAuthUserId, accountId);
     }
 
     @PutMapping("/unblock/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void unblockFriend(@PathVariable("id") Long accountId, HttpServletRequest request) {
-        deleteFriendship(accountId, request);
+    public void unblockFriend(
+            @PathVariable("id") Long accountId,
+            @RequestHeader("id") Long currentAuthUserId) {
+        deleteFriendship(accountId, currentAuthUserId);
     }
 
     @PostMapping("/subscribe/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void subscribe(@PathVariable("id") Long accountId, HttpServletRequest request) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+    public void subscribe(
+            @PathVariable("id") Long accountId,
+            @RequestHeader("id") Long currentAuthUserId) {
         friendshipService.subscribeToAccount(currentAuthUserId, accountId);
     }
 
@@ -68,27 +74,25 @@ public class FriendController {
     public ResponseEntity<Page<FriendDto>> getFriends(
             @RequestParam StatusCode statusCode,
             @RequestParam(defaultValue = "3") int size,
-            HttpServletRequest request) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+            @RequestHeader("id") Long currentAuthUserId) {
         return ResponseEntity.ok(friendshipService.getFriendsByStatus(statusCode, size, currentAuthUserId));
     }
 
     @GetMapping("/recommendations")
     public ResponseEntity<List<RecommendedFriendDto>> getByRecommendation(
-            HttpServletRequest request) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+            @RequestHeader("id") Long currentAuthUserId) {
         return ResponseEntity.ok(friendshipService.getFriendRecommendations(currentAuthUserId));
     }
 
     @GetMapping("/recommendations?")
     public ResponseEntity<List<RecommendedFriendDto>> getByRecommendationWithQuestionMark(
-            HttpServletRequest request) {
-        return getByRecommendation(request);
+            @RequestHeader("id") Long currentAuthUserId) {
+        return getByRecommendation(currentAuthUserId);
     }
 
     @GetMapping("/count")
-    public ResponseEntity<CountDto> requestCount(HttpServletRequest request) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+    public ResponseEntity<CountDto> requestCount(
+            @RequestHeader("id") Long currentAuthUserId) {
         return ResponseEntity.ok(new CountDto(friendshipService.getFriendRequestCount(currentAuthUserId)));
     }
 }
