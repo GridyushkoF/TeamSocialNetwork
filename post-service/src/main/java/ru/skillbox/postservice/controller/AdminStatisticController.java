@@ -1,6 +1,8 @@
 package ru.skillbox.postservice.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +19,12 @@ import ru.skillbox.postservice.service.admin.AdminStatisticsService;
 @RequiredArgsConstructor
 @RequestMapping("${app.apiPrefix}" + "/post")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Admin Statistic Controller", description = "Admin Statistic API")
 public class AdminStatisticController {
     private final AdminStatisticsService adminStatisticsService;
 
     @PostMapping("/statistic/comment")
+    @Operation(summary = "Get comment statistics")
     public ResponseEntity<AdminStatisticsDto> getCommentStatistics(
             @RequestBody PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
@@ -29,6 +33,7 @@ public class AdminStatisticController {
     }
 
     @PostMapping("/statistic/post")
+    @Operation(summary = "Get posts statistics")
     public ResponseEntity<AdminStatisticsDto> getPostsStatistics(
             @RequestBody PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
@@ -37,6 +42,7 @@ public class AdminStatisticController {
     }
 
     @PostMapping("/statistic/like")
+    @Operation(summary = "Get likes statistics")
     public ResponseEntity<AdminStatisticsDto> getLikesStatistics(
             @RequestBody PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {

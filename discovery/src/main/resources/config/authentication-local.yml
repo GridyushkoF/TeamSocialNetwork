@@ -8,7 +8,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
   redis:
     host: localhost
@@ -87,3 +87,6 @@ server:
 app:
   changeEmailHost: http://localhost
   apiPrefix: /api/v1
+
+springdoc:
+  override-with-generic-response: false

@@ -1,6 +1,8 @@
 package ru.skillbox.postservice.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -21,16 +23,19 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @RequestMapping("${app.apiPrefix}/post")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Post Controller", description = "Post API")
 public class PostController {
     private final PostService postService;
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get post by ID")
     public ResponseEntity<PostDto> getPostById(@PathVariable("id") Long postId) {
         return ResponseEntity.ok(postService.getPostById(postId));
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Update post by ID")
     public void updatePostById(
             @RequestBody PostDto postDto,
             HttpServletRequest request) {
@@ -40,6 +45,7 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Delete post by ID")
     public void deletePostById(@PathVariable("id") Long postId,
                                                  HttpServletRequest request) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
@@ -47,6 +53,7 @@ public class PostController {
     }
 
     @GetMapping
+    @Operation(summary = "Search post")
     public ResponseEntity<PagePostDto> searchPosts(
             @ModelAttribute PostSearchDto searchDto,
             @RequestParam(value = "page",defaultValue = "0") int page,
@@ -64,6 +71,7 @@ public class PostController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Create post")
     public void createPost(
             @RequestParam(value = "publishDate", required = false) Long publishDateEpochMillis,
             @RequestBody PostDto postDto,

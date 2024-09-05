@@ -1,6 +1,8 @@
 package ru.skillbox.userservice.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +26,13 @@ import java.util.List;
 @RequestMapping("/account")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Account Controller", description = "Account API")
 public class AccountController {
 
     private final AccountService accountService;
 
     @PutMapping("/recovery")
+    @Operation(summary = "Recovery user account")
     public ResponseEntity<String> recoveryUserAccount(
             @Valid
             @RequestBody AccountRecoveryRequest recoveryRequest) {
@@ -37,22 +41,26 @@ public class AccountController {
     }
 
     @GetMapping("/me")
+    @Operation(summary = "Get user account")
     public ResponseEntity<AccountDto> getUserAccount(HttpServletRequest request) {
         Long myId = Long.parseLong(request.getHeader("id"));
         return ResponseEntity.ok(accountService.getAccountById(myId, myId));
     }
 
     @PutMapping("/me")
+    @Operation(summary = "Update user account")
     public ResponseEntity<AccountDto> updateUserAccount(@Valid @RequestBody AccountDto accountDto, HttpServletRequest request) {
         return ResponseEntity.ok(accountService.updateUserAccount(accountDto, Long.parseLong(request.getHeader("id"))));
     }
 
     @DeleteMapping("/me")
+    @Operation(summary = "Delete user account")
     public ResponseEntity<String> deleteUserAccount(HttpServletRequest request) {
         return ResponseEntity.ok(accountService.deleteUserAccount(Long.parseLong(request.getHeader("id"))));
     }
 
     @GetMapping
+    @Operation(summary = "Get all accounts")
     public ResponseEntity<Page<AccountDto>> getAllAccounts(
             @RequestParam(value = "page",defaultValue = "0") int page,
             @RequestParam(value = "size",defaultValue = "5") int size,
@@ -64,22 +72,26 @@ public class AccountController {
     }
 
     @PostMapping
+    @Operation(summary = "Create user account")
     public ResponseEntity<Long> createAccount(@RequestBody AccountDto accountDto, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(accountService.createAccount(accountDto, Long.parseLong(request.getHeader("id"))));
     }
 
     @PostMapping("/searchByFilter")
+    @Operation(summary = "Search account by filter")
     public ResponseEntity<List<AccountDto>> searchAccountByFilter(@RequestBody AccountByFilterDto filterDto, HttpServletRequest request) {
         return ResponseEntity.ok(accountService.searchAccountByFilter(filterDto, Long.parseLong(request.getHeader("id"))));
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get user account by id")
     public ResponseEntity<AccountDto> getAccountById(@PathVariable Long id, HttpServletRequest request) {
         return ResponseEntity.ok(accountService.getAccountById(id, Long.parseLong(request.getHeader("id"))));
     }
 
     @GetMapping("/search")
+    @Operation(summary = "Search user account")
     public ResponseEntity<Page<AccountDto>> searchAccount(
             @RequestParam boolean isDeleted,
           HttpServletRequest request) {
@@ -89,16 +101,19 @@ public class AccountController {
     }
 
     @GetMapping("/ids")
+    @Operation(summary = "Get all IDs")
     public ResponseEntity<List<Long>> getAllIds() {
         return ResponseEntity.ok(accountService.getAllIds());
     }
 
     @GetMapping("/accountIds")
+    @Operation(summary = "Get account IDs")
     public ResponseEntity<List<AccountDto>> getAccountIds(@RequestParam Long[] ids, HttpServletRequest request) {
         return ResponseEntity.ok(accountService.getAccountIds(ids, Long.parseLong(request.getHeader("id"))));
     }
     //----------------------------ADMIN-ACCESS---------------------------
     @PostMapping("/statistic")
+    @Operation(summary = "Get users statistics")
     public ResponseEntity<UsersStatisticsDto> getUsersStatistics(
             @RequestBody PeriodRequestDto periodRequestDto,
             HttpServletRequest request) {
@@ -107,6 +122,7 @@ public class AccountController {
     }
 
     @PutMapping("/block/{id}")
+    @Operation(summary = "Block user account by ID")
     public ResponseEntity<String> blockAccountById(
             @PathVariable Integer id,
             HttpServletRequest request) {
@@ -115,6 +131,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/block/{id}")
+    @Operation(summary = "Unblock user account by ID")
     public ResponseEntity<String> unblockAccountById(
             @PathVariable Integer id,
             HttpServletRequest request) {

@@ -1,6 +1,8 @@
 package ru.skillbox.dialogservice.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,11 +18,13 @@ import ru.skillbox.dialogservice.service.MessageService;
 @RequiredArgsConstructor
 @RequestMapping("${app.apiPrefix}" + "/dialogs")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Dialog Controller", description = "Dialog API")
 public class DialogController {
     private final DialogService dialogService;
     private final MessageService messageService;
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update dialog")
     public DialogDto updateDialog(HttpServletRequest request,
                                   @PathVariable Long id) {
         Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
@@ -28,6 +32,7 @@ public class DialogController {
     }
 
     @GetMapping
+    @Operation(summary = "Get dialogs")
     public Page<DialogDto> getDialogs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "unreadCount,desc") String sort,
@@ -37,6 +42,7 @@ public class DialogController {
         return dialogService.getDialogs(page, sort, currentAuthUserId);
     }
     @GetMapping("/unread")
+    @Operation(summary = "Get Unread")
     public CountDto getUnread (
             HttpServletRequest request
     ) {
@@ -45,6 +51,7 @@ public class DialogController {
     }
 
     @GetMapping("/messages")
+    @Operation(summary = "Get messages")
     public Page<MessageDto> getMessages(
             @RequestParam Long recipientId,
             @RequestParam(defaultValue = "0") int page,
@@ -56,6 +63,7 @@ public class DialogController {
     }
 
     @GetMapping("/recipientId/{id}")
+    @Operation(summary = "Get dialog")
     public DialogDto getDialog(HttpServletRequest request,
                                @PathVariable long id) {
         Long authUserId = Long.parseLong(request.getHeader("id"));

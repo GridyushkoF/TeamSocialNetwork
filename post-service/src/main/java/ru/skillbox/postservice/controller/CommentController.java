@@ -1,6 +1,8 @@
 package ru.skillbox.postservice.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -19,11 +21,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("${app.apiPrefix}/post")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Comment Controller", description = "Comment API")
 public class CommentController {
     private final CommentService commentService;
 
     @PutMapping("/{id}/comment")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Update comment")
     public void updateComment(
             @PathVariable("id") Long postId,
             @RequestBody CommentDto commentDto,
@@ -35,6 +39,7 @@ public class CommentController {
 
     @DeleteMapping("/{id}/comment/{commentId}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Delete comment")
     public void deleteComment(
             @PathVariable("id") Long postId,
             @PathVariable Long commentId,
@@ -45,6 +50,7 @@ public class CommentController {
     }
 
     @GetMapping("/{id}/comment")
+    @Operation(summary = "Get comment on post")
     public ResponseEntity<PageCommentDto> getCommentsOnPost(
             @PathVariable("id") Long postId,
             @RequestParam("page") int page,
@@ -59,6 +65,7 @@ public class CommentController {
     }
 
     @PostMapping("/{id}/comment")
+    @Operation(summary = "Create comment")
     @ResponseStatus(HttpStatus.CREATED)
     public void createComment(@PathVariable("id") Long postId,
                               @RequestBody CommentDto commentDto,
@@ -68,6 +75,7 @@ public class CommentController {
     }
 
     @GetMapping("/{id}/comment/{commentId}/subcomment")
+    @Operation(summary = "Get subcomments")
     public ResponseEntity<PageCommentDto> getSubComments(
             @PathVariable("id") Long postId,
             @PathVariable("commentId") Long commentId,
