@@ -43,21 +43,23 @@ public class AccountController {
 
     @GetMapping("/me")
     @Operation(summary = "Get user account")
-    public ResponseEntity<AccountDto> getUserAccount(HttpServletRequest request) {
-        Long myId = Long.parseLong(request.getHeader("id"));
-        return ResponseEntity.ok(accountService.getAccountById(myId, myId));
+    public ResponseEntity<AccountDto> getUserAccount(
+            @RequestHeader("id") Long currentAuthUserId) {
+        return ResponseEntity.ok(accountService.getAccountById(currentAuthUserId, currentAuthUserId));
     }
 
     @PutMapping("/me")
     @Operation(summary = "Update user account")
-    public ResponseEntity<AccountDto> updateUserAccount(@Valid @RequestBody AccountDto accountDto, HttpServletRequest request) {
-        return ResponseEntity.ok(accountService.updateUserAccount(accountDto, Long.parseLong(request.getHeader("id"))));
+    public ResponseEntity<AccountDto> updateUserAccount(
+            @Valid @RequestBody AccountDto accountDto,
+            @RequestHeader("id") Long currentAuthUserId) {
+        return ResponseEntity.ok(accountService.updateUserAccount(accountDto, currentAuthUserId));
     }
 
     @DeleteMapping("/me")
     @Operation(summary = "Delete user account")
-    public ResponseEntity<String> deleteUserAccount(HttpServletRequest request) {
-        return ResponseEntity.ok(accountService.deleteUserAccount(Long.parseLong(request.getHeader("id"))));
+    public ResponseEntity<String> deleteUserAccount(@RequestHeader("id") Long currentAuthUserId) {
+        return ResponseEntity.ok(accountService.deleteUserAccount(currentAuthUserId));
     }
 
     @GetMapping
@@ -133,8 +135,6 @@ public class AccountController {
 
     @GetMapping("/accountIds")
     @Operation(summary = "Get account IDs")
-    public ResponseEntity<List<AccountDto>> getAccountIds(@RequestParam Long[] ids, HttpServletRequest request) {
-        return ResponseEntity.ok(accountService.getAccountIds(ids, Long.parseLong(request.getHeader("id"))));
     public ResponseEntity<List<AccountDto>> getAccountIds(
             @RequestParam Long[] ids,
             @RequestHeader("id") Long currentAuthUserId) {
