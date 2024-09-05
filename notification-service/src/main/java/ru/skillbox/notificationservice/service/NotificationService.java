@@ -39,13 +39,6 @@ public class NotificationService {
     private Settings createNewSettings(Long currentAuthUserId) {
         Settings newSettings = Settings.builder()
                 .userId(currentAuthUserId)
-                .message(true)
-                .friendBirthday(true)
-                .commentComment(true)
-                .friendRequest(true)
-                .postComment(true)
-                .sendEmailMessage(true)
-                .post(true)
                 .build();
         return settingsRepository.saveAndFlush(newSettings);
     }
