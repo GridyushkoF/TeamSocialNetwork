@@ -1,17 +1,15 @@
 stages:
   - compile
   - sonarqube-check
-  - deploy_docker_frontend
-  - deploy_docker_services
+  - deploy_docker
   - deploy_prod
 
 cache:
   paths:
     - .m2/repository
-  key: "$CI_COMMIT_SHA"
 
 variables:
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
   MAVEN_OPTS_CLI: "--batch-mode --fail-at-end --show-version"
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
@@ -33,19 +31,8 @@ sonarqube-check-job:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH == 'develop'
 
-deploy_docker_frontend-job:
-  stage: deploy_docker_frontend
-  script:
-    - echo "Deploying frontend..."
-    - docker build --no-cache -f ./frontend/Dockerfile -t "skillboxgroup/frontend" ./frontend
-    - echo "Pushing frontend image to docker hub..."
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin
-    - docker push "skillboxgroup/frontend" --all-tags
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'develop'
-
-deploy_docker_services-job:
-  stage: deploy_docker_services
+deploy_docker-job:
+  stage: deploy_docker
   script:
     - echo "Pushing service images to docker hub..."
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin

@@ -46,7 +46,6 @@
 			<artifactId>cage</artifactId>
 			<version>1.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -61,12 +60,7 @@
 			<groupId>org.liquibase</groupId>
 			<artifactId>liquibase-core</artifactId>
 		</dependency>
-		<!-- Зависимость для Redis Jedis -->
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-			<version>5.1.3</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
@@ -138,7 +132,6 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-bootstrap</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>

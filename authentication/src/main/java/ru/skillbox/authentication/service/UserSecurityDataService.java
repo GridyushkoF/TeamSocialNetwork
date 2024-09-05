@@ -1,10 +1,10 @@
 package ru.skillbox.authentication.service;
 
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,13 +37,16 @@ public class UserSecurityDataService {
     private String fromEmail;
     @Value("${app.changeEmailHost}")
     private String changeEmailHost;
+    @Value("${app.apiPrefix}")
+    private String apiPrefix;
 
     @Transactional
-    public SimpleResponse sendEmailChangeRequestToEmail(ChangeEmailRequest changeEmailRequest, Long userId) throws NoSuchAlgorithmException {
+    public SimpleResponse sendEmailChangeRequestToEmail(ChangeEmailRequest changeEmailRequest, Long userId)
+            throws MailSendException, NoSuchAlgorithmException {
         if (userRepository.existsByEmail(changeEmailRequest.getEmail().getEmail())) {
             throw new AlreadyExistsException("this email already exists in database");
         }
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("user not found"));
+        User user = userRepository.findByIdAndIsDeletedFalse(userId).orElseThrow(() -> new EntityNotFoundException("user not found"));
         emailChangeRequestRepository.findByOldEmail(user.getEmail()).ifPresent(emailChangeRequestRepository::delete);
         EmailChangeRequest emailChangeRequest = emailChangeRequestRepository.save(EmailChangeRequest.builder()
                 .id(UUID.randomUUID().toString())
@@ -56,7 +59,7 @@ public class UserSecurityDataService {
     }
 
     public void sendToEmail(String oldEmail,EmailChangeRequest emailChangeRequest) {
-        String subject = "Смена пароля";
+        String subject = "Смена email адреса";
         String messageBody = getMailBody(oldEmail,emailChangeRequest);
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -64,14 +67,18 @@ public class UserSecurityDataService {
         mailMessage.setTo(oldEmail);
         mailMessage.setSubject(subject);
         mailMessage.setText(messageBody);
-        mailSender.send(mailMessage);
-        log.info("Заявка на смену пароля создана и отправлена на почту");
+        try {
+            mailSender.send(mailMessage);
+            log.info("Заявка на смену email адреса создана и отправлена на почту");
+        } catch (MailSendException e) {
+            log.info("Возникли проблемы с отправкой email {}", e.getMessage());
+        }
     }
 
     private String getMailBody(String oldEmail, EmailChangeRequest emailChangeRequest) {
         var userOpt = userRepository.findByEmail(oldEmail);
         if (userOpt.isPresent()) {
-            return  "Для смены email: " + changeEmailHost + "/api/v1/auth/change-email/verification/" +
+            return  "Для смены email: " + changeEmailHost +  apiPrefix  + "/auth/change-email/verification/" +
                     emailChangeRequest.getOldEmail() + "/" + emailChangeRequest.getCurrentTempCode() + "/confirm";
         }
         log.error("Смена по емаил: {} не удалась. Email не найден в БД", emailChangeRequest.getOldEmail());
@@ -104,7 +111,7 @@ public class UserSecurityDataService {
     }
     @Transactional
     public void changePassword(ChangePasswordRequest changePasswordRequest, Long currentAuthUserId) {
-        User user = userRepository.findById(currentAuthUserId).orElseThrow();
+        User user = userRepository.findByIdAndIsDeletedFalse(currentAuthUserId).orElseThrow();
         if(!changePasswordRequest.getNewPassword1().equals(changePasswordRequest.getNewPassword2())) {
             throw new IncorrectPasswordException("passwords not match");
         }

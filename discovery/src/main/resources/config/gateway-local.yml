@@ -49,3 +49,5 @@ server:
   port: 9090
 app:
   userMicroservicePath: lb://USER-SERVICE
+  adminMicroservicePath: lb://ADMIN-CONSOLE
+  auditMicroservicePath: lb://AUDIT-SERVICE

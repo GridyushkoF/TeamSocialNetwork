@@ -32,7 +32,6 @@ spring:
 
 app:
   apiPrefix: /api/v1
-  gatewayPort: 9090
 
 eureka:
   client:

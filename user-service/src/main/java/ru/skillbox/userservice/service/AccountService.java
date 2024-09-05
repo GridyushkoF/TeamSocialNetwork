@@ -5,7 +5,6 @@ import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -123,9 +122,12 @@ public class AccountService {
         Stream<User> users = userRepository.findAll().stream();
         AccountSearchDto params = filterDto.getAccountSearchDto();
         users = users
+                .filter(AccountPredicate.checkIsDeleted(params.isDeleted()))
                 .filter(AccountPredicate.checkIds(params.getIds()))
                 .filter(AccountPredicate.checkFirstName(params.getFirstName()))
-                .filter(AccountPredicate.checkFirstName(params.getLastName()))
+                .filter(AccountPredicate.checkLastName(params.getLastName()))
+                .filter(AccountPredicate.checkCountry(params.getCountry()))
+                .filter(AccountPredicate.checkCity(params.getCity()))
                 .filter(AccountPredicate.birthdayBetween(params.getBirthDateFrom(), params.getBirthDateTo()))
                 .filter(AccountPredicate.checkAge(params.getAgeFrom(), params.getAgeTo()));
         return users.map(user -> userMapper.userToResponse(authUserId, user)).toList();
@@ -148,13 +150,6 @@ public class AccountService {
                 .toList();
     }
 
-    public Page<AccountDto> searchAccount(boolean isDeleted, long authUserId) {
-        Pageable nextPage = PageRequest.of(0, Integer.MAX_VALUE);
-        List<User> users = userRepository.findAllByIsDeletedAndIdNot(nextPage, isDeleted, authUserId);
-        List<AccountDto> pageList = users.stream().map(user -> userMapper.userToResponse(authUserId, user)).toList();
-        return new PageImpl<>(pageList, nextPage, users.size());
-    }
-
     public UsersStatisticsDto getUsersStatistics(PeriodRequestDto periodRequestDto) {
         long usersAmount = userRepository.count();
         List<DateCountPointDto> dateCountStatistics = adminStatisticsRepository.getDateCountStatistics(
@@ -167,5 +162,26 @@ public class AccountService {
         return new UsersStatisticsDto(usersAmount, ageDate, dateCountStatistics);
     }
 
+    public Page<AccountDto> searchAccountByFilterParams(
+            boolean isDeleted, Integer size, List<Long> ids,
+            String firstName, String lastName, Integer ageFrom, Integer ageTo, String country, String city, long id) {
+        AccountSearchDto params = AccountSearchDto.builder()
+                .ids(ids)
+                .isDeleted(isDeleted)
+                .firstName(firstName)
+                .lastName(lastName)
+                .ageFrom(ageFrom)
+                .ageTo(ageTo)
+                .city(city)
+                .country(country)
+                .build();
+        AccountByFilterDto filterDto = AccountByFilterDto.builder()
+                .pageNumber(0)
+                .pageSize(size)
+                .accountSearchDto(params).build();
+        Pageable nextPage = PageRequest.of(0, size);
+        List<AccountDto> pageList = searchAccountByFilter(filterDto, id);
+        return new PageImpl<>(pageList, nextPage, pageList.size());
+    }
 }
 

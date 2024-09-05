@@ -1,4 +1,4 @@
-package ru.skillbox.commonlib.dto.error;
+package ru.skillbox.commonlib.dto;
 
 import lombok.Getter;
 import lombok.Setter;

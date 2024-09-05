@@ -2,7 +2,7 @@
   <form class="admin-login" action="#" @submit.prevent="submitHandler">
     <h1 class="admin-login__title form__title">Вход в админ-панель</h1>
 
-    <email-field id="admin-login-email" v-model="emailvalue" :v="$v.emailvalue" />
+    <email-field id="admin-login-email" v-model="email" :v="$v.email" />
     <password-field id="admin-login-password" v-model="password" :v="$v.password" />
 
     <div class="admin-login__action">
@@ -13,11 +13,9 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import useVuelidate from '@vuelidate/core';
-import { required, email, minLength } from '@vuelidate/validators';
-import PasswordField from '@/components/FormElements/PasswordField.vue';
-import EmailField from '@/components/FormElements/EmailField.vue';
+import { required, email, minLength } from 'vuelidate/lib/validators';
+import PasswordField from '@/components/FormElements/PasswordField';
+import EmailField from '@/components/FormElements/EmailField';
 
 export default {
   name: 'AdminLogin',
@@ -26,29 +24,22 @@ export default {
     EmailField,
   },
 
-  setup() {
-    const emailvalue = ref('');
-    const password = ref('');
+  data: () => ({
+    email: '',
+    password: '',
+  }),
 
-    const rules = {
-      emailvalue: { required, email },
-      password: { required, minLength: minLength(8) },
-    };
-
-    const $v = useVuelidate(rules, { emailvalue, password });
-
-    const submitHandler = () => {
-      if ($v.$invalid) {
-        $v.$touch();
+  methods: {
+    submitHandler() {
+      if (this.$v.$invalid) {
+        this.$v.$touch();
       }
-    };
+    },
+  },
 
-    return {
-      emailvalue,
-      password,
-      $v,
-      submitHandler,
-    };
+  validations: {
+    email: {required, email},
+    password: {required, minLength: minLength(8)},
   },
 };
 </script>

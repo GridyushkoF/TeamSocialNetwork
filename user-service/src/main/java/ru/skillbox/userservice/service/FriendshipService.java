@@ -8,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.skillbox.commonlib.dto.account.AccountDto;
 import ru.skillbox.commonlib.dto.account.StatusCode;
 import ru.skillbox.commonlib.event.notification.NotificationType;
 import ru.skillbox.userservice.exception.NoSuchAccountException;
@@ -23,7 +22,6 @@ import ru.skillbox.userservice.processor.FriendProcessor;
 import ru.skillbox.userservice.repository.FriendshipRepository;
 import ru.skillbox.userservice.repository.UserRepository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 

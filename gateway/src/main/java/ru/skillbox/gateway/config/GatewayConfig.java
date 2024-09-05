@@ -17,6 +17,10 @@ public class GatewayConfig {
     private final AdminAuthFilter adminFilter;
     @Value("${app.userMicroservicePath}")
     private String pathToUserMicroservice;
+    @Value("${app.adminMicroservicePath}")
+    private String pathToAdminMicroservice;
+    @Value("${app.auditMicroservicePath}")
+    private String pathToAuditMicroservice;
 
     @Autowired
     public GatewayConfig(@Qualifier("authenticationFilter") AuthenticationFilter filter,
@@ -81,32 +85,32 @@ public class GatewayConfig {
                 .route(
                         "admin_route_prometheus", r -> r.path("/api/v1/admin-console/actuator/**")
                                 .filters(f -> f.filter(filter))
-                                .uri("lb://ADMIN-CONSOLE")
+                                .uri(pathToAdminMicroservice)
                 )
                 .route(
                         "admin_route_swagger", r -> r.path("/api/v1/admin-console/v3/**")
                                 .filters(f -> f.filter(filter))
-                                .uri("lb://ADMIN-CONSOLE")
+                                .uri(pathToAdminMicroservice)
                 )
                 .route(
                         "admin_route", r -> r.path("/api/v1/admin-console/statistic/**")
                                 .filters(f -> f.filter(filter).filter(adminFilter))
-                                .uri("lb://ADMIN-CONSOLE")
+                                .uri(pathToAdminMicroservice)
                 )
                 .route(
                         "audit-log_route_prometheus", r -> r.path("/api/v1/audit/actuator/**")
                                 .filters(f -> f.filter(filter))
-                                .uri("lb://AUDIT-SERVICE")
+                                .uri(pathToAuditMicroservice)
                 )
                 .route(
                         "audit-log_route_swagger", r -> r.path("/api/v1/audit/v3/**")
                                 .filters(f -> f.filter(filter))
-                                .uri("lb://AUDIT-SERVICE")
+                                .uri(pathToAuditMicroservice)
                 )
                 .route(
                         "audit-log_route", r -> r.path("/api/v1/audit/search/**")
                                 .filters(f -> f.filter(filter).filter(adminFilter))
-                                .uri("lb://AUDIT-SERVICE")
+                                .uri(pathToAuditMicroservice)
                 )
                 .build();
     }

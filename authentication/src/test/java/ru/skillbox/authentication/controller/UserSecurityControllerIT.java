@@ -70,8 +70,8 @@ class UserSecurityControllerIT extends TestDependenciesContainer {
 
     @DynamicPropertySource
     static void redisProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.redis.host", redisContainer::getHost);
-        registry.add("spring.redis.port", redisContainer::getFirstMappedPort);
+        registry.add("spring.data.redis.host", redisContainer::getHost);
+        registry.add("spring.data.redis.port", redisContainer::getFirstMappedPort);
     }
 
     @Test
@@ -92,7 +92,7 @@ class UserSecurityControllerIT extends TestDependenciesContainer {
                 .newPassword1("newPassword123")
                 .newPassword2("newPassword123")
                 .build();
-        return mockMvc.perform(post("/api/v1/auth/change-password-link")
+        return mockMvc.perform(post("/change-password-link")
                 .header("id", user.getId())
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(changePasswordRequest)));
@@ -104,7 +104,7 @@ class UserSecurityControllerIT extends TestDependenciesContainer {
         ChangeEmailRequest changeEmailRequest = ChangeEmailRequest.builder()
                 .email(ChangeEmailRequestWrapper.builder().email("newmail@gmail.com").build())
                 .build();
-        mockMvc.perform(post("/api/v1/auth/change-email-link")
+        mockMvc.perform(post("/change-email-link")
                         .header("id", user.getId())
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(changeEmailRequest)))
@@ -125,7 +125,7 @@ class UserSecurityControllerIT extends TestDependenciesContainer {
                         .currentTempCode(changeEmailKey)
                         .build()
         );
-        mockMvc.perform(get("/api/v1/auth/change-email/verification/{userEmail}/{changeEmailKey}/confirm", userEmail, changeEmailKey))
+        mockMvc.perform(get("/change-email/verification/{userEmail}/{changeEmailKey}/confirm", userEmail, changeEmailKey))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("changed successful"));
     }
@@ -135,7 +135,7 @@ class UserSecurityControllerIT extends TestDependenciesContainer {
     void testAcceptEmailChanging_invalidKey_noAccess() throws Exception {
         String userEmail = user.getEmail();
         String changeEmailKey = "invalidKey";
-        mockMvc.perform(get("/api/v1/auth/change-email/verification/{userEmail}/{changeEmailKey}/confirm", userEmail, changeEmailKey))
+        mockMvc.perform(get("/change-email/verification/{userEmail}/{changeEmailKey}/confirm", userEmail, changeEmailKey))
                 .andExpect(status().isNotFound());
     }
 }
