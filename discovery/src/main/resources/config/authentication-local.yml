@@ -88,3 +88,6 @@ server:
 app:
   changeEmailHost: ${PROD_SERVER_URI:http://localhost}
   apiPrefix: /api/v1
+
+springdoc:
+  override-with-generic-response: false

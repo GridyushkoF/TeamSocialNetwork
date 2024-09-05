@@ -47,7 +47,6 @@ deploy_docker-job:
     - docker push "skillboxgroup/geo-service" --all-tags
     - docker push "skillboxgroup/audit-service" --all-tags
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH == 'develop'
 
 deploy_prod-job:
@@ -78,5 +77,4 @@ deploy_prod-job:
     - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.yml up -d --force-recreate --remove-orphans"
     - ssh $PROD_USER@$PROD_HOST "docker compose -f ./docker/docker-compose.services.yml up -d"
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH == 'develop'

@@ -1,6 +1,8 @@
 package ru.skillbox.authentication.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import ru.skillbox.authentication.service.CaptchaService;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "User Controller", description = "User API")
 public class UserController {
 
     private final CaptchaService captchaService;
@@ -25,6 +28,7 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Create user")
     public void createUser(@RequestBody RegUserDto userDto) {
         if (!captchaService.validateCaptcha(userDto.getCaptchaSecret()
                 , userDto.getCaptchaCode())) {
@@ -41,11 +45,13 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/logout")
+    @Operation(summary = "Logout")
     public void logout(@RequestHeader("Authorization") String authorizationHeader) {
         authenticationService.logout(authorizationHeader);
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Login")
     public ResponseEntity<AuthenticationResponse> loginUser(
             @RequestBody AuthenticationRequest authenticationRequest) {
         return ResponseEntity.ok(authenticationService.login(authenticationRequest));
