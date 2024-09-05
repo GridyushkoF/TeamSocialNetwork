@@ -1,6 +1,5 @@
 package ru.skillbox.postservice.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
@@ -69,7 +68,6 @@ public class PostService {
         return existingPost;
     }
 
-
     @Transactional
     public void deletePostById(Long postId, Long authUserId) {
         Post post = postRepository.getPostByIdOrThrowException(postId);
@@ -127,8 +125,7 @@ public class PostService {
     }
 
     @Transactional
-    public Post createNewPost(PostDto postDto, HttpServletRequest request) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+    public Post createNewPost(PostDto postDto, long currentAuthUserId) {
         if (postDto.getPublishDate() != null) {
             postDto.setType(PostType.QUEUED);
         } else {
@@ -158,5 +155,4 @@ public class PostService {
                     processor.auditProcess(newPost, ActionType.UPDATE);
                 });
     }
-
 }

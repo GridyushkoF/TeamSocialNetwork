@@ -1,7 +1,6 @@
 package ru.skillbox.postservice.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +19,7 @@ public class LikeController {
     public void likePost(
             @PathVariable("id") Long postId,
             @RequestBody LikeDto likeDto,
-            HttpServletRequest request
-    ) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+            @RequestHeader("id") Long currentAuthUserId) {
         likeService.likePost(postId, likeDto, currentAuthUserId);
     }
 
@@ -30,9 +27,7 @@ public class LikeController {
     @ResponseStatus(HttpStatus.OK)
     public void unLikePost(
             @PathVariable("id") Long postId,
-            HttpServletRequest request
-    ) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+            @RequestHeader("id") Long currentAuthUserId) {
         likeService.unlikePost(postId, currentAuthUserId);
     }
 
@@ -41,9 +36,7 @@ public class LikeController {
     public void likeComment(
             @PathVariable("id") Long postId,
             @PathVariable("commentId") Long commentId,
-            HttpServletRequest request
-    ) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+            @RequestHeader("id") Long currentAuthUserId) {
         likeService.likeComment(postId, commentId, currentAuthUserId);
     }
 
@@ -52,9 +45,7 @@ public class LikeController {
     public void unLikeComment(
             @PathVariable("id") Long postId,
             @PathVariable("commentId") Long commentId,
-            HttpServletRequest request
-    ) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+            @RequestHeader("id") Long currentAuthUserId) {
         likeService.unlikeComment(postId, commentId, currentAuthUserId);
     }
 }
