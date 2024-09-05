@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.skillbox.commonlib.dto.account.StatusCode;
 import ru.skillbox.commonlib.dto.statistics.CountDto;
 import ru.skillbox.userservice.model.dto.FriendDto;
+import ru.skillbox.userservice.model.dto.FriendShortDto;
 import ru.skillbox.userservice.model.dto.RecommendedFriendDto;
 import ru.skillbox.userservice.service.FriendshipService;
 
@@ -81,7 +82,7 @@ public class FriendController {
 
     @GetMapping
     @Operation(summary = "Get friends")
-    public ResponseEntity<Page<FriendDto>> getFriends(
+    public ResponseEntity<Page<FriendShortDto>> getFriends(
             @RequestParam StatusCode statusCode,
             @RequestParam(defaultValue = "3") int size,
             @RequestHeader("id") Long currentAuthUserId) {

@@ -5,6 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import ru.skillbox.commonlib.dto.account.AccountDto;
+import ru.skillbox.userservice.model.dto.FriendShortDto;
 import ru.skillbox.userservice.model.entity.User;
 
 @DecoratedWith(UserMapperDelegate.class)
