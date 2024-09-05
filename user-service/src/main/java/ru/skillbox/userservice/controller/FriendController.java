@@ -3,7 +3,6 @@ package ru.skillbox.userservice.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -103,8 +102,8 @@ public class FriendController {
 
     @GetMapping("/count")
     @Operation(summary = "Count request")
-    public ResponseEntity<CountDto> requestCount(HttpServletRequest request) {
-        Long currentAuthUserId = Long.parseLong(request.getHeader("id"));
+    public ResponseEntity<CountDto> requestCount(
+            @RequestHeader("id") Long currentAuthUserId) {
         return ResponseEntity.ok(new CountDto(friendshipService.getFriendRequestCount(currentAuthUserId)));
     }
 }
