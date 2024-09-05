@@ -24,51 +24,56 @@ public class NotificationController {
     @GetMapping("/settings")
     @Operation(summary = "Get notification setting")
     public ResponseEntity<NotificationSettingsDto> getNotificationSetting(HttpServletRequest request){
-
         return ResponseEntity.ok(notificationService.getSettings(request));
-
     }
 
     @PutMapping("/settings")
     @Operation(summary = "Update notification setting")
     public ResponseEntity<NotificationSettingsDto> updateNotificationSettings(
-            @RequestBody SettingRq settingsData, HttpServletRequest request){
-        return ResponseEntity.ok(notificationService.updateSettings(settingsData, request));
+            @RequestBody SettingRq settingsData,
+            @RequestHeader("id") Long currentAuthUserId) {
+        return ResponseEntity.ok(notificationService.updateSettings(settingsData, currentAuthUserId));
     }
 
     @PostMapping("/settings")
     @Operation(summary = "Create notification setting")
     public ResponseEntity<NotificationSettingsDto> createNotificationSetting(
-            @RequestBody SettingsDto settingsDto, HttpServletRequest request){
-        return ResponseEntity.ok(notificationService.createSettings(settingsDto, request));
+            @RequestBody SettingsDto settingsDto,
+            @RequestHeader("id") Long currentAuthUserId) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(notificationService
+                .createSettings(settingsDto, currentAuthUserId));
     }
 
 
     @GetMapping
     @Operation(summary = "Get notification")
-    public ResponseEntity<NotificationSentDto> getNotification(HttpServletRequest request) {
-
-        return ResponseEntity.ok(notificationService.getNotifications(request));
+    public ResponseEntity<NotificationSentDto> getNotification(
+            @RequestHeader("id") Long currentAuthUserId
+    ) {
+        return ResponseEntity.ok(notificationService.getNotifications(currentAuthUserId));
     }
 
 
     @PostMapping
     @Operation(summary = "Create notification")
     public ResponseEntity<NotificationDto> createNotification(
-            @RequestBody NotificationInputDto notificationInputDto){
-        return ResponseEntity.ok(notificationService.createNotification(notificationInputDto));
+            @RequestBody NotificationInputDto notificationInputDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(notificationService.createNotification(notificationInputDto));
     }
 
     @GetMapping("/count")
     @Operation(summary = "Get notification count")
-    public ResponseEntity<NotificationCountRs> getNotificationCount(HttpServletRequest request) {
-        return ResponseEntity.ok(notificationService.getCount(request));
+    public ResponseEntity<NotificationCountRs> getNotificationCount(
+            @RequestHeader("id") Long currentAuthUserId) {
+        return ResponseEntity.ok(notificationService.getCount(currentAuthUserId));
     }
 
     @PutMapping("/readed")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Set readed")
-    public void setReaded(HttpServletRequest request) {
-        notificationService.setReaded(request);
+    public void setReaded(
+            @RequestHeader("id") Long currentAuthUserId
+    ) {
+        notificationService.setReaded(currentAuthUserId);
     }
 }
