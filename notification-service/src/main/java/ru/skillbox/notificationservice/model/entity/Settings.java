@@ -10,25 +10,32 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "notifications_settings")
+@Table(name = "settings")
 public class Settings {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "user_id")
     private Long userId;
+    @Builder.Default
     @Column(name = "friend_request")
-    private boolean friendRequest;
+    private boolean friendRequest = true;
+    @Builder.Default
     @Column(name = "friend_birthday")
-    private boolean friendBirthday;
+    private boolean friendBirthday = true;
+    @Builder.Default
     @Column(name = "post_comment")
-    private boolean postComment;
+    private boolean postComment = true;
     @Column(name = "comment_comment")
-    private boolean commentComment;
+    @Builder.Default
+    private boolean commentComment = true;
     @Column(name = "post")
-    private boolean post;
+    @Builder.Default
+    private boolean post = true;
     @Column(name = "message")
-    private boolean message;
+    @Builder.Default
+    private boolean message = true;
     @Column(name = "send_email_message")
-    private boolean sendEmailMessage;
+    @Builder.Default
+    private boolean sendEmailMessage = true;
 }

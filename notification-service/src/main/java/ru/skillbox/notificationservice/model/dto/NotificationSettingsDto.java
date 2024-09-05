@@ -12,17 +12,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NotificationSettingsDto {
     @JsonProperty
-    private boolean enablePost;
+    @Builder.Default
+    private boolean enablePost = true;
     @JsonProperty
-    private boolean enablePostComment;
+    @Builder.Default
+    private boolean enablePostComment = true;
     @JsonProperty
-    private boolean enableCommentComment;
+    @Builder.Default
+    private boolean enableCommentComment = true;
     @JsonProperty
-    private boolean enableFriendRequest;
+    @Builder.Default
+    private boolean enableFriendRequest = true;
     @JsonProperty
-    private boolean enableMessage;
+    @Builder.Default
+    private boolean enableMessage = true;
     @JsonProperty
-    private boolean enableFriendBirthday;
+    @Builder.Default
+    private boolean enableFriendBirthday = true;
     @JsonProperty
-    private boolean enableSendEmailMessage;
+    @Builder.Default
+    private boolean enableSendEmailMessage = true;
 }
