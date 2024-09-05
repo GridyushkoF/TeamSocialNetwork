@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "notifications_settings")
+@Table(name = "settings")
 public class Settings {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
