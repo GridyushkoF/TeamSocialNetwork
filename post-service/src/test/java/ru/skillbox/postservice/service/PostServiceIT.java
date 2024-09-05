@@ -75,7 +75,7 @@ class PostServiceIT extends TestDependenciesContainer {
         PostSearchDto searchDto = new PostSearchDto();
         PagePostDto result = postService.searchPosts(searchDto, Pageable.unpaged(), 1L);
         assertNotNull(result);
-        assertFalse(result.getContent().isEmpty());
+        assertEquals(1,result.getContent().size());
     }
 
     @Test
@@ -86,7 +86,7 @@ class PostServiceIT extends TestDependenciesContainer {
         Post savedPost = postService.createNewPost(postDto, postDto.getAuthorId());
         PostSearchDto searchDto = new PostSearchDto();
         searchDto.setTitle(postDto.getTitle());
-        searchDto.setDelete(false);
+        searchDto.setIsDeleted(false);
         PagePostDto result = postService.searchPosts(searchDto, Pageable.unpaged(), postDto.getAuthorId());
         assertNotNull(result);
         assertFalse(result.getContent().isEmpty());

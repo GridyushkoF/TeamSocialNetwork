@@ -14,6 +14,7 @@ import ru.skillbox.userservice.exception.NoSuchAccountException;
 import ru.skillbox.userservice.mapper.v1.FriendMapperV1;
 import ru.skillbox.userservice.mapper.v1.UserMapperV1;
 import ru.skillbox.userservice.model.dto.FriendDto;
+import ru.skillbox.userservice.model.dto.FriendShortDto;
 import ru.skillbox.userservice.model.dto.RecommendedFriendDto;
 import ru.skillbox.userservice.model.entity.Friendship;
 import ru.skillbox.userservice.model.entity.FriendshipId;
@@ -125,15 +126,15 @@ public class FriendshipService {
     }
 
     @Transactional
-    public Page<FriendDto> getFriendsByStatus(StatusCode statusCode, int size, Long currentAuthUserId) {
+    public Page<FriendShortDto> getFriendsByStatus(StatusCode statusCode, int size, Long currentAuthUserId) {
 
         User currentUser = userRepository.findById(currentAuthUserId).orElseThrow();
         Pageable nextPage = PageRequest.of(0, size);
         Set<User> friends = currentUser.getFriends();
-        List<FriendDto> accounts = friends
+        List<FriendShortDto> accounts = friends
                 .stream().map(user -> userMapper.userToResponse(currentAuthUserId, user))
                 .filter(accountDto -> accountDto.getStatusCode().equals(statusCode))
-                .map(friendMapper::accountToFriend)
+                .map(friendMapper::accountDtoToFriendShortDto)
                 .skip(nextPage.getOffset())
                 .limit(nextPage.getPageSize()).toList();
 

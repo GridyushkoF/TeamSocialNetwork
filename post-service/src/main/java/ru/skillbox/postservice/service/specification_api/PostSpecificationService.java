@@ -18,31 +18,30 @@ public class PostSpecificationService {
     public Specification<Post> getSpecificationByDto(PostSearchDto postSearchDto, Long currenAuthUserID) {
         return (root, query, builder) -> {
             List<Predicate> predicates = new ArrayList<>();
-            predicates.add(builder.or(builder.equal(root.get("type"), PostType.POSTED),
-                    builder.equal(root.get(AUTHOR_ID), currenAuthUserID)));
+            predicates.add(builder.or(builder.equal(root.get("type"), PostType.POSTED)));
             addIdPredicate(postSearchDto, root, predicates);
             addAccountsPredicate(postSearchDto, root, predicates);
             addAuthorIdPredicate(postSearchDto, root, builder, predicates);
             addTitlePredicate(postSearchDto, root, builder, predicates);
             addPostTextPredicate(postSearchDto, root, builder, predicates);
-            addFriendsPredicate(postSearchDto);
             addIsDeletePredicate(postSearchDto, root, builder, predicates);
             addTagsPredicate(postSearchDto, root, predicates);
             addFromDatePredicate(postSearchDto, root, builder, predicates);
-            addToDatePredicate(postSearchDto, root, builder, predicates);
+            addToDatePredicate(postSearchDto,root,builder,predicates);
+
             return builder.and(predicates.toArray(new Predicate[0]));
         };
     }
 
     private static void addToDatePredicate(PostSearchDto postSearchDto, Root<Post> root, CriteriaBuilder builder, List<Predicate> predicates) {
         if (postSearchDto.getDateTo() != null) {
-            predicates.add(builder.lessThanOrEqualTo(root.get("publishDate"), new Date(postSearchDto.getDateTo())));
+            predicates.add(builder.lessThanOrEqualTo(root.get("time"), postSearchDto.getDateTo()));
         }
     }
 
     private static void addFromDatePredicate(PostSearchDto postSearchDto, Root<Post> root, CriteriaBuilder builder, List<Predicate> predicates) {
         if (postSearchDto.getDateFrom() != null) {
-            predicates.add(builder.greaterThanOrEqualTo(root.get("publishDate"), new Date(postSearchDto.getDateFrom())));
+            predicates.add(builder.greaterThanOrEqualTo(root.get("time"), postSearchDto.getDateFrom()));
         }
     }
 
@@ -54,11 +53,14 @@ public class PostSpecificationService {
     }
 
     private static void addIsDeletePredicate(PostSearchDto postSearchDto, Root<Post> root, CriteriaBuilder builder, List<Predicate> predicates) {
-        predicates.add(builder.equal(root.get("isDelete"), postSearchDto.isDelete()));
+        if(postSearchDto.getIsDeleted() != null) {
+            predicates.add(builder.equal(root.get("isDelete"), postSearchDto.getIsDeleted()));
+        }
+
     }
 
     private static void addFriendsPredicate(PostSearchDto postSearchDto) {
-        if (postSearchDto.isWithFriends()) {
+        if (postSearchDto.getWithFriends() != null) {
             // сделать когда будет полностью готова FriendShip-логика
         }
     }

@@ -12,6 +12,7 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import ru.skillbox.commonlib.dto.account.StatusCode;
 import ru.skillbox.userservice.model.dto.FriendDto;
 import ru.skillbox.userservice.model.dto.FriendSearchDto;
+import ru.skillbox.userservice.model.dto.FriendShortDto;
 import ru.skillbox.userservice.service.FriendshipService;
 
 import java.time.LocalDateTime;
@@ -96,8 +97,14 @@ class FriendControllerTest {
 
     @Test
     void getFriends() throws Exception {
-        List<FriendDto> friendDtos = List.of(
-                new FriendDto(1L, "https://example.com/avatar.jpg", StatusCode.REQUEST_TO, "Test", "User", "City", "Country", LocalDateTime.now(), true)
+        List<FriendShortDto> friendDtos = List.of(
+                FriendShortDto.builder()
+                        .friendId(1L)
+                        .id(1L)
+                        .statusCode(StatusCode.REQUEST_TO)
+                        .rating(1)
+                        .previousStatusCode(StatusCode.NONE)
+                        .build()
         );
         when(friendshipService.getFriendsByStatus(StatusCode.REQUEST_TO, 3, 1L)).thenReturn(new org.springframework.data.domain.PageImpl<>(friendDtos));
 

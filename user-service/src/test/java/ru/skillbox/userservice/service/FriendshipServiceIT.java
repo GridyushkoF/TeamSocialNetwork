@@ -13,6 +13,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.skillbox.commonlib.dto.account.Role;
 import ru.skillbox.commonlib.dto.account.StatusCode;
 import ru.skillbox.userservice.model.dto.FriendDto;
+import ru.skillbox.userservice.model.dto.FriendShortDto;
 import ru.skillbox.userservice.model.entity.FriendshipId;
 import ru.skillbox.userservice.model.entity.User;
 import ru.skillbox.userservice.repository.FriendshipRepository;
@@ -146,8 +147,8 @@ class FriendshipServiceIT {
 
         friendshipService.requestFriendship(user1.getId(), friend2.getId());
         friendshipService.blockAccount(user1.getId(), friend2.getId());
-        Page<FriendDto> friendsWithStatusFriend = friendshipService.getFriendsByStatus(StatusCode.FRIEND, 10, userId);
-        Page<FriendDto> friendsWithStatusBlocked = friendshipService.getFriendsByStatus(StatusCode.BLOCKED, 10, userId);
+        Page<FriendShortDto> friendsWithStatusFriend = friendshipService.getFriendsByStatus(StatusCode.FRIEND, 10, userId);
+        Page<FriendShortDto> friendsWithStatusBlocked = friendshipService.getFriendsByStatus(StatusCode.BLOCKED, 10, userId);
         assertEquals(1, friendsWithStatusFriend.getTotalElements());
         assertEquals(1, friendsWithStatusBlocked.getTotalElements());
     }

@@ -83,7 +83,6 @@ services:
         aliases:
           - prometheus
     restart: on-failure
-
 volumes:
   kafka:
   database-data:

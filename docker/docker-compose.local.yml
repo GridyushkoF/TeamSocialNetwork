@@ -80,7 +80,7 @@ services:
     tty: true
     restart: on-failure
     volumes:
-      - ./nginx-config:/etc/nginx/conf.d
+      - ./nginx-config.local:/etc/nginx/conf.d
 
 volumes:
   kafka:
