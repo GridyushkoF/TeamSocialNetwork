@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
@@ -37,7 +36,7 @@ class PostServiceIT extends TestDependenciesContainer {
     @Transactional
     void getPostById_ReturnsValidPost() {
         PostDto postDto = generateTestPostDto();
-        Post savedPost = postService.createNewPost(postDto, generateTestRequest());
+        Post savedPost = postService.createNewPost(postDto, postDto.getAuthorId());
         PostDto result = postService.getPostById(savedPost.getId());
         assertEquals(savedPost.getId(), result.getId());
         assertEquals(postDto.getTitle(), result.getTitle());
@@ -48,7 +47,7 @@ class PostServiceIT extends TestDependenciesContainer {
     @Transactional
     void updatePost_CorrectUpdate() {
         PostDto postDto = generateTestPostDto();
-        Post savedPost = postService.createNewPost(postDto, generateTestRequest());
+        Post savedPost = postService.createNewPost(postDto, postDto.getAuthorId());
         PostDto updatedPostDto = new PostDto();
         updatedPostDto.setId(savedPost.getId());
         updatedPostDto.setPostText("Updated text");
@@ -62,7 +61,7 @@ class PostServiceIT extends TestDependenciesContainer {
     @Transactional
     void deletePost_CorrectDelete() {
         PostDto postDto = generateTestPostDto();
-        Post savedPost = postService.createNewPost(postDto, generateTestRequest());
+        Post savedPost = postService.createNewPost(postDto, postDto.getAuthorId());
         postService.deletePostById(savedPost.getId(), savedPost.getAuthorId());
         assertTrue(postRepository.findById(savedPost.getId()).get().isDelete());
     }
@@ -72,7 +71,7 @@ class PostServiceIT extends TestDependenciesContainer {
     @Transactional
     void searchPosts() {
         PostDto postDto = generateTestPostDto();
-        postService.createNewPost(postDto, generateTestRequest());
+        postService.createNewPost(postDto, postDto.getAuthorId());
         PostSearchDto searchDto = new PostSearchDto();
         PagePostDto result = postService.searchPosts(searchDto, Pageable.unpaged(), 1L);
         assertNotNull(result);
@@ -84,7 +83,7 @@ class PostServiceIT extends TestDependenciesContainer {
     @Transactional
     void searchSpecificPostByFilters() {
         PostDto postDto = generateTestPostDto();
-        Post savedPost = postService.createNewPost(postDto, generateTestRequest());
+        Post savedPost = postService.createNewPost(postDto, postDto.getAuthorId());
         PostSearchDto searchDto = new PostSearchDto();
         searchDto.setTitle(postDto.getTitle());
         searchDto.setDelete(false);
@@ -100,7 +99,7 @@ class PostServiceIT extends TestDependenciesContainer {
     @Transactional
     void searchPostWithNonMatchingFilters() {
         PostDto postDto = generateTestPostDto();
-        postService.createNewPost(postDto, generateTestRequest());
+        postService.createNewPost(postDto, postDto.getAuthorId());
         PostSearchDto searchDto = new PostSearchDto();
         searchDto.setTitle("Non-existing title");
         PagePostDto result = postService.searchPosts(searchDto, Pageable.unpaged(), postDto.getAuthorId());
@@ -114,7 +113,7 @@ class PostServiceIT extends TestDependenciesContainer {
     void createNewPost() {
         PostDto postDto = generateTestPostDto();
 
-        postService.createNewPost(postDto, generateTestRequest());
+        postService.createNewPost(postDto, postDto.getAuthorId());
 
         assertEquals(1, postRepository.count());
     }
@@ -128,11 +127,4 @@ class PostServiceIT extends TestDependenciesContainer {
                 .authorId(1L)
                 .build();
     }
-
-    public MockHttpServletRequest generateTestRequest() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addHeader("id", "1");
-        return request;
-    }
-
 }

@@ -163,18 +163,7 @@ public class AccountService {
     }
 
     public Page<AccountDto> searchAccountByFilterParams(
-            boolean isDeleted, Integer size, List<Long> ids,
-            String firstName, String lastName, Integer ageFrom, Integer ageTo, String country, String city, long id) {
-        AccountSearchDto params = AccountSearchDto.builder()
-                .ids(ids)
-                .isDeleted(isDeleted)
-                .firstName(firstName)
-                .lastName(lastName)
-                .ageFrom(ageFrom)
-                .ageTo(ageTo)
-                .city(city)
-                .country(country)
-                .build();
+            Integer size, AccountSearchDto params, long id) {
         AccountByFilterDto filterDto = AccountByFilterDto.builder()
                 .pageNumber(0)
                 .pageSize(size)
